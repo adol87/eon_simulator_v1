@@ -620,7 +620,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
                 
                 //hallar el max y min de la tabla
-                getMaxMin(contB[0]);
+                if (contB[0]!=0){
+                    getMaxMin();
+                }
                 
                 //graficar
                 Utilitarios.GraficarResultado(series, annotation, this.panelResultados);
@@ -668,7 +670,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEjecutarSimulacionActionPerformed
 
     // get the maximum and the minimum
-    public void getMaxMin(int contador){
+    public void getMaxMin(){
         DefaultTableModel model2 = (DefaultTableModel) this.jTableResultadosBloqueosMinMax.getModel();
         ArrayList<Double> list0 = new ArrayList<Double>();
         ArrayList<Double> list1 = new ArrayList<Double>();
@@ -699,20 +701,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         Double maxEntroUso = 0.0;
         Double minEntroUso = 0.0;
         
-        if (contador!=0){
-            maxEntro = Collections.max(list0);
-            minEntro = Collections.min(list0);
-            maxMSI = Collections.max(list1);
-            minMSI = Collections.min(list1);
-            maxBRF = Collections.max(list2);
-            minBRF = Collections.min(list2);
-            maxLP = Collections.max(list3);
-            minLP = Collections.min(list3);
-            maxPC = Collections.max(list4);
-            minPC = Collections.min(list4);
-            maxEntroUso = Collections.max(list5);
-             minEntroUso = Collections.min(list5);
-        }
+        maxEntro = Collections.max(list0);
+        minEntro = Collections.min(list0);
+        maxMSI = Collections.max(list1);
+        minMSI = Collections.min(list1);
+        maxBRF = Collections.max(list2);
+        minBRF = Collections.min(list2);
+        maxLP = Collections.max(list3);
+        minLP = Collections.min(list3);
+        maxPC = Collections.max(list4);
+        minPC = Collections.min(list4);
+        maxEntroUso = Collections.max(list5);
+        minEntroUso = Collections.min(list5);
         
         
         //agrega a la tabla los bloqueos
