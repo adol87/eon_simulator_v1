@@ -2084,4 +2084,22 @@ public class Utilitarios {
 
        return A;
     }
+    
+    //Algoritmo basado en ACO para seleccioinar las rutas a reconfigurar
+    public static void seleccionDeRutas(ArrayList<ListaEnlazada> rutas) {
+         int h, cantHormigas = 0,rutasAmover;
+         float[] feromonas = new float[rutas.size()];
+         double[] visibilidad = new double[rutas.size()];
+         ArrayList<Integer> rutasElegidas; //guarda los indices de las rutas elegidas por la hormiga
+         //feromonas = inicializarFeromonas();
+         //visibilidad = calcularMetrica();
+         //rutasAmover = calcularCantRutas();
+         for(h=0;h<cantHormigas;h++){
+             //rutasElegidas = new ArrayList<>(rutasAmover);
+             //rutasElegidas = elegirCaminos(feromonas,visibilidad, rutas, rutasAmover);
+             for(int i=0;i<=feromonas.length;i++){
+                 //depositar feromonas
+             }
+         }
+     }
 }
