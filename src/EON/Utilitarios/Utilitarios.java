@@ -2091,11 +2091,16 @@ public class Utilitarios {
          float[] feromonas = new float[rutas.size()];
          double[] visibilidad = new double[rutas.size()];
          ArrayList<Integer> rutasElegidas; //guarda los indices de las rutas elegidas por la hormiga
-         //feromonas = inicializarFeromonas();
+         //inicializarFeromonas
+         for (int i =0; i<feromonas.length ; i++){
+             feromonas[i]=1;
+         }
          //visibilidad = calcularMetrica();
          for(h=0;h<cantHormigas;h++){
              //rutasElegidas = new ArrayList<>(rutasAmover);
-             //rutasElegidas = elegirCaminos(feromonas,visibilidad, rutas, rutasAmover);
+             //rutasElegidas = elegirSolucion(feromonas,visibilidad, rutas, rutasAmover);
+             //evaluarSolucion
+             //calcular mejor solucion
              for(int i=0;i<=feromonas.length;i++){
                  //depositar feromonas
              }
