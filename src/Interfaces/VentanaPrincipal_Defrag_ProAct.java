@@ -159,6 +159,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual15 = new javax.swing.JLabel();
         etiquetaAnchoFSActual16 = new javax.swing.JLabel();
         etiquetaAnchoFSActual17 = new javax.swing.JLabel();
+        jCheckBoxPasoaPaso = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -198,7 +199,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaTopologia, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, 70, 20));
 
         etiquetaError.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        getContentPane().add(etiquetaError, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 670, 310, 20));
+        getContentPane().add(etiquetaError, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 650, 160, 40));
 
         etiquetaCapacidadActual.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaCapacidadActual.setText("Capacidad");
@@ -471,6 +472,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
             }
         ));
+        jTableEstadoEnlaces.setColumnSelectionAllowed(true);
         jScrollPane6.setViewportView(jTableEstadoEnlaces);
 
         jTabbedPane1.addTab("Estado Final de los Enlaces", jScrollPane6);
@@ -590,6 +592,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         etiquetaAnchoFSActual17.setText("Entropía");
         getContentPane().add(etiquetaAnchoFSActual17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 570, 50, 20));
+
+        jCheckBoxPasoaPaso.setText("Paso a Paso");
+        jCheckBoxPasoaPaso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxPasoaPasoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jCheckBoxPasoaPaso, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 670, -1, -1));
 
         getAccessibleContext().setAccessibleDescription("");
 
@@ -808,6 +818,16 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     }
                 }
                 contBloqueos = 0;
+                
+                //imprimir estado si marco paso a paso
+                if(jCheckBoxPasoaPaso.isSelected()){
+                    actualizarTablaEstadoEnlaces(G, 0); //envío el grafo y la posición del vector a publicar
+                    try {
+                        System.in.read();
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
             ++k;
             // almacenamos la probablidad de bloqueo final para cada algoritmo
@@ -940,20 +960,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             list5.add(Double.parseDouble(Tabla.getValueAt(i,8).toString()));
         }
         
-        
-//        Double maxEntro = 0.0;
-//        Double minEntro = 0.0;
-//        Double maxMSI = 0.0;
-//        Double minMSI = 0.0;
-//        Double maxBRF = 0.0;
-//        Double minBRF = 0.0;
-//        Double maxLP = 0.0;
-//        Double minLP = 0.0;
-//        Double maxPC = 0.0;
-//        Double minPC = 0.0;
-//        Double maxEntroUso = 0.0;
-//        Double minEntroUso = 0.0;
-        
         Double maxEntro;
         Double minEntro;
         Double maxMSI;
@@ -994,8 +1000,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         DefaultTableModel modelEstadoEnlaces = (DefaultTableModel) this.jTableEstadoEnlaces.getModel(); //todos
 
         //agrega una columna por cada enlace
-        for(int i=0;i<=G[posicion].getCantidadEnlaces();i++){
-            modelEstadoEnlaces.addColumn(i);
+        for(int i=0;i<G[posicion].getCantidadDeVertices();i++){
+            for(int j=0;j<G[posicion].getCantidadDeVertices();j++){
+                if(j>i && G[posicion].acceder(i, j)!=null){
+                    modelEstadoEnlaces.addColumn(i + " - " + j); //con el nombre de origen-destino
+                }
+            }
         }
 
         //agrega todas las lineas por cada FS
@@ -1004,7 +1014,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         //crear matriz de estados de los enlaces
         for(int i=0;i<G[posicion].getCantidadDeVertices();i++){
             for(int j=0;j<G[posicion].getCantidadDeVertices();j++){
-                if(G[posicion].acceder(i, j)!=null){
+                if(j>i && G[posicion].acceder(i, j)!=null){
                     for(int kk=0;kk<G[posicion].acceder(i, j).getFS().length;kk++){
                         modelEstadoEnlaces.setValueAt(G[posicion].acceder(i, j).getFS()[kk].getEstado(), kk, cont);
                     }
@@ -1098,6 +1108,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private void textFieldEntroUsoMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldEntroUsoMinActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldEntroUsoMinActionPerformed
+
+    private void jCheckBoxPasoaPasoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPasoaPasoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxPasoaPasoActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -1199,6 +1213,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaTiempoActual;
     private javax.swing.JLabel etiquetaTopologia;
     private javax.swing.Box.Filler filler1;
+    private javax.swing.JCheckBox jCheckBoxPasoaPaso;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
