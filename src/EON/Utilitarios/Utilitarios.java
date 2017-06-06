@@ -2117,23 +2117,35 @@ public class Utilitarios {
                 }
                 cont = 0;
             while(mejoraActual<mejora){
-                copiaGrafo = G;
+                //Crear la copia del grafo original manualmente
+                for(int i=0;i<G.getCantidadDeVertices();i++){
+                    for(int j=0;j<G.getCantidadDeVertices();j++){
+                        if(G.acceder(i, j)!=null){
+                            for (int k=0; k<capacidad; k++){
+                                copiaGrafo.acceder(i, j).getFS()[k].setEstado(G.acceder(i, j).getFS()[k].getEstado());
+                            } 
+                        }
+                    }
+                }
                 indicesElegidas.add(elegirRuta(probabilidad));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
                 copiaGrafo = desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
                 //volver a rutear con las nuevas condiciones mismo algoritmo
                 int contBloqueos =0;
                 for (int i=0; i<rutasElegidas.size(); i++){
+                    //ORDENAR LISTA
                     int fs = resultados.get(i).getFin() - resultados.get(i).getInicio();
                     Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), rutasElegidas.get(i).getFin().getDato(), fs, 1);
                     ListaEnlazada[] ksp = KSP(copiaGrafo, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
                     rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                     if (rparcial != null) {
-                        asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
+                        asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0); 
+                        //verificar si la nueva asignacion crea una disrupcion
                     } else {
                         contBloqueos++;
                     }
                 }
+                //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
                     entropiaActual = copiaGrafo.entropia();
                     mejoraActual = 100 - ((entropiaActual * 100)/entropiaGrafo);
@@ -2141,8 +2153,6 @@ public class Utilitarios {
                     mejoraActual = 0;
                     break;
                 }
-                //elegir una ruta y agregar a las rutas elegidas y poner en negativo su probabilidad
-                //calcular la mejora con las rutas en rutasElegidas
                 cont++;
              }
              //elegir otra sin tener en cuenta la que ya se tomo.

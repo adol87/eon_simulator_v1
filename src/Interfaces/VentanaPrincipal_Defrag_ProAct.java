@@ -665,6 +665,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         ArrayList<Demanda> demandasPorUnidadTiempo = new ArrayList<>(); //ArrayList que contiene las demandas para una unidad de tiempo T
         rutasEstablecidas = new ArrayList();
         arrayRutas = new ArrayList<>();
+        resultadoRuteo = new ArrayList<>();
         int earlang = 0; //Carga de trafico en cada simulacion
         int k = -1; // contador auxiliar
         //int paso = (int) this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
