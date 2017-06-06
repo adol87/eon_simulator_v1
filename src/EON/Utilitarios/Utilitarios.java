@@ -2129,7 +2129,7 @@ public class Utilitarios {
                 }
                 indicesElegidas.add(elegirRuta(probabilidad));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
-                copiaGrafo = desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
+                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
                 //volver a rutear con las nuevas condiciones mismo algoritmo
                 int contBloqueos =0;
                 for (int i=0; i<rutasElegidas.size(); i++){
@@ -2232,7 +2232,7 @@ public class Utilitarios {
     }
     
      /*Metodo que se encarga de desasignar los FS de una ruta marcada para reconfiguracion en el grafo matriz copia*/
-    public static GrafoMatriz desasignarFS_DefragProAct(ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> r, GrafoMatriz G) {
+    public static void desasignarFS_DefragProAct(ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> r, GrafoMatriz G) {
         for (int i =0; i<rutas.size(); i++){
             for (Nodo nod = rutas.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
                 for (int p = r.get(i).getInicio(); p <= r.get(i).getFin(); p++) {
@@ -2241,6 +2241,5 @@ public class Utilitarios {
                 }
             }
         }
-        return G;
     }
 }
