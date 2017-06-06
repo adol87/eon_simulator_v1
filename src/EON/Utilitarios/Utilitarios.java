@@ -2086,24 +2086,122 @@ public class Utilitarios {
     }
     
     //Algoritmo basado en ACO para seleccioinar las rutas a reconfigurar
-    public static void seleccionDeRutas(ArrayList<ListaEnlazada> rutas, int mejora) {
-         int h, cantHormigas = 0;
+    public static void seleccionDeRutas(String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, Demanda d) {
+         int h, cantHormigas = 0, cont;
+         double entropiaActual, entropiaGrafo;
+         double mejoraActual;
+         Resultado rparcial;
+         GrafoMatriz copiaGrafo =  new GrafoMatriz(G.getCantidadDeVertices());
          float[] feromonas = new float[rutas.size()];
          double[] visibilidad = new double[rutas.size()];
-         ArrayList<Integer> rutasElegidas; //guarda los indices de las rutas elegidas por la hormiga
-         //inicializarFeromonas
+         double[] probabilidad = new double[rutas.size()];
+         double sumatoria;
+         ArrayList<ListaEnlazada> rutasElegidas;  //guarda las rutas elegidas por una hormiga
+         ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
+         entropiaGrafo = G.entropia();
+         //inicializarFeromonas y visibilidad
          for (int i =0; i<feromonas.length ; i++){
              feromonas[i]=1;
+             visibilidad[i]=entropiaDeRuta(rutas.get(i), capacidad, G);
          }
-         //visibilidad = calcularMetrica();
-         for(h=0;h<cantHormigas;h++){
-             //rutasElegidas = new ArrayList<>(rutasAmover);
-             //rutasElegidas = elegirSolucion(feromonas,visibilidad, rutas, rutasAmover);
-             //evaluarSolucion
-             //calcular mejor solucion
+         for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada
+             rutasElegidas = new ArrayList<>();
+             mejoraActual=0;
+                //calcular la probabilidad
+                sumatoria=0.0;
+                for(int i=0; i<feromonas.length; i++){
+                    sumatoria = sumatoria+(feromonas[i]*visibilidad[i]);
+                }
+                for(int i=0; i<feromonas.length; i++){
+                    probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
+                }
+                cont = 0;
+            while(mejoraActual<mejora){
+                copiaGrafo = G;
+                indicesElegidas.add(elegirRuta(probabilidad));
+                rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
+                copiaGrafo = desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
+                //volver a rutear con las nuevas condiciones mismo algoritmo
+                int contBloqueos =0;
+                for (int i=0; i<rutasElegidas.size(); i++){
+                    int fs = resultados.get(i).getFin() - resultados.get(i).getInicio();
+                    Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), rutasElegidas.get(i).getFin().getDato(), fs, 1);
+                    ListaEnlazada[] ksp = KSP(copiaGrafo, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
+                    rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
+                    if (rparcial != null) {
+                        asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
+                    } else {
+                        contBloqueos++;
+                    }
+                }
+                if(contBloqueos==0){
+                    entropiaActual = copiaGrafo.entropia();
+                    mejoraActual = 100 - ((entropiaActual * 100)/entropiaGrafo);
+                } else {
+                    mejoraActual = 0;
+                    break;
+                }
+                //elegir una ruta y agregar a las rutas elegidas y poner en negativo su probabilidad
+                //calcular la mejora con las rutas en rutasElegidas
+                cont++;
+             }
+             //elegir otra sin tener en cuenta la que ya se tomo.
              for(int i=0;i<=feromonas.length;i++){
-                 //depositar feromonas
+                 //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
              }
          }
      }
+    
+    public static Resultado realizarRuteo(String algoritmo, Demanda demanda,  GrafoMatriz grafoCopia, ListaEnlazada ksp[], int capacidadE){
+        Resultado r = null;
+        switch (algoritmo) {
+                            case "FA":
+                                r = Algoritmos_Defrag_ProAct.Def_FA(grafoCopia, demanda, ksp, capacidadE);
+                                break;
+                            case "FA-CA":
+                                r = Algoritmos_Defrag_ProAct.Def_FACA(grafoCopia, demanda, ksp, capacidadE);
+                                break;
+                           case "MTLSC":
+                                r = Algoritmos.MTLSC_Algorithm(grafoCopia, demanda, ksp, capacidadE);
+                                break;
+                        }
+        return r;
+    }
+    
+    public static int elegirRuta(double[] p){
+        int indice = 0;
+        return indice;
+    }
+    public static double entropiaDeRuta(ListaEnlazada ruta, int capacidad, GrafoMatriz G){
+        double uelink=0;
+        double entropy=0;
+        int countlinks=0;
+        Nodo t;
+        for (t = ruta.getInicio(); t.getSiguiente().getSiguiente() != null; t = t.getSiguiente()) {
+            int UEcont=0;
+            if(G.acceder(t.getDato(), t.getSiguiente().getDato())!=null){
+                for(int kk=0;kk<G.acceder(t.getDato(), t.getSiguiente().getDato()).getFS().length-1;kk++){
+                    if(G.acceder(t.getDato(), t.getSiguiente().getDato()).getFS()[kk].getEstado()!=G.acceder(t.getDato(), t.getSiguiente().getDato()).getFS()[kk+1].getEstado()){
+                        UEcont++;
+                    }
+                }
+                uelink=uelink+((double)UEcont/(G.acceder(t.getDato(), t.getSiguiente().getDato()).getFS().length-1));
+                countlinks++;
+            }
+        }
+        entropy=uelink/countlinks;
+        return entropy;
+    }
+    
+     /*Algoritmo que se encarga de desasignar los FS de una ruta marcada para reconfiguracion en el grafo matriz copia*/
+    public static GrafoMatriz desasignarFS_DefragProAct(ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> r, GrafoMatriz G) {
+        for (int i =0; i<rutas.size(); i++){
+            for (Nodo nod = rutas.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
+                for (int p = r.get(i).getInicio(); p <= r.get(i).getFin(); p++) {
+                    G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setEstado(1);
+                }
+            }
+        }
+        return G;
+    }
 }

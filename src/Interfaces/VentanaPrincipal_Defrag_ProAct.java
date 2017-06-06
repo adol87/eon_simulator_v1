@@ -47,6 +47,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private double entropia, msi, bfr, pathConsec, entropiaUso;
     private ArrayList<Integer> rutasEstablecidas; //guarda el tiempo de vida de las rutas ya establecidas por el algoritmo RSA
     private ArrayList<ListaEnlazada> arrayRutas;//Guarda la lista enlazada que representa a la ruta establecida por el algoritmo RSA
+    private ArrayList<Resultado> resultadoRuteo;//Guarda los resutados del algoritmo para saber en que FS fue ubicada la demanda
     int hora, minutos, segundos, dia, mes, anho;
 //    private int cantidadRedes; //cantidad de redes exitentes en el Simulador
     ///////////////////////////////////////////////////////////////////////////////
@@ -509,6 +510,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
                                     arrayRutas.add(ksp[r.getCamino()]);
+                                    resultadoRuteo.add(r);
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
@@ -520,6 +522,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
                                     arrayRutas.add(ksp[r.getCamino()]);
+                                    resultadoRuteo.add(r);
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
@@ -531,6 +534,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
                                     arrayRutas.add(ksp[r.getCamino()]);
+                                    resultadoRuteo.add(r);
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
@@ -564,6 +568,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     if (rutasEstablecidas.get(index) == 0) { //si el tiempo de vida es cero
                         rutasEstablecidas.remove(index); //remover del contador de rutas establecidas
                         arrayRutas.remove(index); //remover la ruta de la lista de rutas vigentes
+                        resultadoRuteo.remove(index);//remueve de la lista de resultados de ruteo
                     }
                 }
                 contBloqueos = 0;
