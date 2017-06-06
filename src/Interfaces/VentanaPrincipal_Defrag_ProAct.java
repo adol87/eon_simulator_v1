@@ -671,8 +671,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         //int paso = (int) this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
         int contD = 0; // contador de demandas totales
         int tiempoT = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); // Tiempo de simulacion especificada por el usaurio
-        int capacidadE = Integer.parseInt(this.textFieldCapacidadEnlace.getText().toString()); // espectro por enalce
-        double anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText().toString()); // ancho de FS
+        int capacidadE = Integer.parseInt(this.textFieldCapacidadEnlace.getText()); // espectro por enalce
+        double anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText()); // ancho de FS
         //factor del tiempo de simulacion especificado por el usuario
 
         System.out.println("El ancho del FS es:" + anchoFS);
@@ -1021,6 +1021,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         for(int i=0;i<G[posicion].getCantidadDeVertices();i++){
             for(int j=0;j<G[posicion].getCantidadDeVertices();j++){
                 if(j>i && G[posicion].acceder(i, j)!=null){
+                    int cantFS = G[posicion].acceder(i, j).getFS().length;
                     for(int kk=0;kk<G[posicion].acceder(i, j).getFS().length;kk++){
                         modelEstadoEnlaces.setValueAt(G[posicion].acceder(i, j).getFS()[kk].getEstado(), kk, cont);
                     }
