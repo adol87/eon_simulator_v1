@@ -2085,7 +2085,7 @@ public class Utilitarios {
        return A;
     }
     
-    //Algoritmo basado en ACO para seleccioinar las rutas a reconfigurar
+    //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
     public static void seleccionDeRutas(String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, Demanda d) {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
@@ -2134,6 +2134,9 @@ public class Utilitarios {
                 int contBloqueos =0;
                 for (int i=0; i<rutasElegidas.size(); i++){
                     //ORDENAR LISTA
+                    if (rutasElegidas.size()>1){
+                        ordenarRutas(resultados, rutasElegidas, rutasElegidas.size());
+                    }
                     int fs = resultados.get(i).getFin() - resultados.get(i).getInicio();
                     Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), rutasElegidas.get(i).getFin().getDato(), fs, 1);
                     ListaEnlazada[] ksp = KSP(copiaGrafo, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
@@ -2162,6 +2165,28 @@ public class Utilitarios {
          }
      }
     
+    //Metodo que ordena las rutas elegidas por las hormigas para su posterior re-ruteo 
+    //por orden decreciente de cantidad de FS requeridos
+    public static void ordenarRutas(ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, int n){
+        Resultado aux = new Resultado();
+        ListaEnlazada aux2 = new ListaEnlazada();
+        for (int i = 0; i <= n - 1; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                if (resultados.get(i).getFin()-resultados.get(i).getInicio() > resultados.get(j).getFin()-resultados.get(j).getInicio()) {
+                    aux = resultados.get(i);
+                    resultados.set(i,resultados.get(j));
+                    resultados.set(j, aux);
+                    
+                    //cambia el orden en el array de rutas
+                    aux2 = rutas.get(i);
+                    rutas.set(i,rutas.get(j));
+                    rutas.set(j, aux2);
+                }
+            }
+        }
+    } 
+    
+    //Metodo que realiza el re-ruteo de las rutas seleccionadas por las hormigas
     public static Resultado realizarRuteo(String algoritmo, Demanda demanda,  GrafoMatriz grafoCopia, ListaEnlazada ksp[], int capacidadE){
         Resultado r = null;
         switch (algoritmo) {
@@ -2178,10 +2203,13 @@ public class Utilitarios {
         return r;
     }
     
+    //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
     public static int elegirRuta(double[] p){
         int indice = 0;
         return indice;
     }
+    
+    //Metodo que calcula la entropia de los enlaces por los que pasa una ruta en particular 
     public static double entropiaDeRuta(ListaEnlazada ruta, int capacidad, GrafoMatriz G){
         double uelink=0;
         double entropy=0;
@@ -2203,12 +2231,13 @@ public class Utilitarios {
         return entropy;
     }
     
-     /*Algoritmo que se encarga de desasignar los FS de una ruta marcada para reconfiguracion en el grafo matriz copia*/
+     /*Metodo que se encarga de desasignar los FS de una ruta marcada para reconfiguracion en el grafo matriz copia*/
     public static GrafoMatriz desasignarFS_DefragProAct(ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> r, GrafoMatriz G) {
         for (int i =0; i<rutas.size(); i++){
             for (Nodo nod = rutas.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
                 for (int p = r.get(i).getInicio(); p <= r.get(i).getFin(); p++) {
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setEstado(1);
+                    G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setEstado(1);
                 }
             }
         }
