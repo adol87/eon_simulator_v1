@@ -150,6 +150,7 @@ public GrafoMatriz(int V){
         entropy=uelink/countlinks;
         return entropy;
     }
+    
     public void ResetRed(){
         for(int ii=0; ii<this.getCantidadDeVertices() ;ii++ )
         {
