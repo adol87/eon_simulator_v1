@@ -2277,7 +2277,7 @@ public class Utilitarios {
         
         //hallar el valor random entre 0.001 a el valor máximo de probabilidades en juego
         Random randomGenerator = new Random();
-        double randomValue = 0.001 + (sumaProbParticipan - 0.001) * randomGenerator.nextDouble();
+        double randomValue = 0.0000000000000001 + (sumaProbParticipan - 0.0000000000000001) * randomGenerator.nextDouble();
         
         //halla el índice que corresponde al valor random, sin tener en cuenta los índices ya elegidos
         double sumaProb = 0;
