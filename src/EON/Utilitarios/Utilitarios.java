@@ -2162,13 +2162,17 @@ public class Utilitarios {
                 cont++;
              }
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
-             if(mejoraActual>mejor){
+             if(mejoraActual>mejor && mejoraActual>mejora){
                  mejor = mejoraActual;
                  copiarGrafo(grafoMejor, copiaGrafo, capacidad);
              }
+             
              //elegir otra sin tener en cuenta la que ya se tomo.
              for(int i=0;i<=feromonas.length;i++){
                  //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
+                if (isInList(indicesElegidas, i)){
+                    feromonas[i] = feromonas[i] + 1; //TODO agregar feromona de acuerdo a la mejora
+                }
              }
          }
      }
