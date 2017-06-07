@@ -796,6 +796,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                     }
                     contD++;
+                    
+                    //si la opción paso a paso está activada entonces actualiza la tabla de estados de los enlaces
+//                    if(this.jCheckBoxPasoaPaso.isSelected()) {
+//                        //o sino ver como hacer con hilos
+//                    }
                 }
                 for (int a = 0; a < RSA.size(); a++) {
                     //Escribimos el archivo de resultados

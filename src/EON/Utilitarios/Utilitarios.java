@@ -429,11 +429,17 @@ public class Utilitarios {
             cont = 0;
             for (int p = r.getInicio(); cont <= d.getNroFS() && p <= r.getFin(); p++) {
                 cont++;
+                if (G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].getEstado() == 0){
+                    System.out.println("HAY UN CONFLICTO AL GUARDAR EL ESTADO DEL FS IDA");
+                }
                 G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setEstado(0);
                 G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setTiempo(d.getTiempo());
                 G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setConexion(conexid);
                 util = G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getUtilizacion()[p]++;
                 G.acceder(nod.getDato(), nod.getSiguiente().getDato()).setUtilizacionFS(p, util);
+                if (G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].getEstado() == 0){
+                    System.out.println("HAY UN CONFLICTO AL GUARDAR EL ESTADO DEL FS VUELTA");
+                }
                 G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setEstado(0);
                 G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setConexion(-conexid);
                 G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setTiempo(d.getTiempo());
