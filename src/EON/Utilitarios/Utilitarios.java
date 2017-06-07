@@ -2248,6 +2248,28 @@ public class Utilitarios {
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
     public static int elegirRuta(double[] p, ArrayList<Integer> indices){
         int indice = 0;
+        //sumar todas las probabilidades que siguen en juego
+        double sumaProbParticipan = 0;
+        int n = p.length;
+        for (int i = 0; i <= n - 1; i++) {
+            if (!isInList(indices, i)){
+                sumaProbParticipan = sumaProbParticipan + p[i];
+            }
+        }
+        
+        //hallar el valor random entre 0.001 a el valor máximo de probabilidades en juego
+        Random randomGenerator = new Random();
+        double randomValue = 0.001 + (sumaProbParticipan - 0.001) * randomGenerator.nextDouble();
+        
+        //halla el índice que corresponde al valor random, sin tener en cuenta los índices ya elegidos
+        double sumaProb = 0;
+        while (sumaProb < randomValue){
+            if (!isInList(indices, indice)){
+                sumaProb = sumaProb + p[indice];
+                indice++;
+            }
+        }
+        
         return indice;
     }
     
