@@ -2095,9 +2095,10 @@ public class Utilitarios {
     public static void seleccionDeRutas(String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, Demanda d) {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
-         double mejoraActual;
+         double mejoraActual, mejor=0;
          Resultado rparcial;
          GrafoMatriz copiaGrafo =  new GrafoMatriz(G.getCantidadDeVertices());
+         GrafoMatriz grafoMejor =  new GrafoMatriz(G.getCantidadDeVertices());
          float[] feromonas = new float[rutas.size()];
          double[] visibilidad = new double[rutas.size()];
          double[] probabilidad = new double[rutas.size()];
@@ -2125,17 +2126,9 @@ public class Utilitarios {
                 //ordenar todos de acuerdo a su probabilidad
                 ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas);
                 cont = 0;
-            while(mejoraActual<mejora){
+            while(mejoraActual<mejora && cont<rutas.size()){
                 //Crear la copia del grafo original manualmente
-                for(int i=0;i<G.getCantidadDeVertices();i++){
-                    for(int j=0;j<G.getCantidadDeVertices();j++){
-                        if(G.acceder(i, j)!=null){
-                            for (int k=0; k<capacidad; k++){
-                                copiaGrafo.acceder(i, j).getFS()[k].setEstado(G.acceder(i, j).getFS()[k].getEstado());
-                            } 
-                        }
-                    }
-                }
+                copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
@@ -2146,8 +2139,9 @@ public class Utilitarios {
                     if (rutasElegidas.size()>1){
                         ordenarRutas(resultados, rutasElegidas, rutasElegidas.size());
                     }
-                    int fs = resultados.get(i).getFin() - resultados.get(i).getInicio();
-                    Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), rutasElegidas.get(i).getFin().getDato(), fs, 1);
+                    int fs = resultados.get(indicesElegidas.get(i)).getFin() - resultados.get(indicesElegidas.get(i)).getInicio();
+                    int tVida = G.acceder(rutas.get(indicesElegidas.get(i)).getInicio().getDato(),rutas.get(indicesElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultados.get(i).getInicio()].getTiempo();
+                    Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), rutasElegidas.get(i).getFin().getDato(), fs, tVida);
                     ListaEnlazada[] ksp = KSP(copiaGrafo, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
                     rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                     if (rparcial != null) {
@@ -2167,6 +2161,11 @@ public class Utilitarios {
                 }
                 cont++;
              }
+            //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
+             if(mejoraActual>mejor){
+                 mejor = mejoraActual;
+                 copiarGrafo(grafoMejor, copiaGrafo, capacidad);
+             }
              //elegir otra sin tener en cuenta la que ya se tomo.
              for(int i=0;i<=feromonas.length;i++){
                  //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
@@ -2174,6 +2173,18 @@ public class Utilitarios {
          }
      }
     
+    //Metodo para realizar la copia de un grafo item por item
+    public static void copiarGrafo(GrafoMatriz copia, GrafoMatriz original, int capacidad){
+        for(int i=0;i<original.getCantidadDeVertices();i++){
+            for(int j=0;j<original.getCantidadDeVertices();j++){
+                if(original.acceder(i, j)!=null){
+                    for (int k=0; k<capacidad; k++){
+                        copia.acceder(i, j).getFS()[k].setEstado(original.acceder(i, j).getFS()[k].getEstado());
+                    } 
+                }
+            }
+        }
+    }
     //Metodo que ordena las rutas elegidas por las hormigas para su posterior re-ruteo 
     //por orden decreciente de cantidad de FS requeridos
     public static void ordenarRutas(ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, int n){
@@ -2279,7 +2290,13 @@ public class Utilitarios {
             for (Nodo nod = rutas.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
                 for (int p = r.get(i).getInicio(); p <= r.get(i).getFin(); p++) {
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setEstado(1);
+                    G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setTiempo(0);
+                    G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setConexion(1);
+                    G.acceder(nod.getDato(), nod.getSiguiente().getDato()).setUtilizacionFS(p, 0);
                     G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setEstado(1);
+                    G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setConexion(-1);
+                    G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setTiempo(0);
+                    G.acceder(nod.getSiguiente().getDato(), nod.getDato()).setUtilizacionFS(p, 0);
                 }
             }
         }
