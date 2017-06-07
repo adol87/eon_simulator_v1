@@ -47,7 +47,6 @@ public class Utilitarios {
      */
     /*Algoritmo de los k caminos mas cortos*/
     public static ListaEnlazada[] KSP(GrafoMatriz G, int s, int d, int k) {
-
         ListaEnlazada A[] = new ListaEnlazada[k];
         A[0] = Dijkstra(G, s, d);
         ListaEnlazada B[] = new ListaEnlazada[100];
@@ -2092,7 +2091,7 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G) {
+    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP) {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
@@ -2127,7 +2126,7 @@ public class Utilitarios {
                     probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
                 }
                 //ordenar todos de acuerdo a su probabilidad
-                ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas);
+                ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas, listaKSP);
                 cont = 0;
             while(mejoraActual<mejora && cont<rutas.size()){
                 //Crear la copia del grafo original manualmente
@@ -2145,7 +2144,8 @@ public class Utilitarios {
                     int fs = resultados.get(indicesElegidas.get(i)).getFin() - resultados.get(indicesElegidas.get(i)).getInicio();
                     int tVida = G.acceder(rutas.get(indicesElegidas.get(i)).getInicio().getDato(),rutas.get(indicesElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultados.get(i).getInicio()].getTiempo();
                     Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), rutasElegidas.get(i).getFin().getDato(), fs, tVida);
-                    ListaEnlazada[] ksp = KSP(copiaGrafo, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
+                    //ListaEnlazada[] ksp = KSP(G, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
+                    ListaEnlazada[] ksp = listaKSP.get(indicesElegidas.get(i));
                     rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                     if (rparcial != null) {
                         asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0); 
@@ -2198,7 +2198,7 @@ public class Utilitarios {
         Resultado aux = new Resultado();
         ListaEnlazada aux2 = new ListaEnlazada();
         for (int i = 0; i <= n - 1; i++) {
-            for (int j = i + 1; j <= n; j++) {
+            for (int j = i + 1; j < n; j++) {
                 if (resultados.get(i).getFin()-resultados.get(i).getInicio() > resultados.get(j).getFin()-resultados.get(j).getInicio()) {
                     aux = resultados.get(i);
                     resultados.set(i,resultados.get(j));
@@ -2215,9 +2215,10 @@ public class Utilitarios {
     
     //Metodo que ordena el vector de probabilidades de forma creciente
     //reordenando tambien los vectores de feromonas y visibilidad, y el array de rutas.
-    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas){
+    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP){
         ListaEnlazada aux = new ListaEnlazada();
         double auxp, auxv;
+        ListaEnlazada[] auxKSP;
         int n = probabilidad.length;
         float auxf;
         for (int i = 0; i <= n - 1; i++) {
@@ -2231,6 +2232,11 @@ public class Utilitarios {
                     aux = rutas.get(i);
                     rutas.set(i,rutas.get(j));
                     rutas.set(j, aux);
+                    
+                    //cambia el orden en el array de rutas
+                    auxKSP = listaKSP.get(i);
+                    listaKSP.set(i,listaKSP.get(j));
+                    listaKSP.set(j, auxKSP);
                     
                     //cambia el orden en el vector de feromonas
                     auxf = feromonas[i];

@@ -50,6 +50,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private ArrayList<Integer> rutasEstablecidas; //guarda el tiempo de vida de las rutas ya establecidas por el algoritmo RSA
     private ArrayList<ListaEnlazada> arrayRutas;//Guarda la lista enlazada que representa a la ruta establecida por el algoritmo RSA
     private ArrayList<Resultado> resultadoRuteo;//Guarda los resutados del algoritmo para saber en que FS fue ubicada la demanda
+    private ArrayList<ListaEnlazada[]> listaKSP;
     int hora, minutos, segundos, dia, mes, anho;
 //    private int cantidadRedes; //cantidad de redes exitentes en el Simulador
     ///////////////////////////////////////////////////////////////////////////////
@@ -666,6 +667,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         rutasEstablecidas = new ArrayList();
         arrayRutas = new ArrayList<>();
         resultadoRuteo = new ArrayList<>();
+        listaKSP = new ArrayList<>();
         int earlang = 0; //Carga de trafico en cada simulacion
         int k = -1; // contador auxiliar
         //int paso = (int) this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
@@ -763,6 +765,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     rutasEstablecidas.add(demanda.getTiempo());
                                     arrayRutas.add(ksp[r.getCamino()]);
                                     resultadoRuteo.add(r);
+                                    listaKSP.add(ksp);
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
@@ -826,11 +829,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         rutasEstablecidas.remove(index); //remover del contador de rutas establecidas
                         arrayRutas.remove(index); //remover la ruta de la lista de rutas vigentes
                         resultadoRuteo.remove(index);//remueve de la lista de resultados de ruteo
+                        listaKSP.remove(index);
                     }
                 }
                 //////////////////////////PRUEBA
                 if(i == 100){
-                    Utilitarios.seleccionDeRutas(RSA.get(0), resultadoRuteo, arrayRutas, 10, capacidadE, G[0]);
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 10, capacidadE, G[0], listaKSP);
                 }
                 contBloqueos = 0;
                 
