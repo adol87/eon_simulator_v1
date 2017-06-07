@@ -2127,7 +2127,7 @@ public class Utilitarios {
                         }
                     }
                 }
-                indicesElegidas.add(elegirRuta(probabilidad));
+                indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
                 //volver a rutear con las nuevas condiciones mismo algoritmo
@@ -2204,7 +2204,7 @@ public class Utilitarios {
     }
     
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
-    public static int elegirRuta(double[] p){
+    public static int elegirRuta(double[] p, ArrayList<Integer> indices){
         int indice = 0;
         return indice;
     }
