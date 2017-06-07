@@ -2096,7 +2096,7 @@ public class Utilitarios {
          double[] visibilidad = new double[rutas.size()];
          double[] probabilidad = new double[rutas.size()];
          double sumatoria;
-         ArrayList<ListaEnlazada> rutasElegidas;  //guarda las rutas elegidas por una hormiga
+         ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
          entropiaGrafo = G.entropia();
          //inicializarFeromonas y visibilidad
@@ -2104,8 +2104,9 @@ public class Utilitarios {
              feromonas[i]=1;
              visibilidad[i]=entropiaDeRuta(rutas.get(i), capacidad, G);
          }
-         for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada
-             rutasElegidas = new ArrayList<>();
+         for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
+             rutasElegidas.clear();
+             indicesElegidas.clear();
              mejoraActual=0;
                 //calcular la probabilidad
                 sumatoria=0.0;
@@ -2115,6 +2116,8 @@ public class Utilitarios {
                 for(int i=0; i<feromonas.length; i++){
                     probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
                 }
+                //ordenar todos de acuerdo a su probabilidad
+                ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas);
                 cont = 0;
             while(mejoraActual<mejora){
                 //Crear la copia del grafo original manualmente
@@ -2184,7 +2187,40 @@ public class Utilitarios {
                 }
             }
         }
-    } 
+    }
+    
+    //Metodo que ordena el vector de probabilidades de forma creciente
+    //reordenando tambien los vectores de feromonas y visibilidad, y el array de rutas.
+    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas){
+        ListaEnlazada aux = new ListaEnlazada();
+        double auxp, auxv;
+        int n = probabilidad.length;
+        float auxf;
+        for (int i = 0; i <= n - 1; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                if (probabilidad[i] > probabilidad[j]) {
+                    auxp = probabilidad[i];
+                    probabilidad[i] = probabilidad[j];
+                    probabilidad[j] = auxp;
+                    
+                    //cambia el orden en el array de rutas
+                    aux = rutas.get(i);
+                    rutas.set(i,rutas.get(j));
+                    rutas.set(j, aux);
+                    
+                    //cambia el orden en el vector de feromonas
+                    auxf = feromonas[i];
+                    feromonas[i] = feromonas[j];
+                    feromonas[j] = auxf;
+                    
+                    //cambia el orden en el vector de visibilidad
+                    auxv = visibilidad[i];
+                    visibilidad[i] = visibilidad[j];
+                    visibilidad[j] = auxv;
+                }
+            }
+        }
+    }
     
     //Metodo que realiza el re-ruteo de las rutas seleccionadas por las hormigas
     public static Resultado realizarRuteo(String algoritmo, Demanda demanda,  GrafoMatriz grafoCopia, ListaEnlazada ksp[], int capacidadE){
