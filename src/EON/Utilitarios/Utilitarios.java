@@ -2092,13 +2092,15 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static void seleccionDeRutas(String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G) {
+    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G) {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
          Resultado rparcial;
          GrafoMatriz copiaGrafo =  new GrafoMatriz(G.getCantidadDeVertices());
+         copiaGrafo.insertarDatos(v);
          GrafoMatriz grafoMejor =  new GrafoMatriz(G.getCantidadDeVertices());
+         grafoMejor.insertarDatos(v);
          float[] feromonas = new float[rutas.size()];
          double[] visibilidad = new double[rutas.size()];
          double[] probabilidad = new double[rutas.size()];
@@ -2111,6 +2113,7 @@ public class Utilitarios {
              feromonas[i]=1;
              visibilidad[i]=entropiaDeRuta(rutas.get(i), capacidad, G);
          }
+         cantHormigas =100;
          for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
              rutasElegidas.clear();
              indicesElegidas.clear();
@@ -2218,7 +2221,7 @@ public class Utilitarios {
         int n = probabilidad.length;
         float auxf;
         for (int i = 0; i <= n - 1; i++) {
-            for (int j = i + 1; j <= n; j++) {
+            for (int j = i + 1; j < n; j++) {
                 if (probabilidad[i] > probabilidad[j]) {
                     auxp = probabilidad[i];
                     probabilidad[i] = probabilidad[j];
