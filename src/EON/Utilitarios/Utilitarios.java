@@ -2092,7 +2092,7 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static void seleccionDeRutas(String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, Demanda d) {
+    public static void seleccionDeRutas(String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G) {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;

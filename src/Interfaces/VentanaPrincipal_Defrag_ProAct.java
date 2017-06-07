@@ -828,6 +828,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         resultadoRuteo.remove(index);//remueve de la lista de resultados de ruteo
                     }
                 }
+                //////////////////////////PRUEBA
+                if(i == 100){
+                    Utilitarios.seleccionDeRutas(RSA.get(0), resultadoRuteo, arrayRutas, 10, capacidadE, G[0]);
+                }
                 contBloqueos = 0;
                 
                 //imprimir estado si marco paso a paso
