@@ -2188,10 +2188,31 @@ public class Utilitarios {
                 if(original.acceder(i, j)!=null){
                     for (int k=0; k<capacidad; k++){
                         copia.acceder(i, j).getFS()[k].setEstado(original.acceder(i, j).getFS()[k].getEstado());
+                        copia.acceder(i, j).getFS()[k].setTiempo(original.acceder(i, j).getFS()[k].getTiempo());
+                        copia.acceder(i, j).getFS()[k].setConexion(original.acceder(i, j).getFS()[k].getConexion());
+                        copia.acceder(i, j).getFS()[k].setPropietario(original.acceder(i, j).getFS()[k].getPropietario());
                     } 
                 }
             }
         }
+    }
+    
+    public static boolean sonIguales(GrafoMatriz copia, GrafoMatriz original, int capacidad){
+        for(int i=0;i<original.getCantidadDeVertices();i++){
+            for(int j=0;j<original.getCantidadDeVertices();j++){
+                if(original.acceder(i, j)!=null){
+                    for (int k=0; k<capacidad; k++){
+                        if (original.acceder(i, j).getFS()[k].getEstado() != copia.acceder(i, j).getFS()[k].getEstado() || 
+                        original.acceder(i, j).getFS()[k].getTiempo() != copia.acceder(i, j).getFS()[k].getTiempo() ||
+                        original.acceder(i, j).getFS()[k].getConexion() != copia.acceder(i, j).getFS()[k].getConexion() ||
+                        original.acceder(i, j).getFS()[k].getPropietario() != copia.acceder(i, j).getFS()[k].getPropietario()){
+                            return false;
+                        }
+                    } 
+                }
+            }
+        }
+        return true;
     }
     //Metodo que ordena las rutas elegidas por las hormigas para su posterior re-ruteo 
     //por orden decreciente de cantidad de FS requeridos
