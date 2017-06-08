@@ -2091,7 +2091,7 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP) {
+    public static GrafoMatriz seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP) {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
@@ -2128,19 +2128,19 @@ public class Utilitarios {
                 //ordenar todos de acuerdo a su probabilidad
                 ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas, listaKSP);
                 cont = 0;
-            while(mejoraActual<mejora && cont<rutas.size()){
+            while(mejoraActual<mejora && cont<rutas.size() && mejoraActual>=0){
                 //Crear la copia del grafo original manualmente
                 copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
+                //ORDENAR LISTA
+                if (rutasElegidas.size()>1){
+                    ordenarRutas(resultados, rutasElegidas, indicesElegidas, rutasElegidas.size());
+                }
                 //volver a rutear con las nuevas condiciones mismo algoritmo
                 int contBloqueos =0;
                 for (int i=0; i<rutasElegidas.size(); i++){
-                    //ORDENAR LISTA
-                    if (rutasElegidas.size()>1){
-                        ordenarRutas(resultados, rutasElegidas, rutasElegidas.size());
-                    }
                     int fs = resultados.get(indicesElegidas.get(i)).getFin() - resultados.get(indicesElegidas.get(i)).getInicio();
                     int tVida = G.acceder(rutas.get(indicesElegidas.get(i)).getInicio().getDato(),rutas.get(indicesElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultados.get(i).getInicio()].getTiempo();
                     Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), rutasElegidas.get(i).getFin().getDato(), fs, tVida);
@@ -2157,7 +2157,7 @@ public class Utilitarios {
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
                     entropiaActual = copiaGrafo.entropia();
-                    mejoraActual = 100 - ((entropiaActual * 100)/entropiaGrafo);
+                    mejoraActual = 100 - ((redondearDecimales(entropiaActual, 3) * 100)/redondearDecimales(entropiaGrafo, 3));
                 } else {
                     mejoraActual = 0;
                     break;
@@ -2178,6 +2178,7 @@ public class Utilitarios {
                 }
              }
          }
+         return grafoMejor;
      }
     
     //Metodo para realizar la copia de un grafo item por item
@@ -2194,15 +2195,16 @@ public class Utilitarios {
     }
     //Metodo que ordena las rutas elegidas por las hormigas para su posterior re-ruteo 
     //por orden decreciente de cantidad de FS requeridos
-    public static void ordenarRutas(ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, int n){
-        Resultado aux = new Resultado();
+    public static void ordenarRutas(ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, ArrayList<Integer> indices,int n){
+        Integer aux = 0;
         ListaEnlazada aux2 = new ListaEnlazada();
         for (int i = 0; i <= n - 1; i++) {
             for (int j = i + 1; j < n; j++) {
-                if (resultados.get(i).getFin()-resultados.get(i).getInicio() > resultados.get(j).getFin()-resultados.get(j).getInicio()) {
-                    aux = resultados.get(i);
-                    resultados.set(i,resultados.get(j));
-                    resultados.set(j, aux);
+                if (resultados.get(indices.get(j)).getFin()-resultados.get(indices.get(j)).getInicio() > resultados.get(indices.get(i)).getFin()-resultados.get(indices.get(i)).getInicio()) {
+                    //cambia el orden del array de indices
+                    aux = indices.get(i);
+                    indices.set(i,indices.get(j));
+                    indices.set(j, aux);
                     
                     //cambia el orden en el array de rutas
                     aux2 = rutas.get(i);
@@ -2290,11 +2292,10 @@ public class Utilitarios {
         while (sumaProb < randomValue){
             if (!isInList(indices, indice)){
                 sumaProb = sumaProb + p[indice];
-                indice++;
             }
+            indice++;
         }
-        
-        return indice;
+        return indice-1;
     }
     
     //Metodo que calcula la entropia de los enlaces por los que pasa una ruta en particular 

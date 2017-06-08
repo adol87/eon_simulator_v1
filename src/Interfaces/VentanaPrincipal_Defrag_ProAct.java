@@ -833,9 +833,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     }
                 }
                 //////////////////////////PRUEBA
-                if(i == 100){
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 10, capacidadE, G[0], listaKSP);
-                }
+//                if(i == 200 || i==500){
+//                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+//                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+//                }
                 contBloqueos = 0;
                 
                 //imprimir estado si marco paso a paso
