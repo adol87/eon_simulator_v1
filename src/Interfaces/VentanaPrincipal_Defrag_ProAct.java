@@ -491,6 +491,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         textFieldEntropíaMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldEntropíaMin.setText("0");
+        textFieldEntropíaMin.setToolTipText("");
         textFieldEntropíaMin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldEntropíaMinActionPerformed(evt);
@@ -576,6 +577,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         textFieldEntroUsoMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldEntroUsoMin.setText("0");
+        textFieldEntroUsoMin.setToolTipText("");
         textFieldEntroUsoMin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldEntroUsoMinActionPerformed(evt);
@@ -649,6 +651,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         //System.out.println("El algoritmosRuteoSeleccionados22:"+algoritmoSeleccionado);
         this.algoritmosCompletosParaGraficar.add(cantidadDeAlgoritmosTotalSeleccionados, algoritmoSeleccionado);
         this.cantidadDeAlgoritmosTotalSeleccionados++;
+        
+        //parámetros desfragmentación
+        double entropiaMin = Double.parseDouble(this.textFieldEntropíaMin.getText());
+        double msiMin = Double.parseDouble(this.textFieldMSIMin.getText());
+        double bfrMin = Double.parseDouble(this.textFieldBFRMin.getText());
+        double lightPathMax = Double.parseDouble(this.textFieldLightPathMax.getText());
+        double pathConsMin = Double.parseDouble(this.textFieldPathConsMin.getText());
+        double entroUsoMin = Double.parseDouble(this.textFieldEntroUsoMin.getText());
 
 
         GrafoMatriz G[] = new GrafoMatriz[this.algoritmosCompletosParaGraficar.size()]; // Se tiene una matriz de adyacencia por algoritmo RSA elegidos para por el usuario
@@ -832,11 +842,33 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         listaKSP.remove(index);
                     }
                 }
-                //////////////////////////PRUEBA
-//                if(i == 200 || i==500){
-//                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-//                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
-//                }
+                
+                //desfragmentación
+                if (entropiaMin > 0 && entropia >= entropiaMin){
+                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                }
+                if (msiMin > 0 && msi >= msiMin){
+                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                }
+                if (bfrMin > 0 && bfr >= bfrMin){
+                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                }
+                if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
+                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                }                
+                if (pathConsMin > 0 && pathConsec >= pathConsMin){
+                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                }                
+                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
+                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                }                
+                
                 contBloqueos = 0;
                 
                 //imprimir estado si marco paso a paso
