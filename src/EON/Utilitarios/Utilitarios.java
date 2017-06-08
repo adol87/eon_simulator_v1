@@ -2091,7 +2091,7 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static GrafoMatriz seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP) {
+    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP) {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
@@ -2166,6 +2166,7 @@ public class Utilitarios {
              }
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
              if(mejoraActual>mejor && mejoraActual>mejora){
+                 System.out.println("Mejor actual"+rutasElegidas.size());
                  mejor = mejoraActual;
                  copiarGrafo(grafoMejor, copiaGrafo, capacidad);
              }
@@ -2178,7 +2179,7 @@ public class Utilitarios {
                 }
              }
          }
-         return grafoMejor;
+         copiarGrafo(G, grafoMejor, capacidad);
      }
     
     //Metodo para realizar la copia de un grafo item por item

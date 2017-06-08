@@ -845,28 +845,22 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 
                 //desfragmentación
                 if (entropiaMin > 0 && entropia >= entropiaMin){
-                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
                 }
                 if (msiMin > 0 && msi >= msiMin){
-                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
                 }
                 if (bfrMin > 0 && bfr >= bfrMin){
-                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
                 }
                 if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
-                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
                 }                
                 if (pathConsMin > 0 && pathConsec >= pathConsMin){
-                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
                 }                
                 if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
-                    GrafoMatriz nuevoGrafo = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                    Utilitarios.copiarGrafo(G[0], nuevoGrafo, capacidadE);
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
                 }                
                 
                 contBloqueos = 0;
