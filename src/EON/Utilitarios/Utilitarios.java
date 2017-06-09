@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -2091,7 +2093,7 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP) {
+    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivoDefrag, int tiempo) throws IOException {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
@@ -2112,7 +2114,7 @@ public class Utilitarios {
              feromonas[i]=1;
              visibilidad[i]=entropiaDeRuta(rutas.get(i), capacidad, G);
          }
-         cantHormigas =100;
+         cantHormigas =500;
          for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
              rutasElegidas.clear();
              indicesElegidas.clear();
@@ -2157,13 +2159,17 @@ public class Utilitarios {
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
                     entropiaActual = copiaGrafo.entropia();
-                    mejoraActual = 100 - ((redondearDecimales(entropiaActual, 3) * 100)/redondearDecimales(entropiaGrafo, 3));
+                    mejoraActual = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 6));
                 } else {
                     mejoraActual = 0;
                     break;
                 }
                 cont++;
              }
+                            System.out.println("Las elegidas son, por la hormiga:"+h);
+                for(int i=0; i<rutasElegidas.size(); i++){
+                   System.out.println(""+indicesElegidas.get(i)+"\r\n");
+                }
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
              if(mejoraActual>mejor && mejoraActual>mejora){
                  System.out.println("Mejor actual"+rutasElegidas.size());
@@ -2171,7 +2177,7 @@ public class Utilitarios {
                  copiarGrafo(grafoMejor, copiaGrafo, capacidad);
              }
              
-             //elegir otra sin tener en cuenta la que ya se tomo.
+             //feromonas
              for(int i=0;i<=feromonas.length;i++){
                  //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
                 if (isInList(indicesElegidas, i)){
@@ -2179,7 +2185,13 @@ public class Utilitarios {
                 }
              }
          }
-         copiarGrafo(G, grafoMejor, capacidad);
+            if(mejor !=0){
+                   copiarGrafo(G, grafoMejor, capacidad);
+                   //escribimos en el archivo defrag los resultados del proceso
+                   escribirArchivoDefrag(archivoDefrag,rutasElegidas.size() ,tiempo, mejor, true);
+            }else {
+                    escribirArchivoDefrag(archivoDefrag,rutasElegidas.size() ,tiempo, mejor, false);
+            }
      }
     
     //Metodo para realizar la copia de un grafo item por item
@@ -2357,6 +2369,28 @@ public class Utilitarios {
                     G.acceder(nod.getSiguiente().getDato(), nod.getDato()).setUtilizacionFS(p, 0);
                 }
             }
+        }
+    }
+    
+    public static void escribirArchivoDefrag (File archivo, int cantRutas, int tiempo, double mejora, boolean solucion) throws IOException{
+        BufferedWriter bw;
+        if (archivo.exists()) {
+            bw = new BufferedWriter(new FileWriter(archivo, true));
+        } else {
+            bw = new BufferedWriter(new FileWriter(archivo));
+        }
+        if (solucion){
+            bw.write("" + tiempo);
+            bw.write(",");
+            bw.write("" + cantRutas);
+            bw.write(",");
+            bw.write("" + mejora);
+            bw.write("\r\n");
+            bw.close();
+        }else{
+            bw.write("No encontro solucion");
+            bw.write("\r\n");
+            bw.close();
         }
     }
 }

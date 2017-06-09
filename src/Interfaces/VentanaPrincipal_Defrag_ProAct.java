@@ -865,9 +865,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
 //                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
 //                }
-                    if(i==250 || i == 500 || i == 750){
+                    if(i==145 || i == 240 || i == 300){
                     try {
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP, archivoDefrag, i);
                     } catch (IOException ex) {
                         Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                     }
