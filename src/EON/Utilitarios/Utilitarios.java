@@ -2091,7 +2091,7 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP) {
+    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo) throws IOException {
          int h, cantHormigas = 0, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
@@ -2172,18 +2172,24 @@ public class Utilitarios {
              }
              
             //elegir otra sin tener en cuenta la que ya se tomo.
-            for(int i=0;i<=indicesElegidas.size();i++){
+            for(int i=0;i<indicesElegidas.size();i++){
                 //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
                 feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejor/100)); //TODO agregar feromona de acuerdo a la mejora
             }
             
-            for(int i=0;i<=feromonas.length;i++){
-                //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
+            for(int i=0;i<feromonas.length;i++){
+                //evaporar feromonas
                 feromonas[i] = (float) (feromonas[i]*0.9); //TODO agregar feromona de acuerdo a la mejora
             }
             
          }
-         copiarGrafo(G, grafoMejor, capacidad);
+         if(mejor!=0){
+            copiarGrafo(G, grafoMejor, capacidad);
+            escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true);
+         }else{
+            escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false);
+         }
+
      }
     
     //Metodo para realizar la copia de un grafo item por item
@@ -2364,7 +2370,7 @@ public class Utilitarios {
         }
     }
     
-        public static void escribirArchivoDefrag (File archivo, int cantRutas, int tiempo, double mejora, boolean solucion) throws IOException{
+    public static void escribirArchivoDefrag (File archivo, int cantRutas, int tiempo, double mejora, boolean solucion) throws IOException{
         BufferedWriter bw;
         if (archivo.exists()) {
             bw = new BufferedWriter(new FileWriter(archivo, true));
