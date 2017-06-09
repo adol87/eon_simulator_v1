@@ -2359,4 +2359,26 @@ public class Utilitarios {
             }
         }
     }
+    
+        public static void escribirArchivoDefrag (File archivo, int cantRutas, int tiempo, double mejora, boolean solucion) throws IOException{
+        BufferedWriter bw;
+        if (archivo.exists()) {
+            bw = new BufferedWriter(new FileWriter(archivo, true));
+        } else {
+            bw = new BufferedWriter(new FileWriter(archivo));
+        }
+        if (solucion){
+            bw.write("" + tiempo);
+            bw.write(",");
+            bw.write("" + cantRutas);
+            bw.write(",");
+            bw.write("" + mejora);
+            bw.write("\r\n");
+            bw.close();
+        }else{
+            bw.write("No encontro solucion");
+            bw.write("\r\n");
+            bw.close();
+        }
+    }
 }
