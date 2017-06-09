@@ -140,9 +140,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         jScrollPane6 = new javax.swing.JScrollPane();
         jTableEstadoEnlaces = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTableResultadosDefrag = new javax.swing.JTable();
         etiquetaRSA2 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         textFieldEntropíaMin = new javax.swing.JTextField();
@@ -486,30 +483,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jScrollPane6.setViewportView(jTableEstadoEnlaces);
 
         jTabbedPane1.addTab("Estado Final de los Enlaces", jScrollPane6);
-
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jTableResultadosDefrag.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Tiempo", "LP Movidos", "% Mejora"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane7.setViewportView(jTableResultadosDefrag);
-
-        jPanel2.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 220, 610));
-
-        jTabbedPane1.addTab("Desfragmentaciones", jPanel2);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 40, 990, 660));
 
@@ -931,6 +904,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
 //                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
 //                }
+                    if(i==250 || i == 500 || i == 750){
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
                 
                 contBloqueos = 0;
                 
@@ -960,8 +940,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             String linea;
             int contLinea = 0;
             XYSeries series[] = new XYSeries[7];
+            XYSeriesCollection datos = new XYSeriesCollection();
             
-            //tablas Resultados y Bloqueos
+            //tablas
             DefaultTableModel modelBloqueos = (DefaultTableModel) this.jTableResultadosBloqueos.getModel(); //todos
             DefaultTableModel modelResultados = (DefaultTableModel) this.jTableResultados.getModel(); //bloqueos
 
@@ -982,7 +963,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     String[] line = linea.split(",", 9);
                     
                     //agrega a la tabla los Resultados
-                    modelResultados.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8])});
+                        modelResultados.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8])});
                     
                     //agrega en annotation todos los bloqueos para después agregarlos a los gráficos
                     if ((double) Double.parseDouble(line[2]) > 0) {
@@ -1018,16 +999,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             } catch (IOException ioe) {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ioe);  
             }
-            
-            //tabla desfragmentaciones
-            String rutaResultadosDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
-            File archivoResultadosDefrag = new File(rutaResultadosDefrag);
-            try {
-                Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
-            } catch (IOException ex) {
-                Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
 
             //Utilitarios.GraficarResultado(prob, this.panelResultado, "Resultado de la Simulación", RSA, paso);
             String demandasTotales = "" + contD; // mostramos la cantidad de demandas totales recibidas
@@ -1361,21 +1332,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableEstadoEnlaces;
     private javax.swing.JTable jTableResultados;
     private javax.swing.JTable jTableResultadosBloqueos;
     private javax.swing.JTable jTableResultadosBloqueosMinMax;
-    private javax.swing.JTable jTableResultadosDefrag;
     private javax.swing.JTable jTableResultadosMinMax;
     private javax.swing.JList<String> listaAlgoritmosRuteo;
     private javax.swing.JComboBox<String> listaRedes;
