@@ -694,6 +694,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         reiniciarJTableRows(this.jTableResultadosBloqueosMinMax);
         reiniciarJTableRows(this.jTableEstadoEnlaces);
         reiniciarJTableColumns(this.jTableEstadoEnlaces);
+        
+        //parámetros ACO
+        double mejoraACO = Double.parseDouble(this.textFieldMejoraACO.getText());
+        double cantHormACO = Double.parseDouble(this.textFieldCantHormigas.getText());
+
 
         //leemos los valores seteados
         this.tiempoTotal = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); //Tiempo de simulacion indicado por el usuario
@@ -913,24 +918,24 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
                 
                 //desfragmentación
-//                if (entropiaMin > 0 && entropia >= entropiaMin){
-//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-//                }
-//                if (msiMin > 0 && msi >= msiMin){
-//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-//                }
-//                if (bfrMin > 0 && bfr >= bfrMin){
-//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-//                }
-//                if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
-//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-//                }                
-//                if (pathConsMin > 0 && pathConsec >= pathConsMin){
-//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-//                }                
-//                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
-//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-//                }
+                if (entropiaMin > 0 && entropia >= entropiaMin){
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                }
+                if (msiMin > 0 && msi >= msiMin){
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                }
+                if (bfrMin > 0 && bfr >= bfrMin){
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                }
+                if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                }                
+                if (pathConsMin > 0 && pathConsec >= pathConsMin){
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                }                
+                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                }
 //                    if(i==250 || i == 500 || i == 750){
 //                    try {
 //                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
