@@ -937,20 +937,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if(!archivoDefrag.exists()){
-                        try {
-                            BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDefrag));
-                            bw.write("" + 0);
-                            bw.write(",");
-                            bw.write("" + 0);
-                            bw.write(",");
-                            bw.write("" + 0);
-                            bw.write("\r\n");
-                            bw.close();
-                        } catch (IOException ex) {
-                            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                }
+
 //                    if(i==250 || i == 500 || i == 750){
 //                    try {
 //                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
@@ -979,6 +966,21 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             }
             this.etiquetaError.setText("Simulacion Terminada...");
             
+            //Si no existe escibir 0,0,0
+            if(!archivoDefrag.exists()){
+                        try {
+                            BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDefrag));
+                            bw.write("" + 0);
+                            bw.write(",");
+                            bw.write("" + 0);
+                            bw.write(",");
+                            bw.write("" + 0);
+                            bw.write("\r\n");
+                            bw.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                }
             //RESULTADOS
 
             // una vez finalizado, graficamos el resultado.
