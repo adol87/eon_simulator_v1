@@ -750,11 +750,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             mes = calendario.get(Calendar.MONTH);
             anho = calendario.get(Calendar.YEAR);
             File carpeta = new File(System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\");
-            String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Resultado" + Lambda + "k_" + tiempoTotal + "t-" + RSA.get(0) + "-" + dia + "-" + mes + "-" + anho + "-" + hora + "_" + minutos + "_" + segundos + ".txt";
+            String detallesNombre = ""+Lambda + "k_" + tiempoTotal + "t-" + RSA.get(0) + "-" + dia + "-" + mes + "-" + anho + "-" + hora + "_" + minutos + "_" + segundos + ".txt";
+            String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Resultado"+detallesNombre;
+            String rutaDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
             if (!carpeta.exists()) {
                 carpeta.mkdirs();
             }
             File archivoResultados = new File(ruta);
+            File archivoDefrag = new File(rutaDefrag);
             for (int i = 1; i <= tiempoT; i++) {
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -844,24 +847,31 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
                 
                 //desfragmentación
-                if (entropiaMin > 0 && entropia >= entropiaMin){
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                }
-                if (msiMin > 0 && msi >= msiMin){
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                }
-                if (bfrMin > 0 && bfr >= bfrMin){
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                }
-                if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                }                
-                if (pathConsMin > 0 && pathConsec >= pathConsMin){
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                }                
-                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
-                }                
+//                if (entropiaMin > 0 && entropia >= entropiaMin){
+//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+//                }
+//                if (msiMin > 0 && msi >= msiMin){
+//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+//                }
+//                if (bfrMin > 0 && bfr >= bfrMin){
+//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+//                }
+//                if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
+//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+//                }                
+//                if (pathConsMin > 0 && pathConsec >= pathConsMin){
+//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+//                }                
+//                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
+//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
+//                }
+                    if(i==250 || i == 500 || i == 750){
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
                 
                 contBloqueos = 0;
                 
