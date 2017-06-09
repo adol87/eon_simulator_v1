@@ -2164,6 +2164,10 @@ public class Utilitarios {
                 }
                 cont++;
              }
+            System.out.println("Rutas que eligio la hormiga: "+h);
+            for (int i =0; i<indicesElegidas.size(); i++){
+                System.out.println(""+indicesElegidas.get(i));
+            }
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
              if(mejoraActual>mejor && mejoraActual>mejora){
                  System.out.println("Mejor actual"+rutasElegidas.size());
