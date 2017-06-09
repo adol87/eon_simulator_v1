@@ -2180,7 +2180,7 @@ public class Utilitarios {
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
                     entropiaActual = copiaGrafo.entropia();
-                    mejoraActual = 100 - ((redondearDecimales(entropiaActual, 3) * 100)/redondearDecimales(entropiaGrafo, 3));
+                    mejoraActual = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 3));
                 } else {
                     mejoraActual = 0;
                     break;
@@ -2194,13 +2194,17 @@ public class Utilitarios {
                  copiarGrafo(grafoMejor, copiaGrafo, capacidad);
              }
              
-             //elegir otra sin tener en cuenta la que ya se tomo.
-             for(int i=0;i<=feromonas.length;i++){
-                 //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
-                if (isInList(indicesElegidas, i)){
-                    feromonas[i] = feromonas[i] + 1; //TODO agregar feromona de acuerdo a la mejora
-                }
-             }
+            //elegir otra sin tener en cuenta la que ya se tomo.
+            for(int i=0;i<=indicesElegidas.size();i++){
+                //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
+                feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejor/100)); //TODO agregar feromona de acuerdo a la mejora
+            }
+            
+            for(int i=0;i<=feromonas.length;i++){
+                //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
+                feromonas[i] = (float) (feromonas[i]*0.9); //TODO agregar feromona de acuerdo a la mejora
+            }
+            
          }
          copiarGrafo(G, grafoMejor, capacidad);
      }
