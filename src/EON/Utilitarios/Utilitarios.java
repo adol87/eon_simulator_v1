@@ -2,6 +2,7 @@ package EON.Utilitarios;
 
 import EON.*;
 import EON.Algoritmos.*;
+import Interfaces.VentanaPrincipal_Defrag_ProAct;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
@@ -14,9 +15,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.XYTextAnnotation;
@@ -1871,6 +1876,25 @@ public class Utilitarios {
         }
         return demandas;
     }
+    
+        public static void cargarTablaResultadosDefrag(File archivo, JTable tabla) throws FileNotFoundException, IOException {
+            
+        String linea;
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel(); //bloqueos
+        
+        try {
+            FileReader fr = new FileReader(archivo);
+            BufferedReader br = new BufferedReader(fr);
+            while (((linea = br.readLine()) != null)) {
+                String[] line = linea.split(",", 3);
+                model.addRow(new Object[]{(double) Double.parseDouble(line[0]), (double) Double.parseDouble(line[1]), (double) Double.parseDouble(line[2])});
+                
+            }
+        } catch (IOException ioe) {
+            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ioe);  
+        }
+    }
+
 
     public static int poisson(int lambda) {
         int b, bFact;

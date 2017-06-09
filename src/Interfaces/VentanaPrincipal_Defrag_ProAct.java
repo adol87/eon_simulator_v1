@@ -931,13 +931,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
 //                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 1, capacidadE, G[0], listaKSP);
 //                }
-                    if(i==250 || i == 500 || i == 750){
-                    try {
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
-                    } catch (IOException ex) {
-                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    }
+//                    if(i==250 || i == 500 || i == 750){
+//                    try {
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                    }
                 
                 contBloqueos = 0;
                 
@@ -1026,6 +1026,16 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             } catch (IOException ioe) {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ioe);  
             }
+            
+            //tabla desfragmentaciones
+            String rutaResultadosDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
+            File archivoResultadosDefrag = new File(rutaResultadosDefrag);
+            try {
+                Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
+            } catch (IOException ex) {
+                Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
 
             //Utilitarios.GraficarResultado(prob, this.panelResultado, "Resultado de la Simulación", RSA, paso);
             String demandasTotales = "" + contD; // mostramos la cantidad de demandas totales recibidas
