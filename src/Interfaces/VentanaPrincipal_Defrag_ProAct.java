@@ -726,11 +726,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         double lightPathMax = Double.parseDouble(this.textFieldLightPathMax.getText());
         double pathConsMin = Double.parseDouble(this.textFieldPathConsMin.getText());
         double entroUsoMin = Double.parseDouble(this.textFieldEntroUsoMin.getText());
-        
-        //parámetros ACO
-        double mejoraACO = Double.parseDouble(this.textFieldMejoraACO.getText());
-        double cantHormACO = Double.parseDouble(this.textFieldCantHormigas.getText());
-
 
         GrafoMatriz G[] = new GrafoMatriz[this.algoritmosCompletosParaGraficar.size()]; // Se tiene una matriz de adyacencia por algoritmo RSA elegidos para por el usuario
         ListaEnlazada[] caminosDeDosEnlaces = null;
