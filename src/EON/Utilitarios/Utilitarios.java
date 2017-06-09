@@ -2414,7 +2414,11 @@ public class Utilitarios {
             bw.write("\r\n");
             bw.close();
         }else{
-            bw.write("No encontro solucion");
+            bw.write("" + tiempo);
+            bw.write(",");
+            bw.write("" + 0);
+            bw.write(",");
+            bw.write("" + 0);
             bw.write("\r\n");
             bw.close();
         }
