@@ -5,8 +5,10 @@ import EON.*;
 import EON.Algoritmos.*;
 import EON.Metricas.Metricas;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -935,7 +937,20 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                if(!archivoDefrag.exists()){
+                        try {
+                            BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDefrag));
+                            bw.write("" + 0);
+                            bw.write(",");
+                            bw.write("" + 0);
+                            bw.write(",");
+                            bw.write("" + 0);
+                            bw.write("\r\n");
+                            bw.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                }
 //                    if(i==250 || i == 500 || i == 750){
 //                    try {
 //                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
