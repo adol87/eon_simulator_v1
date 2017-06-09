@@ -140,6 +140,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         jScrollPane6 = new javax.swing.JScrollPane();
         jTableEstadoEnlaces = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTableResultadosDefrag = new javax.swing.JTable();
         etiquetaRSA2 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         textFieldEntropíaMin = new javax.swing.JTextField();
@@ -484,6 +487,30 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Estado Final de los Enlaces", jScrollPane6);
 
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTableResultadosDefrag.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Tiempo", "Cant. Rutas", "Mejora %"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane7.setViewportView(jTableResultadosDefrag);
+
+        jPanel2.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 240, 610));
+
+        jTabbedPane1.addTab("Desfragmentaciones", jPanel2);
+
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 40, 990, 660));
 
         etiquetaRSA2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -513,7 +540,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 620, 20, 20));
 
         textFieldCantHormigas.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldCantHormigas.setText("1");
+        textFieldCantHormigas.setText("500");
         textFieldCantHormigas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldCantHormigasActionPerformed(evt);
@@ -1332,18 +1359,21 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableEstadoEnlaces;
     private javax.swing.JTable jTableResultados;
     private javax.swing.JTable jTableResultadosBloqueos;
     private javax.swing.JTable jTableResultadosBloqueosMinMax;
+    private javax.swing.JTable jTableResultadosDefrag;
     private javax.swing.JTable jTableResultadosMinMax;
     private javax.swing.JList<String> listaAlgoritmosRuteo;
     private javax.swing.JComboBox<String> listaRedes;
