@@ -2116,7 +2116,7 @@ public class Utilitarios {
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
     public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo) throws IOException {
-         int h, cantHormigas = 0, cont;
+         int h, cantHormigas = 0, cont, disrupciones=0;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
          Resultado rparcial;
@@ -2172,6 +2172,9 @@ public class Utilitarios {
                     ListaEnlazada[] ksp = listaKSP.get(indicesElegidas.get(i));
                     rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                     if (rparcial != null) {
+                        if(rparcial.getCamino()!= resultados.get(i).getCamino()){
+                            disrupciones++;
+                        }
                         asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0); 
                         //verificar si la nueva asignacion crea una disrupcion
                     } else {
