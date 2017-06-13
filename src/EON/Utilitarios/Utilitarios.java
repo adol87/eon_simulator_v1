@@ -2150,7 +2150,7 @@ public class Utilitarios {
                     probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
                 }
                 //ordenar todos de acuerdo a su probabilidad
-                ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas, listaKSP);
+                ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas, listaKSP, resultados);
                 cont = 0;
             while(mejoraActual<mejora && cont<rutas.size() && mejoraActual>=0){
                 //Crear la copia del grafo original manualmente
@@ -2277,9 +2277,10 @@ public class Utilitarios {
     
     //Metodo que ordena el vector de probabilidades de forma creciente
     //reordenando tambien los vectores de feromonas y visibilidad, y el array de rutas.
-    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP){
+    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP, ArrayList<Resultado> resultados){
         ListaEnlazada aux = new ListaEnlazada();
         double auxp, auxv;
+        Resultado auxR = new Resultado();
         ListaEnlazada[] auxKSP;
         int n = probabilidad.length;
         float auxf;
@@ -2290,12 +2291,17 @@ public class Utilitarios {
                     probabilidad[i] = probabilidad[j];
                     probabilidad[j] = auxp;
                     
-                    //cambia el orden en el array de rutas
+                    //cambia el orden en el array de rutas establecidas
                     aux = rutas.get(i);
                     rutas.set(i,rutas.get(j));
                     rutas.set(j, aux);
                     
-                    //cambia el orden en el array de rutas
+                    //cambia el orden en el array de resultados
+                    auxR = resultados.get(i);
+                    resultados.set(i,resultados.get(j));
+                    resultados.set(j, auxR);
+                    
+                    //cambia el orden en el array de rutas elegidas
                     auxKSP = listaKSP.get(i);
                     listaKSP.set(i,listaKSP.get(j));
                     listaKSP.set(j, auxKSP);
