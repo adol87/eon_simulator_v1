@@ -696,11 +696,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         reiniciarJTableRows(this.jTableResultadosBloqueosMinMax);
         reiniciarJTableRows(this.jTableEstadoEnlaces);
         reiniciarJTableColumns(this.jTableEstadoEnlaces);
+        reiniciarJTableRows(this.jTableResultadosDefrag);
         
         //parámetros ACO
         double mejoraACO = Double.parseDouble(this.textFieldMejoraACO.getText());
-        double cantHormACO = Double.parseDouble(this.textFieldCantHormigas.getText());
-
+        int cantHormACO = Integer.parseInt(this.textFieldCantHormigas.getText());
 
         //leemos los valores seteados
         this.tiempoTotal = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); //Tiempo de simulacion indicado por el usuario
@@ -1177,6 +1177,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
             }
         }
+        
+//        //imprimir en consola
+//        for (int x=0; x < 10; x++) {
+//            System.out.print("|");
+//            System.out.print("\t");
+//            for (int y=0; y < 21; y++) {
+//              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
+//              System.out.print("\t");
+//            }
+//            System.out.println("|");
+//        }
+//        System.out.println("\\");
     }
             
     private void listaAlgoritmosRuteoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaAlgoritmosRuteoMouseClicked
