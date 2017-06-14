@@ -746,7 +746,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         arrayRutas = new ArrayList<>();
         resultadoRuteo = new ArrayList<>();
         listaKSP = new ArrayList<>();
-        int earlang = 0; //Carga de trafico en cada simulacion
         int k = -1; // contador auxiliar
         //int paso = (int) this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
         int contD = 0; // contador de demandas totales
@@ -804,7 +803,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             }
             try {
                 //while (earlang <= E) { // mientras no se llega a la cargad de trafico maxima
-                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, earlang);
+                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, Erlang);
             } catch (IOException ex) {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
             }
