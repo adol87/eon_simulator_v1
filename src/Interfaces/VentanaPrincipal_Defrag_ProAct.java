@@ -248,7 +248,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jLabel4.setText("Trafico Maximo");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 90, 20));
 
-        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(100, 10, 1500, 100));
+        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1500, 50));
         getContentPane().add(spinnerErlang, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 50, -1));
 
         jLabel6.setText("Erlang");
