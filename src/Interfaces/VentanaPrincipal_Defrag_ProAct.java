@@ -914,43 +914,43 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     }
                 }
                 
-                //desfragmentación
-                try {
-                    if (entropiaMin > 0 && entropia >= entropiaMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i);
-                    }
-                    if (msiMin > 0 && msi >= msiMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i);
-                    }
-                    if (bfrMin > 0 && bfr >= bfrMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i);
-                    }
-                    if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i);
-                    }                
-                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i);
-                    }                
-                    if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i);
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-//                    if(i==250 || i == 500 || i == 750){
-//                    try {
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                //desfragmentación
+//                try {
+//                    if (entropiaMin > 0 && entropia >= entropiaMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
 //                    }
+//                    if (msiMin > 0 && msi >= msiMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
 //                    }
+//                    if (bfrMin > 0 && bfr >= bfrMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
+//                    }
+//                    if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
+//                    }                
+//                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
+//                    }                
+//                    if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
+//                    }
+//                } catch (IOException ex) {
+//                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//
+                    if(i==250 || i == 500 || i == 750){
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
                 
                 contBloqueos = 0;
                 
                 //imprimir estado si marco paso a paso
                 if(jCheckBoxPasoaPaso.isSelected()){
-                    actualizarTablaEstadoEnlaces(G, 0); //envío el grafo y la posición del vector a publicar
+                    Utilitarios.actualizarTablaEstadoEnlaces(G[0], jTableResultados, capacidadPorEnlace);
                     try {
                         System.in.read();
                     } catch (IOException ex) {
@@ -1042,7 +1042,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 Utilitarios.GraficarResultado(series, annotation, this.panelResultados);
                 
                 //estado final de los enlaces
-                actualizarTablaEstadoEnlaces(G, 0); //envío el grafo y la posición del vector a publicar
+                Utilitarios.actualizarTablaEstadoEnlaces(G[0], jTableResultados, capacidadPorEnlace);
 
 
             } catch (IOException ioe) {
@@ -1148,48 +1148,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //        Tmin.setText(Integer.toString(min));
     }
     
-    private void actualizarTablaEstadoEnlaces(GrafoMatriz G[], int posicion){
-        //estado final de los enlaces
-        int cont = 0;
-        DefaultTableModel modelEstadoEnlaces = (DefaultTableModel) this.jTableEstadoEnlaces.getModel(); //todos
 
-        //agrega una columna por cada enlace
-        for(int i=0;i<G[posicion].getCantidadDeVertices();i++){
-            for(int j=0;j<G[posicion].getCantidadDeVertices();j++){
-                if(j>i && G[posicion].acceder(i, j)!=null){
-                    modelEstadoEnlaces.addColumn(i + " - " + j); //con el nombre de origen-destino
-                }
-            }
-        }
-
-        //agrega todas las lineas por cada FS
-        modelEstadoEnlaces.setRowCount(capacidadPorEnlace);
-
-        //crear matriz de estados de los enlaces
-        for(int i=0;i<G[posicion].getCantidadDeVertices();i++){
-            for(int j=0;j<G[posicion].getCantidadDeVertices();j++){
-                if(j>i && G[posicion].acceder(i, j)!=null){
-                    int cantFS = G[posicion].acceder(i, j).getFS().length;
-                    for(int kk=0;kk<G[posicion].acceder(i, j).getFS().length;kk++){
-                        modelEstadoEnlaces.setValueAt(G[posicion].acceder(i, j).getFS()[kk].getEstado(), kk, cont);
-                    }
-                    cont++;
-                }
-            }
-        }
-        
-//        //imprimir en consola
-//        for (int x=0; x < 10; x++) {
-//            System.out.print("|");
-//            System.out.print("\t");
-//            for (int y=0; y < 21; y++) {
-//              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
-//              System.out.print("\t");
-//            }
-//            System.out.println("|");
-//        }
-//        System.out.println("\\");
-    }
             
     private void listaAlgoritmosRuteoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaAlgoritmosRuteoMouseClicked
         // TODO add your handling code here:

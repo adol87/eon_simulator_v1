@@ -2115,8 +2115,8 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo) throws IOException {
-         int h, cantHormigas = 0, cont, disrupciones=0;
+    public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, JTable tablaEnlaces) throws IOException {
+         int h, cont;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
          Resultado rparcial;
@@ -2128,6 +2128,11 @@ public class Utilitarios {
          double[] visibilidad = new double[rutas.size()];
          double[] probabilidad = new double[rutas.size()];
          double sumatoria;
+         
+        //imprimir estado de los enlaces
+        System.out.println("Grafo Original");
+        actualizarTablaEstadoEnlaces(G,tablaEnlaces,10);
+        
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
          entropiaGrafo = G.entropia();
@@ -2136,28 +2141,33 @@ public class Utilitarios {
              feromonas[i]=1;
              visibilidad[i]=entropiaDeRuta(rutas.get(i), capacidad, G);
          }
-         cantHormigas =100;
          for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
              rutasElegidas.clear();
              indicesElegidas.clear();
              mejoraActual=0;
-                //calcular la probabilidad
-                sumatoria=0.0;
-                for(int i=0; i<feromonas.length; i++){
-                    sumatoria = sumatoria+(feromonas[i]*visibilidad[i]);
-                }
-                for(int i=0; i<feromonas.length; i++){
-                    probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
-                }
-                //ordenar todos de acuerdo a su probabilidad
-                ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas, listaKSP, resultados);
-                cont = 0;
-            while(mejoraActual<mejora && cont<rutas.size() && mejoraActual>=0){
+            //calcular la probabilidad
+            sumatoria=0.0;
+            for(int i=0; i<feromonas.length; i++){
+                sumatoria = sumatoria+(feromonas[i]*visibilidad[i]);
+            }
+            for(int i=0; i<feromonas.length; i++){
+                probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
+            }
+            //ordenar todos de acuerdo a su probabilidad
+            ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas, listaKSP);
+            cont = 0;
+            
+            while(mejoraActual<mejora && cont<rutas.size()){
                 //Crear la copia del grafo original manualmente
                 copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
+                
+                //imprimir estado de los enlaces
+                System.out.println("Despues de desasignar " + cont);
+                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,10); 
+                
                 //ORDENAR LISTA
                 if (rutasElegidas.size()>1){
                     ordenarRutas(resultados, rutasElegidas, indicesElegidas, rutasElegidas.size());
@@ -2166,15 +2176,13 @@ public class Utilitarios {
                 int contBloqueos =0;
                 for (int i=0; i<rutasElegidas.size(); i++){
                     int fs = resultados.get(indicesElegidas.get(i)).getFin() - resultados.get(indicesElegidas.get(i)).getInicio();
+                    fs++;
                     int tVida = G.acceder(rutas.get(indicesElegidas.get(i)).getInicio().getDato(),rutas.get(indicesElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultados.get(i).getInicio()].getTiempo();
                     Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), obtenerFin(rutasElegidas.get(i).getInicio()).getDato(), fs, tVida);
                     //ListaEnlazada[] ksp = KSP(G, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
                     ListaEnlazada[] ksp = listaKSP.get(indicesElegidas.get(i));
                     rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                     if (rparcial != null) {
-                        if(rparcial.getCamino()!= resultados.get(indicesElegidas.get(i)).getCamino()){
-                            disrupciones++;
-                        }
                         asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0); 
                         //verificar si la nueva asignacion crea una disrupcion
                     } else {
@@ -2183,8 +2191,14 @@ public class Utilitarios {
                 }
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
+                    //imprimir estado de los enlaces
+                    System.out.println("Grafo Copia");
+                    actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,10);
+                    
                     entropiaActual = copiaGrafo.entropia();
-                    mejoraActual = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 3));
+                    System.out.println("Entropia: " + entropiaActual);
+                    
+                    mejoraActual = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 6));
                 } else {
                     mejoraActual = 0;
                     break;
@@ -2280,10 +2294,9 @@ public class Utilitarios {
     
     //Metodo que ordena el vector de probabilidades de forma creciente
     //reordenando tambien los vectores de feromonas y visibilidad, y el array de rutas.
-    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP, ArrayList<Resultado> resultados){
+    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP){
         ListaEnlazada aux = new ListaEnlazada();
         double auxp, auxv;
-        Resultado auxR = new Resultado();
         ListaEnlazada[] auxKSP;
         int n = probabilidad.length;
         float auxf;
@@ -2294,17 +2307,12 @@ public class Utilitarios {
                     probabilidad[i] = probabilidad[j];
                     probabilidad[j] = auxp;
                     
-                    //cambia el orden en el array de rutas establecidas
+                    //cambia el orden en el array de rutas
                     aux = rutas.get(i);
                     rutas.set(i,rutas.get(j));
                     rutas.set(j, aux);
                     
-                    //cambia el orden en el array de resultados
-                    auxR = resultados.get(i);
-                    resultados.set(i,resultados.get(j));
-                    resultados.set(j, auxR);
-                    
-                    //cambia el orden en el array de rutas elegidas
+                    //cambia el orden en el array de rutas
                     auxKSP = listaKSP.get(i);
                     listaKSP.set(i,listaKSP.get(j));
                     listaKSP.set(j, auxKSP);
@@ -2433,6 +2441,49 @@ public class Utilitarios {
         }
     }
     
+    public static void actualizarTablaEstadoEnlaces(GrafoMatriz G, JTable tabla, int capacidadEnlaces){
+        //estado final de los enlaces
+        int cont = 0;
+        DefaultTableModel modelEstadoEnlaces = (DefaultTableModel) tabla.getModel(); //todos
+
+        //agrega una columna por cada enlace
+        for(int i=0;i<G.getCantidadDeVertices();i++){
+            for(int j=0;j<G.getCantidadDeVertices();j++){
+                if(j>i && G.acceder(i, j)!=null){
+                    modelEstadoEnlaces.addColumn(i + " - " + j); //con el nombre de origen-destino
+                }
+            }
+        }
+
+        //agrega todas las lineas por cada FS
+        modelEstadoEnlaces.setRowCount(capacidadEnlaces);
+
+        //crear matriz de estados de los enlaces
+        for(int i=0;i<G.getCantidadDeVertices();i++){
+            for(int j=0;j<G.getCantidadDeVertices();j++){
+                if(j>i && G.acceder(i, j)!=null){
+                    for(int kk=0;kk<G.acceder(i, j).getFS().length;kk++){
+                        modelEstadoEnlaces.setValueAt(G.acceder(i, j).getFS()[kk].getEstado(), kk, cont);
+                    }
+                    cont++;
+                }
+            }
+        }
+        
+        
+//        //imprimir en consola
+//        for (int x=0; x < 10; x++) {
+//            System.out.print("|");
+//            System.out.print("\t");
+//            for (int y=0; y < 21; y++) {
+//              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
+//              System.out.print("\t");
+//            }
+//            System.out.println("|");
+//        }
+//        System.out.println("\\");
+    }
+
     private static Nodo obtenerFin(Nodo inicio){
         Nodo nd = inicio;
         while (nd.getSiguiente().getSiguiente() !=null){
@@ -2440,4 +2491,5 @@ public class Utilitarios {
         }
         return nd;
     }
+    
 }
