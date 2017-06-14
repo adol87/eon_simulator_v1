@@ -1800,10 +1800,10 @@ public class Utilitarios {
     lambda: valor para la distribucion de Poisson
     t: Tiempo de simulacion
     minFS y maxFS: Rango de variacion de cantidad de FS por demanda    */
-    public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT) throws IOException {
+    public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang) throws IOException {
         int i, cantidadDemandas, j, origen, destino, fs, tVida;
         File carpeta = new File(System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\");
-        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_"+(lambda*HT)+"Erlang_"+ lambda + "k_" + t + "t_" + minFS + "-" + maxFS + "FS.txt";
+        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_"+erlang+"Erlang_"+ lambda + "k_" + t + "t_" + minFS + "-" + maxFS + "FS.txt";
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
