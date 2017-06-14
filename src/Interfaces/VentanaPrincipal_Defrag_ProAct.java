@@ -542,7 +542,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 620, 20, 20));
 
         textFieldCantHormigas.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldCantHormigas.setText("500");
+        textFieldCantHormigas.setText("100");
         textFieldCantHormigas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldCantHormigasActionPerformed(evt);
@@ -751,12 +751,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         //int paso = (int) this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
         int contD = 0; // contador de demandas totales
         int tiempoT = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); // Tiempo de simulacion especificada por el usaurio
-        int capacidadE = Integer.parseInt(this.textFieldCapacidadEnlace.getText()); // espectro por enalce
         double anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText()); // ancho de FS
         //factor del tiempo de simulacion especificado por el usuario
 
         System.out.println("El ancho del FS es:" + anchoFS);
-        System.out.println("Cantidad de FS por enlace:" + capacidadE);
+        System.out.println("Cantidad de FS por enlace:" + capacidadPorEnlace);
         System.out.println("Cantidad Algoritmos:" + this.cantidadDeAlgoritmosTotalSeleccionados);
 
         //if(this.listaDemandas.getSelectedIndex()>=0 && this.listaAlgoritmosRuteo.getSelectedIndex()>=0 && 
@@ -840,7 +839,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                         switch (algoritmoAejecutar) {
                             case "FA":
-                                r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadE);
+                                r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
@@ -853,7 +852,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                 }
                                 break;
                             case "FA-CA":
-                                r = Algoritmos_Defrag_ProAct.Def_FACA(G[a], demanda, ksp, capacidadE);
+                                r = Algoritmos_Defrag_ProAct.Def_FACA(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
@@ -865,7 +864,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                 }
                                 break;
                            case "MTLSC":
-                                r = Algoritmos.MTLSC_Algorithm(G[a], demanda, ksp, capacidadE);
+                                r = Algoritmos.MTLSC_Algorithm(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
@@ -890,10 +889,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     //Escribimos el archivo de resultados
                     entropia = msi = bfr = 0.0;
                     entropia = G[a].entropia();
-                    msi = Metricas.MSI(G[a], capacidadE);
-                    bfr = Metricas.BFR(G[a], capacidadE);
-                    pathConsec = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadE, G[a]);
-                    entropiaUso = Metricas.EntropiaPorUso(caminosDeDosEnlaces, capacidadE, G[a]);
+                    msi = Metricas.MSI(G[a], capacidadPorEnlace);
+                    bfr = Metricas.BFR(G[a], capacidadPorEnlace);
+                    pathConsec = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
+                    entropiaUso = Metricas.EntropiaPorUso(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
                     try {
                         Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso);
                     } catch (IOException ex) {
@@ -940,7 +939,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //
                     if(i==250 || i == 500 || i == 750){
                     try {
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
                     } catch (IOException ex) {
                         Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                     }

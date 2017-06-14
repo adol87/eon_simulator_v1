@@ -2131,7 +2131,7 @@ public class Utilitarios {
          
         //imprimir estado de los enlaces
         System.out.println("Grafo Original");
-        actualizarTablaEstadoEnlaces(G,tablaEnlaces,10);
+        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
@@ -2166,7 +2166,7 @@ public class Utilitarios {
                 
                 //imprimir estado de los enlaces
                 System.out.println("Despues de desasignar " + cont);
-                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,10); 
+                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
                 
                 //ORDENAR LISTA
                 if (rutasElegidas.size()>1){
@@ -2193,7 +2193,7 @@ public class Utilitarios {
                 if(contBloqueos==0){
                     //imprimir estado de los enlaces
                     System.out.println("Grafo Copia");
-                    actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,10);
+                    actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                     
                     entropiaActual = copiaGrafo.entropia();
                     System.out.println("Entropia: " + entropiaActual);
@@ -2471,17 +2471,17 @@ public class Utilitarios {
         }
         
         
-//        //imprimir en consola
-//        for (int x=0; x < 10; x++) {
-//            System.out.print("|");
-//            System.out.print("\t");
-//            for (int y=0; y < 21; y++) {
-//              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
-//              System.out.print("\t");
-//            }
-//            System.out.println("|");
-//        }
-//        System.out.println("\\");
+        //imprimir en consola
+        for (int x=0; x < 10; x++) {
+            System.out.print("|");
+            System.out.print("\t");
+            for (int y=0; y < 21; y++) {
+              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
+              System.out.print("\t");
+            }
+            System.out.println("|");
+        }
+        System.out.println("\\");
     }
 
     private static Nodo obtenerFin(Nodo inicio){
