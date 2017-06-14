@@ -2162,7 +2162,7 @@ public class Utilitarios {
                 copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
-                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo); //desasignamos los FS de las rutas a reconfigurar
+                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
                 
                 //imprimir estado de los enlaces
                 System.out.println("Despues de desasignar " + cont);
@@ -2398,10 +2398,10 @@ public class Utilitarios {
     }
     
      /*Metodo que se encarga de desasignar los FS de una ruta marcada para reconfiguracion en el grafo matriz copia*/
-    public static void desasignarFS_DefragProAct(ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> r, GrafoMatriz G) {
+    public static void desasignarFS_DefragProAct(ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> r, GrafoMatriz G, ArrayList<Integer> indices) {
         for (int i =0; i<rutas.size(); i++){
             for (Nodo nod = rutas.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
-                for (int p = r.get(i).getInicio(); p <= r.get(i).getFin(); p++) {
+                for (int p = r.get(indices.get(i)).getInicio(); p <= r.get(indices.get(i)).getFin(); p++) {
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setEstado(1);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setTiempo(0);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setConexion(1);
