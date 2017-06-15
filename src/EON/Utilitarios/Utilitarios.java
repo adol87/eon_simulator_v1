@@ -2129,9 +2129,9 @@ public class Utilitarios {
          double[] probabilidad = new double[rutas.size()];
          double sumatoria;
          
-        //imprimir estado de los enlaces
-        System.out.println("Grafo Original");
-        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
+//        //imprimir estado de los enlaces
+//        System.out.println("Grafo Original");
+//        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
@@ -2162,13 +2162,13 @@ public class Utilitarios {
                 copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
-                System.out.println("ANTES de desasignar " + cont);
-                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
-                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
+//                System.out.println("ANTES de desasignar " + cont);
+//                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+//                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
                 
-                //imprimir estado de los enlaces
-                System.out.println("Despues de desasignar " + cont);
-                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
+//                //imprimir estado de los enlaces
+//                System.out.println("Despues de desasignar " + cont);
+//                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
                 
                 //ORDENAR LISTA
                 if (rutasElegidas.size()>1){
@@ -2191,14 +2191,14 @@ public class Utilitarios {
                         contBloqueos++;
                     }
                 }
-                //imprimir estado de los enlaces
-                System.out.println("Despues de REASIGNAR " + cont);
-                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
+//                //imprimir estado de los enlaces
+//                System.out.println("Despues de REASIGNAR " + cont);
+//                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
-                    //imprimir estado de los enlaces
-                    System.out.println("Grafo Copia");
-                    actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+//                    //imprimir estado de los enlaces
+//                    System.out.println("Grafo Copia");
+//                    actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                     
                     entropiaActual = copiaGrafo.entropia();
                     System.out.println("Entropia: " + entropiaActual);
@@ -2495,6 +2495,40 @@ public class Utilitarios {
             nd = nd.getSiguiente();
         }
         return nd;
+    }
+    
+    private static void imprimirResultadoRuteo(ResultadoRuteo r){
+        //imprimir ruta
+        Nodo nd = r.getRuta().getInicio();
+        System.out.println(nd.getDato());
+        while (nd.getSiguiente().getSiguiente() !=null){
+            nd = nd.getSiguiente();
+            System.out.println(nd.getDato());
+        }
+        
+        //nrocaminoksp
+        System.out.println("Nro camino ksp: " + r.getNroCaminoKsp());
+        
+        //demanda
+        System.out.println("Demanda. Origen: " + r.getDemanda().getOrigen()+ " Destino: " + r.getDemanda().getDestino() + " Cant FS: " + r.getDemanda().getNroFS()+ " Tiempo de vida: " + r.getDemanda().getTiempo());
+        
+    }
+    
+    public static void imprimirResultado(Resultado r){
+        System.out.println("Camino: " + r.getCamino() + " Inicio: " + r.getInicio() + " Fin: " + r.getFin() + " CP: " + r.getCp());
+    }
+    
+    public static void imprimirDemanda(Demanda d){
+        System.out.println("Demanda. Origen: " + d.getOrigen()+ " Destino: " + d.getDestino() + " Cant FS: " + d.getNroFS()+ " Tiempo de vida: " + d.getTiempo());
+    }
+    
+    public static void imprimirListaEnlazada(ArrayList<ListaEnlazada> lista) {
+        for (int i =0; i<lista.size(); i++){
+            System.out.println("Ruta " + i + ": ");
+            for (Nodo nod = lista.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
+                System.out.println(nod.getDato());
+            }
+        }
     }
     
 }
