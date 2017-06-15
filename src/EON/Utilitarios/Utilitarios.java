@@ -2129,9 +2129,9 @@ public class Utilitarios {
          double[] probabilidad = new double[rutas.size()];
          double sumatoria;
          
-//        //imprimir estado de los enlaces
-//        System.out.println("Grafo Original");
-//        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
+        //imprimir estado de los enlaces
+        System.out.println("Grafo Original");
+        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
