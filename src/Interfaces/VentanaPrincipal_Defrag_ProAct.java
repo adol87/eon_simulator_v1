@@ -248,7 +248,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jLabel4.setText("Trafico Maximo");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 90, 20));
 
-        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1500, 50));
+        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(5, 1, 1500, 50));
         getContentPane().add(spinnerErlang, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 50, -1));
 
         jLabel6.setText("Erlang");
@@ -283,7 +283,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 410, 50, 20));
 
         textFieldLambda.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldLambda.setText("5");
+        textFieldLambda.setText("2");
         textFieldLambda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldLambdaActionPerformed(evt);
@@ -295,7 +295,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 440, 30, 20));
 
         textFieldFSminimo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldFSminimo.setText("2");
+        textFieldFSminimo.setText("1");
         getContentPane().add(textFieldFSminimo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 440, 30, 20));
 
         etiquetaAnchoFSActual3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -306,7 +306,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 470, 30, 20));
 
         textFieldFSmaximo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldFSmaximo.setText("8");
+        textFieldFSmaximo.setText("3");
         getContentPane().add(textFieldFSmaximo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 470, 30, 20));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -912,6 +912,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         arrayRutas.remove(index); //remover la ruta de la lista de rutas vigentes
                         resultadoRuteo.remove(index);//remueve de la lista de resultados de ruteo
                         listaKSP.remove(index);
+                        index--;
                     }
                 }
                 
@@ -1043,7 +1044,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 Utilitarios.GraficarResultado(series, annotation, this.panelResultados);
                 
                 //estado final de los enlaces
-                Utilitarios.actualizarTablaEstadoEnlaces(G[0], jTableResultados, capacidadPorEnlace);
+//                Utilitarios.actualizarTablaEstadoEnlaces(G[0], jTableResultados, capacidadPorEnlace);
 
 
             } catch (IOException ioe) {
