@@ -904,6 +904,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 //verificar si la ruta sigue activa o no dentro de la red.
                 for (int index = 0; index < rutasEstablecidas.size(); index++) {
                     rutasEstablecidas.set(index, rutasEstablecidas.get(index) - 1);
+                }
+                //Segundo for para evitar problemas con los indices al borrar
+                for (int index = 0; index < rutasEstablecidas.size(); index++) {
                     if (rutasEstablecidas.get(index) == 0) { //si el tiempo de vida es cero
                         rutasEstablecidas.remove(index); //remover del contador de rutas establecidas
                         arrayRutas.remove(index); //remover la ruta de la lista de rutas vigentes
