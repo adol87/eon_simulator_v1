@@ -248,7 +248,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jLabel4.setText("Trafico Maximo");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 90, 20));
 
-        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(5, 1, 1500, 50));
+        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(100, 1, 1500, 50));
         getContentPane().add(spinnerErlang, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 50, -1));
 
         jLabel6.setText("Erlang");
@@ -283,7 +283,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 410, 50, 20));
 
         textFieldLambda.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldLambda.setText("2");
+        textFieldLambda.setText("5");
         textFieldLambda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldLambdaActionPerformed(evt);
@@ -295,7 +295,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 440, 30, 20));
 
         textFieldFSminimo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldFSminimo.setText("1");
+        textFieldFSminimo.setText("2");
         getContentPane().add(textFieldFSminimo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 440, 30, 20));
 
         etiquetaAnchoFSActual3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -306,7 +306,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 470, 30, 20));
 
         textFieldFSmaximo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldFSmaximo.setText("3");
+        textFieldFSmaximo.setText("8");
+        textFieldFSmaximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldFSmaximoActionPerformed(evt);
+            }
+        });
         getContentPane().add(textFieldFSmaximo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 470, 30, 20));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -657,7 +662,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 600, 100, 20));
 
         textFieldMejoraACO.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldMejoraACO.setText("1");
+        textFieldMejoraACO.setText("10");
         textFieldMejoraACO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldMejoraACOActionPerformed(evt);
@@ -917,36 +922,36 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
                 
 //                //desfragmentación
-//                try {
-//                    if (entropiaMin > 0 && entropia >= entropiaMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
-//                    }
-//                    if (msiMin > 0 && msi >= msiMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
-//                    }
-//                    if (bfrMin > 0 && bfr >= bfrMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
-//                    }
-//                    if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
-//                    }                
-//                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
-//                    }                
-//                    if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadE, G[0], listaKSP, archivoDefrag, i, cantHormACO);
-//                    }
-//                } catch (IOException ex) {
-//                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//
-                    if(i==250 || i == 500 || i == 750){
-                    try {
+                try {
+                    if (entropiaMin > 0 && entropia >= entropiaMin){
                         Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    } catch (IOException ex) {
-                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    if (msiMin > 0 && msi >= msiMin){
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
                     }
+                    if (bfrMin > 0 && bfr >= bfrMin){
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    }
+                    if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    }                
+                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    }                
+                    if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+//                    if(i==250 || i == 500 || i == 750){
+//                    try {
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                    }
                 
                 contBloqueos = 0;
                 
@@ -1248,6 +1253,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private void textFieldMejoraACOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldMejoraACOActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldMejoraACOActionPerformed
+
+    private void textFieldFSmaximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFSmaximoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldFSmaximoActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
