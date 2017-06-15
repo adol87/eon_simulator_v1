@@ -2162,6 +2162,8 @@ public class Utilitarios {
                 copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
+                System.out.println("ANTES de desasignar " + cont);
+                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
                 
                 //imprimir estado de los enlaces
@@ -2189,6 +2191,9 @@ public class Utilitarios {
                         contBloqueos++;
                     }
                 }
+                //imprimir estado de los enlaces
+                System.out.println("Despues de REASIGNAR " + cont);
+                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
                     //imprimir estado de los enlaces
