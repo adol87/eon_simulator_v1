@@ -167,7 +167,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual16 = new javax.swing.JLabel();
         etiquetaAnchoFSActual17 = new javax.swing.JLabel();
         jCheckBoxPasoaPaso = new javax.swing.JCheckBox();
-        textFieldMSIMin1 = new javax.swing.JTextField();
+        textFieldMSIMin = new javax.swing.JTextField();
         etiquetaAnchoFSActual18 = new javax.swing.JLabel();
         etiquetaAnchoFSActual19 = new javax.swing.JLabel();
         textFieldMejoraACO = new javax.swing.JTextField();
@@ -644,14 +644,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         });
         getContentPane().add(jCheckBoxPasoaPaso, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 670, -1, -1));
 
-        textFieldMSIMin1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldMSIMin1.setText("0");
-        textFieldMSIMin1.addActionListener(new java.awt.event.ActionListener() {
+        textFieldMSIMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        textFieldMSIMin.setText("0");
+        textFieldMSIMin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldMSIMin1ActionPerformed(evt);
+                textFieldMSIMinActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldMSIMin1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 580, 40, 20));
+        getContentPane().add(textFieldMSIMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 580, 40, 20));
 
         etiquetaAnchoFSActual18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         etiquetaAnchoFSActual18.setText("MSI");
@@ -728,7 +728,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         
         //parámetros desfragmentación
         double entropiaMin = Double.parseDouble(this.textFieldEntropíaMin.getText());
-        double msiMin = Double.parseDouble(this.textFieldCantHormigas.getText());
+        double msiMin = Double.parseDouble(this.textFieldMSIMin.getText());
         double bfrMin = Double.parseDouble(this.textFieldBFRMin.getText());
         double lightPathMax = Double.parseDouble(this.textFieldLightPathMax.getText());
         double pathConsMin = Double.parseDouble(this.textFieldPathConsMin.getText());
@@ -945,13 +945,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-//                    if(i==250 || i == 500 || i == 750){
-//                    try {
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                    }
+                if(i==90){
+                try {
+                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, 5, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                } catch (IOException ex) {
+                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                }
                 
                 contBloqueos = 0;
                 
@@ -1246,9 +1246,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBoxPasoaPasoActionPerformed
 
-    private void textFieldMSIMin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldMSIMin1ActionPerformed
+    private void textFieldMSIMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldMSIMinActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldMSIMin1ActionPerformed
+    }//GEN-LAST:event_textFieldMSIMinActionPerformed
 
     private void textFieldMejoraACOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldMejoraACOActionPerformed
         // TODO add your handling code here:
@@ -1404,7 +1404,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JTextField textFieldFSminimo;
     private javax.swing.JTextField textFieldLambda;
     private javax.swing.JTextField textFieldLightPathMax;
-    private javax.swing.JTextField textFieldMSIMin1;
+    private javax.swing.JTextField textFieldMSIMin;
     private javax.swing.JTextField textFieldMejoraACO;
     private javax.swing.JTextField textFieldPathConsMin;
     // End of variables declaration//GEN-END:variables
