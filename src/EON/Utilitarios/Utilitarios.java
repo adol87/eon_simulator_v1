@@ -2407,10 +2407,16 @@ public class Utilitarios {
         for (int i =0; i<rutas.size(); i++){
             for (Nodo nod = rutas.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
                 for (int p = r.get(indices.get(i)).getInicio(); p <= r.get(indices.get(i)).getFin(); p++) {
+                    if (G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].getEstado() == 1){
+                        System.out.println("CONFLICTO AL DESASIGNAR UN SLOT. (NO ESTA LUEGO ASIGNADO)");
+                    }
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setEstado(1);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setTiempo(0);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setConexion(1);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).setUtilizacionFS(p, 0);
+                    if (G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].getEstado() == 1){
+                        System.out.println("CONFLICTO AL DESASIGNAR UN SLOT. (NO ESTA LUEGO ASIGNADO)");
+                    }
                     G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setEstado(1);
                     G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setConexion(-1);
                     G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setTiempo(0);
