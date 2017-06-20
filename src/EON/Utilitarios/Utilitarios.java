@@ -2130,21 +2130,26 @@ public class Utilitarios {
          double sumatoria;
          
         //imprimir estado de los enlaces
-        System.out.println("Grafo Original");
+        System.out.println("Grafo enviado a desfragmentar: ");
         actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
          entropiaGrafo = G.entropia();
-         //inicializarFeromonas y visibilidad
-         for (int i =0; i<feromonas.length ; i++){
-             feromonas[i]=1;
-             visibilidad[i]=entropiaDeRuta(rutas.get(i), capacidad, G);
-         }
-         for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
-             rutasElegidas.clear();
-             indicesElegidas.clear();
-             mejoraActual=0;
+         
+         //imprimir estado de los enlaces
+        System.out.println("Copia del Grafo: ");
+        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+        
+        //inicializarFeromonas y visibilidad
+        for (int i =0; i<feromonas.length ; i++){
+            feromonas[i]=1;
+            visibilidad[i]=entropiaDeRuta(rutas.get(i), capacidad, G);
+        }
+        for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
+            rutasElegidas.clear();
+            indicesElegidas.clear();
+            mejoraActual=0;
             //calcular la probabilidad
             sumatoria=0.0;
             for(int i=0; i<feromonas.length; i++){
@@ -2162,17 +2167,17 @@ public class Utilitarios {
                 copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
-//                System.out.println("ANTES de desasignar " + cont);
-//                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
-//                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
-                
-//                //imprimir estado de los enlaces
-//                System.out.println("Despues de desasignar " + cont);
-//                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
+                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
+
+                //imprimir estado de los enlaces
+                System.out.println("Despues de desasignar del grafo copia" + cont);
+                imprimirListaEnlazada(rutasElegidas);
+                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                 
                 //ORDENAR LISTA
                 if (rutasElegidas.size()>1){
                     ordenarRutas(resultados, rutasElegidas, indicesElegidas, rutasElegidas.size());
+                    System.out.println("Ordena la lista de rutas a re rutear de acuerdo a la cantidad de FS");
                 }
                 //volver a rutear con las nuevas condiciones mismo algoritmo
                 int contBloqueos =0;
@@ -2185,23 +2190,25 @@ public class Utilitarios {
                     ListaEnlazada[] ksp = listaKSP.get(indicesElegidas.get(i));
                     rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                     if (rparcial != null) {
-                        asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0); 
+                        asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
+                        
+                        //imprimir estado de los enlaces
+                        System.out.println("Despues de RE rutear la/s ruta/s en el grafo copia: ");
+                        imprimirDemanda(demandaActual);
+                        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+                
                         //verificar si la nueva asignacion crea una disrupcion
                     } else {
                         contBloqueos++;
+                        System.out.println("El Re Ruteo en el grafo copia fue bloqueo, la demanda fue: ");
+                        imprimirDemanda(demandaActual);
                     }
                 }
-//                //imprimir estado de los enlaces
-//                System.out.println("Despues de REASIGNAR " + cont);
-//                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad); 
+                
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
-//                    //imprimir estado de los enlaces
-//                    System.out.println("Grafo Copia");
-//                    actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
-                    
                     entropiaActual = copiaGrafo.entropia();
-                    System.out.println("Entropia: " + entropiaActual);
+                    System.out.println("Entropia del Grafo Copia: " + entropiaActual);
                     
                     mejoraActual = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 6));
                 } else {
@@ -2209,36 +2216,40 @@ public class Utilitarios {
                     break;
                 }
                 cont++;
-             }
-            System.out.println("Rutas que eligio la hormiga: "+h);
+            }
+            System.out.println("Índices de rutas que eligio la hormiga: "+h);
             for (int i =0; i<indicesElegidas.size(); i++){
                 System.out.println(""+indicesElegidas.get(i));
             }
+            System.out.println("Rutas que eligio la hormiga: "+h);
+            imprimirListaEnlazada(rutasElegidas);
+            
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
-             if(mejoraActual>mejor && mejoraActual>mejora){
-                 System.out.println("Mejor actual"+rutasElegidas.size());
-                 mejor = mejoraActual;
-                 copiarGrafo(grafoMejor, copiaGrafo, capacidad);
-             }
+            if(mejoraActual>mejor && mejoraActual>mejora){
+                System.out.println("Mejor actual, con "+rutasElegidas.size() + " rutas re ruteadas");
+                mejor = mejoraActual;
+                copiarGrafo(grafoMejor, copiaGrafo, capacidad);
+            }
              
-            //elegir otra sin tener en cuenta la que ya se tomo.
+            //depositar feromonas de acuerdo al porcentaje de mejora
             for(int i=0;i<indicesElegidas.size();i++){
-                //depositar feromonas de acuerdo al porcentaje de mejora y evaporar tambien
                 feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejor/100)); //TODO agregar feromona de acuerdo a la mejora
             }
             
+            //evaporar feromonas
             for(int i=0;i<feromonas.length;i++){
-                //evaporar feromonas
                 feromonas[i] = (float) (feromonas[i]*0.9); //TODO agregar feromona de acuerdo a la mejora
             }
             
-         }
-         if(mejor!=0){
-            copiarGrafo(G, grafoMejor, capacidad);
-            escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true);
-         }else{
-            escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false);
-         }
+        }
+        if(mejor!=0){
+           copiarGrafo(G, grafoMejor, capacidad);
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true);
+           System.out.println("Encontró un mejor entre las hormigas y copio el grafoCopia al Grafo original.");
+        }else{
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false);
+           System.out.println("No encontró un resultado mínimo deseado entre las hormigas, no hace nada con el grafo. :(");
+        }
 
      }
     
@@ -2474,7 +2485,7 @@ public class Utilitarios {
             for(int j=0;j<G.getCantidadDeVertices();j++){
                 if(j>i && G.acceder(i, j)!=null){
                     for(int kk=0;kk<G.acceder(i, j).getFS().length;kk++){
-                        modelEstadoEnlaces.setValueAt(G.acceder(i, j).getFS()[kk].getEstado(), kk, cont);
+                        modelEstadoEnlaces.setValueAt(G.acceder(i, j).getFS()[kk].getEstado() + "(" + G.acceder(i, j).getFS()[kk].getTiempo() + ")", kk, cont);
                     }
                     cont++;
                 }
@@ -2483,6 +2494,14 @@ public class Utilitarios {
         
         
         //imprimir en consola
+        //imprime encabezado con los enlaces
+        System.out.print("|");
+        System.out.print("\t");
+        for (int y=0; y < 21; y++) {
+            System.out.print (modelEstadoEnlaces.getColumnName(y));
+          System.out.print("\t");
+        }
+        System.out.println("\\");
         for (int x=0; x < 10; x++) {
             System.out.print("|");
             System.out.print("\t");

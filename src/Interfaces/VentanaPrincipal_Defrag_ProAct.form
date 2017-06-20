@@ -134,7 +134,7 @@
     <Component class="javax.swing.JSpinner" name="spinnerTiempoSimulacion">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="100" maximum="100000" minimum="50" numberType="java.lang.Integer" stepSize="25" type="number"/>
+          <SpinnerModel initial="50" maximum="100000" minimum="50" numberType="java.lang.Integer" stepSize="25" type="number"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="requestFocusEnabled" type="boolean" value="false"/>
@@ -211,7 +211,7 @@
     <Component class="javax.swing.JSpinner" name="spinnerErlang">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="100" maximum="1500" minimum="1" numberType="java.lang.Integer" stepSize="50" type="number"/>
+          <SpinnerModel initial="8" maximum="1500" minimum="1" numberType="java.lang.Integer" stepSize="50" type="number"/>
         </Property>
       </Properties>
       <Constraints>
@@ -315,7 +315,7 @@
     <Component class="javax.swing.JTextField" name="textFieldLambda">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="5"/>
+        <Property name="text" type="java.lang.String" value="2"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldLambdaActionPerformed"/>
@@ -371,7 +371,7 @@
     <Component class="javax.swing.JTextField" name="textFieldFSmaximo">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="8"/>
+        <Property name="text" type="java.lang.String" value="4"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldFSmaximoActionPerformed"/>
@@ -1065,7 +1065,7 @@
     <Component class="javax.swing.JTextField" name="textFieldCantHormigas">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="100"/>
+        <Property name="text" type="java.lang.String" value="15"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldCantHormigasActionPerformed"/>
@@ -1306,7 +1306,7 @@
     <Component class="javax.swing.JTextField" name="textFieldMejoraACO">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="10"/>
+        <Property name="text" type="java.lang.String" value="1"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldMejoraACOActionPerformed"/>

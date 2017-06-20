@@ -199,6 +199,7 @@ public class Algoritmos_Defrag_ProAct {
             for(int i=0;i<capacidad;i++){
                 if(OE[i]==1){
                     inicio=i;
+                    cont=0; //faltó esta inicialización del contador.
                     for(int j=inicio;j<capacidad;j++){
                         if(OE[j]==1){
                             cont++;
