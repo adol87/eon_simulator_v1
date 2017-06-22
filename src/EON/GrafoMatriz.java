@@ -140,7 +140,7 @@ public GrafoMatriz(int V){
                             UEcont++;      
                         }
                     }
-                    uelink=uelink+((double)UEcont/(this.acceder(i, j).getFS().length-1));
+                    uelink=uelink+(double)UEcont;//(this.acceder(i, j).getFS().length-1));
                     countlinks++;
                     //System.in.read();
                 }
