@@ -2159,7 +2159,8 @@ public class Utilitarios {
                 probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
             }
             //ordenar todos de acuerdo a su probabilidad
-            ordenarProbabilidad (probabilidad, feromonas, visibilidad, rutas, listaKSP);
+            ordenarProbabilidad(probabilidad, feromonas, visibilidad, rutas, listaKSP, resultados);
+
             cont = 0;
             
             while(mejoraActual<mejora && cont<rutas.size()){
@@ -2170,7 +2171,7 @@ public class Utilitarios {
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
 
                 //imprimir estado de los enlaces
-                System.out.println("Despues de desasignar del grafo copia" + cont);
+                System.out.println("Despues de desasignar del grafo copia, cont: " + cont);
                 imprimirListaEnlazada(rutasElegidas);
                 actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                 
@@ -2226,7 +2227,7 @@ public class Utilitarios {
             
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
             if(mejoraActual>mejor && mejoraActual>mejora){
-                System.out.println("Mejor actual, con "+rutasElegidas.size() + " rutas re ruteadas");
+                System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas");
                 mejor = mejoraActual;
                 copiarGrafo(grafoMejor, copiaGrafo, capacidad);
             }
@@ -2310,10 +2311,11 @@ public class Utilitarios {
     
     //Metodo que ordena el vector de probabilidades de forma creciente
     //reordenando tambien los vectores de feromonas y visibilidad, y el array de rutas.
-    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP){
+    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP, ArrayList<Resultado> resultados){
         ListaEnlazada aux = new ListaEnlazada();
         double auxp, auxv;
         ListaEnlazada[] auxKSP;
+        Resultado auxR = new Resultado();
         int n = probabilidad.length;
         float auxf;
         for (int i = 0; i <= n - 1; i++) {
@@ -2323,12 +2325,17 @@ public class Utilitarios {
                     probabilidad[i] = probabilidad[j];
                     probabilidad[j] = auxp;
                     
-                    //cambia el orden en el array de rutas
+                    //cambia el orden en el array de rutas establecidas
                     aux = rutas.get(i);
                     rutas.set(i,rutas.get(j));
                     rutas.set(j, aux);
                     
-                    //cambia el orden en el array de rutas
+                    //cambia el orden en el array de resultados
+                    auxR = resultados.get(i);
+                    resultados.set(i,resultados.get(j));
+                    resultados.set(j, auxR);
+                    
+                    //cambia el orden en el array de rutas elegidas
                     auxKSP = listaKSP.get(i);
                     listaKSP.set(i,listaKSP.get(j));
                     listaKSP.set(j, auxKSP);
@@ -2419,14 +2426,14 @@ public class Utilitarios {
             for (Nodo nod = rutas.get(i).getInicio(); nod.getSiguiente().getSiguiente() != null; nod = nod.getSiguiente()) {
                 for (int p = r.get(indices.get(i)).getInicio(); p <= r.get(indices.get(i)).getFin(); p++) {
                     if (G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].getEstado() == 1){
-                        System.out.println("CONFLICTO AL DESASIGNAR UN SLOT. (NO ESTA LUEGO ASIGNADO)");
+                        System.out.println("CONFLICTO AL DESASIGNAR UN SLOT ida. (NO ESTA LUEGO ASIGNADO). Nodo: " + nod.getDato() + ", Posición: " + p );
                     }
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setEstado(1);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setTiempo(0);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].setConexion(1);
                     G.acceder(nod.getDato(), nod.getSiguiente().getDato()).setUtilizacionFS(p, 0);
-                    if (G.acceder(nod.getDato(), nod.getSiguiente().getDato()).getFS()[p].getEstado() == 1){
-                        System.out.println("CONFLICTO AL DESASIGNAR UN SLOT. (NO ESTA LUEGO ASIGNADO)");
+                    if (G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].getEstado() == 1){
+                        System.out.println("CONFLICTO AL DESASIGNAR UN SLOT vuelta. (NO ESTA LUEGO ASIGNADO). Nodo: " + nod.getDato() + ", Posición: " + p );
                     }
                     G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setEstado(1);
                     G.acceder(nod.getSiguiente().getDato(), nod.getDato()).getFS()[p].setConexion(-1);
