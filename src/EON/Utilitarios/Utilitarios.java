@@ -1939,8 +1939,9 @@ public class Utilitarios {
         return resultado;
     }
 
-    public static void escribirArchivoResultados(File archivo, int tiempo, int cantB, int cantD, double entropia, double MSI, double BFR, int cantRutas, double pathConsec, double entropiaUso) throws IOException {
+    public static void escribirArchivoResultados(File archivo, int tiempo, int cantB, int cantD, double entropia, double MSI, double BFR, int cantRutas, double pathConsec, double entropiaUso){
         BufferedWriter bw;
+        try {
         if (archivo.exists()) {
             bw = new BufferedWriter(new FileWriter(archivo, true));
         } else {
@@ -1965,7 +1966,9 @@ public class Utilitarios {
         bw.write("" + redondearDecimales(entropiaUso, 3));
         bw.write("\r\n");
         bw.close();
-
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         return;
     }
 
@@ -2561,6 +2564,42 @@ public class Utilitarios {
                 System.out.println(nod.getDato());
             }
         }
+    }
+    
+        public static void escribirArchivoEstados(File archivo, double entropia, double msi, double bfr, double pathConsec, double entropiaUso, boolean esBloqueo, int cantRutas) {
+        BufferedWriter bw;
+        try {
+            if (archivo.exists()) {
+                bw = new BufferedWriter(new FileWriter(archivo, true));
+            } else {
+                bw = new BufferedWriter(new FileWriter(archivo));
+                bw.write("entropia,msi,bfr,rutas,pathConsec,entropiaUso");
+                bw.write("\r\n");
+            }
+            if(esBloqueo){
+                bw.write("" + 1);
+            }else {
+                bw.write("" + 0);
+            }
+            bw.write(",");
+            bw.write("" + redondearDecimales(entropia, 3));
+            bw.write(",");
+            bw.write("" + redondearDecimales(msi, 3));
+            bw.write(",");
+            bw.write("" + redondearDecimales(bfr, 3));
+            bw.write(",");
+            bw.write("" + cantRutas);
+            bw.write(",");
+            bw.write("" + redondearDecimales(pathConsec, 3));
+            bw.write(",");
+            bw.write("" + redondearDecimales(entropiaUso, 3));
+            bw.write("\r\n");
+            bw.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+        return;
     }
     
 }

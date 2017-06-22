@@ -44,6 +44,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private int capacidadPorEnlace; // cantidad de FSs por enlace en la topologia elegida
 
     private int Erlang, rutas;
+    private boolean esBloqueo;
     private int Lambda, contBloqueos;
     private int HoldingTime; // Erlang / Lambda
     private int FsMinimo; // Cantidad mínima de FS por enlace
@@ -824,11 +825,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             String detallesNombre = ""+Lambda + "k_" + tiempoTotal + "t-" + RSA.get(0) + "-" + dia + "-" + mes + "-" + anho + "-" + hora + "_" + minutos + "_" + segundos + ".txt";
             String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Resultado"+detallesNombre;
             String rutaDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
+            String rutaEstados = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Estados"+detallesNombre;
             if (!carpeta.exists()) {
                 carpeta.mkdirs();
             }
             File archivoResultados = new File(ruta);
             File archivoDefrag = new File(rutaDefrag);
+            File archivoEstados = new File(rutaEstados);
             for (int i = 1; i <= tiempoT; i++) {
                 
                 //imprimir estado de los enlaces
@@ -841,6 +844,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 for (Demanda demanda : demandasPorUnidadTiempo) { // para cada demanda
+                esBloqueo = false;
                     ListaEnlazada[] ksp = Utilitarios.KSP(G[0], demanda.getOrigen(), demanda.getDestino(), 5); // calculamos los k caminos mas cortos entre el origen y el fin. Con k=5 (pude ser mas, cambiar dependiendo de la necesidad)
                     for (int a = 0; a < RSA.size(); a++) {
 
@@ -868,6 +872,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
+                                    esBloqueo = true;
                                     System.out.println("Hubo bloqueo en el tiempo: " + i + ", demanda: ");
                                     Utilitarios.imprimirDemanda(demanda);
                                 }
@@ -882,6 +887,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
+                                    esBloqueo = true;
                                 }
                                 break;
                            case "MTLSC":
@@ -894,32 +900,26 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
+                                    esBloqueo = true;
                                 }
                                 break;
                         }
 
                     }
                     contD++;
-                    
-                    //si la opción paso a paso está activada entonces actualiza la tabla de estados de los enlaces
-//                    if(this.jCheckBoxPasoaPaso.isSelected()) {
-//                        //o sino ver como hacer con hilos
-//                    }
-                }
-                for (int a = 0; a < RSA.size(); a++) {
-                    //Escribimos el archivo de resultados
-                    entropia = msi = bfr = 0.0;
-                    entropia = G[a].entropia();
-                    msi = Metricas.MSI(G[a], capacidadPorEnlace);
-                    bfr = Metricas.BFR(G[a], capacidadPorEnlace);
-                    pathConsec = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
-                    entropiaUso = Metricas.EntropiaPorUso(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
-                    try {
-                        Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso);
-                    } catch (IOException ex) {
-                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    //Para cada demanda guardar el estado de la red, para el analisisde metricas
+                    for (int a = 0; a < RSA.size(); a++) {
+                        //Escribimos el archivo de resultados
+                        entropia = msi = bfr = pathConsec = entropiaUso = 0.0;
+                        entropia = G[a].entropia();
+                        msi = Metricas.MSI(G[a], capacidadPorEnlace);
+                        bfr = Metricas.BFR(G[a], capacidadPorEnlace);
+                        pathConsec = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
+                        entropiaUso = Metricas.EntropiaPorUso(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
+                        Utilitarios.escribirArchivoEstados(archivoEstados, entropia, msi, bfr, pathConsec, entropiaUso, esBloqueo, rutasEstablecidas.size());
                     }
                 }
+                //Disminuir el tiempo de vida de todas las rutas en la red
                 for (int j = 0; j < RSA.size(); j++) {
                     Utilitarios.Disminuir(G[j]);
                 }
@@ -937,38 +937,49 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         index--;
                     }
                 }
-                
-//                //desfragmentación
-                try {
-                    if (entropiaMin > 0 && entropia >= entropiaMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    }
-                    if (msiMin > 0 && msi >= msiMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    }
-                    if (bfrMin > 0 && bfr >= bfrMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    }
-                    if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    }                
-                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    }                
-                    if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                for (int a = 0; a < RSA.size(); a++) {
+                    //Escribimos el archivo de resultados
+                    entropia = msi = bfr = pathConsec = entropiaUso = 0.0;
+                    entropia = G[a].entropia();
+                    msi = Metricas.MSI(G[a], capacidadPorEnlace);
+                    bfr = Metricas.BFR(G[a], capacidadPorEnlace);
+                    pathConsec = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
+                    entropiaUso = Metricas.EntropiaPorUso(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
+                    Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso);
                 }
 
-                if(i==22){
-                try {
-                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                } catch (IOException ex) {
-                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                }
+                
+////                //desfragmentación
+//                try {
+//                    if (entropiaMin > 0 && entropia >= entropiaMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    }
+//                    if (msiMin > 0 && msi >= msiMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    }
+//                    if (bfrMin > 0 && bfr >= bfrMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    }
+//                    if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    }                
+//                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    }                
+//                    if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    }
+//                } catch (IOException ex) {
+//                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//
+//                if(i==22){
+//                try {
+//                    Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                }
                 
                 contBloqueos = 0;
                 
