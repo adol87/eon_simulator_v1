@@ -2130,20 +2130,27 @@ public class Utilitarios {
          float[] feromonas = new float[rutas.size()];
          double[] visibilidad = new double[rutas.size()];
          double[] probabilidad = new double[rutas.size()];
+         ArrayList<Integer> indexOrden = new ArrayList<>();
          double sumatoria;
-         
+         ArrayList<Resultado> resultadosMejor = new ArrayList<>(); //arrayList que guarda el mejor conjunto de resultados
+         ArrayList<ListaEnlazada> rutasMejor = new ArrayList<>(); //arrayList que guarda el mejor conjunto de resultados
+         ArrayList<Resultado> resultadosActualElegidas = new ArrayList<>(); //ArrayList que guarda el conjunto de resultados de la hormiga actual
+         ArrayList<Integer> indicesMejor = new ArrayList<>(); //arrayList que guarda los indices de las rutas que consiguieron la mejor solucion
         //imprimir estado de los enlaces
-        System.out.println("Grafo enviado a desfragmentar: ");
-        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
+//        System.out.println("Grafo enviado a desfragmentar: ");
+//        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
          entropiaGrafo = G.entropia();
          
          //imprimir estado de los enlaces
-        System.out.println("Copia del Grafo: ");
-        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
-        
+//        System.out.println("Copia del Grafo: ");
+//        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+        //vector que sirve de indice entre la probabilidad y los demas vectores
+        for (int i =0; i<probabilidad.length ; i++){
+            indexOrden.add(i);
+        }
         //inicializarFeromonas y visibilidad
         for (int i =0; i<feromonas.length ; i++){
             feromonas[i]=1;
@@ -2156,35 +2163,36 @@ public class Utilitarios {
             //calcular la probabilidad
             sumatoria=0.0;
             for(int i=0; i<feromonas.length; i++){
-                sumatoria = sumatoria+(feromonas[i]*visibilidad[i]);
+                sumatoria = sumatoria+(feromonas[indexOrden.get(i)]*visibilidad[indexOrden.get(i)]);
             }
             for(int i=0; i<feromonas.length; i++){
-                probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
+                probabilidad[i] = (feromonas[indexOrden.get(i)]*visibilidad[indexOrden.get(i)])/sumatoria;
             }
             //ordenar todos de acuerdo a su probabilidad
-            ordenarProbabilidad(probabilidad, feromonas, visibilidad, rutas, listaKSP, resultados);
+            ordenarProbabilidad(probabilidad, indexOrden);
 
             cont = 0;
             
             while(mejoraActual<mejora && cont<rutas.size()){
                 //Crear la copia del grafo original manualmente
                 copiarGrafo(copiaGrafo, G, capacidad);
-                indicesElegidas.add(elegirRuta(probabilidad, indicesElegidas));
+                indicesElegidas.add(indexOrden.get(elegirRuta(probabilidad, indicesElegidas, indexOrden)));
                 rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
 
                 //imprimir estado de los enlaces
-                System.out.println("Despues de desasignar del grafo copia, cont: " + cont);
-                imprimirListaEnlazada(rutasElegidas);
-                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+//                System.out.println("Despues de desasignar del grafo copia, cont: " + cont);
+//                imprimirListaEnlazada(rutasElegidas);
+//                actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                 
                 //ORDENAR LISTA
                 if (rutasElegidas.size()>1){
                     ordenarRutas(resultados, rutasElegidas, indicesElegidas, rutasElegidas.size());
-                    System.out.println("Ordena la lista de rutas a re rutear de acuerdo a la cantidad de FS");
+//                    System.out.println("Ordena la lista de rutas a re rutear de acuerdo a la cantidad de FS");
                 }
                 //volver a rutear con las nuevas condiciones mismo algoritmo
                 int contBloqueos =0;
+                resultadosActualElegidas.clear();
                 for (int i=0; i<rutasElegidas.size(); i++){
                     int fs = resultados.get(indicesElegidas.get(i)).getFin() - resultados.get(indicesElegidas.get(i)).getInicio();
                     fs++;
@@ -2195,24 +2203,24 @@ public class Utilitarios {
                     rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                     if (rparcial != null) {
                         asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
-                        
-                        //imprimir estado de los enlaces
-                        System.out.println("Despues de RE rutear la/s ruta/s en el grafo copia: ");
-                        imprimirDemanda(demandaActual);
-                        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+                        resultadosActualElegidas.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
+//                        //imprimir estado de los enlaces
+//                        System.out.println("Despues de RE rutear la/s ruta/s en el grafo copia: ");
+//                        imprimirDemanda(demandaActual);
+//                        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                 
                         //verificar si la nueva asignacion crea una disrupcion
                     } else {
                         contBloqueos++;
-                        System.out.println("El Re Ruteo en el grafo copia fue bloqueo, la demanda fue: ");
-                        imprimirDemanda(demandaActual);
+//                        System.out.println("El Re Ruteo en el grafo copia fue bloqueo, la demanda fue: ");
+//                        imprimirDemanda(demandaActual);
                     }
                 }
                 
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
                     entropiaActual = copiaGrafo.entropia();
-                    System.out.println("Entropia del Grafo Copia: " + entropiaActual);
+//                    System.out.println("Entropia del Grafo Copia: " + entropiaActual);
                     
                     mejoraActual = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 6));
                 } else {
@@ -2221,18 +2229,27 @@ public class Utilitarios {
                 }
                 cont++;
             }
-            System.out.println("Índices de rutas que eligio la hormiga: "+h);
-            for (int i =0; i<indicesElegidas.size(); i++){
-                System.out.println(""+indicesElegidas.get(i));
-            }
-            System.out.println("Rutas que eligio la hormiga: "+h);
-            imprimirListaEnlazada(rutasElegidas);
+//            System.out.println("Índices de rutas que eligio la hormiga: "+h);
+//            for (int i =0; i<indicesElegidas.size(); i++){
+//                System.out.println(""+indicesElegidas.get(i));
+//            }
+//            System.out.println("Rutas que eligio la hormiga: "+h);
+//            imprimirListaEnlazada(rutasElegidas);
             
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
             if(mejoraActual>mejor && mejoraActual>mejora){
                 System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas");
                 mejor = mejoraActual;
                 copiarGrafo(grafoMejor, copiaGrafo, capacidad);
+                //Guarda el mejor conjunto de resultados para posteriormente cambiar en el vector resultados
+                resultadosMejor.clear();
+                rutasMejor.clear();
+                indicesMejor.clear();
+                for (int k=0; k<resultadosActualElegidas.size(); k++){
+                    resultadosMejor.add(resultadosActualElegidas.get(k));
+                    indicesMejor.add(indicesElegidas.get(k));
+                    rutasMejor.add(listaKSP.get(indicesElegidas.get(k))[resultadosActualElegidas.get(k).getCamino()]);
+                }
             }
              
             //depositar feromonas de acuerdo al porcentaje de mejora
@@ -2249,7 +2266,23 @@ public class Utilitarios {
         if(mejor!=0){
            copiarGrafo(G, grafoMejor, capacidad);
            escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true);
-           System.out.println("Encontró un mejor entre las hormigas y copio el grafoCopia al Grafo original.");
+           //Retirar resultados viejos del vector resultados, colocar los resultados de la mejor solucion
+//                //CONTROL
+//                for(int k=0; k<resultados.size(); k++ ){
+//                    System.out.println(""+k+" :");
+//                    imprimirResultado(resultados.get(k));
+//                }
+//                System.out.println("///////////////////////////INDICES RESULTADOS DE LA MEJORA////////////////////////////");
+//                for(int k=0; k<indicesMejor.size(); k++ ){
+//                    System.out.println("Indice: "+ indicesMejor.get(k));
+//                    imprimirResultado(resultadosMejor.get(k));
+//                }
+           
+           for (int k=0; k<indicesMejor.size(); k++){
+               resultados.set(indicesMejor.get(k), resultadosMejor.get(k));
+               rutas.set(indicesMejor.get(k), rutasMejor.get(k));
+           }
+           System.out.println("Encontró una solucion mejor entre las hormigas y copio el grafoCopia al Grafo original.");
         }else{
            escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false);
            System.out.println("No encontró un resultado mínimo deseado entre las hormigas, no hace nada con el grafo. :(");
@@ -2314,13 +2347,10 @@ public class Utilitarios {
     
     //Metodo que ordena el vector de probabilidades de forma creciente
     //reordenando tambien los vectores de feromonas y visibilidad, y el array de rutas.
-    public static void ordenarProbabilidad(double[] probabilidad, float[] feromonas, double[]visibilidad, ArrayList<ListaEnlazada> rutas,ArrayList<ListaEnlazada[]> listaKSP, ArrayList<Resultado> resultados){
-        ListaEnlazada aux = new ListaEnlazada();
-        double auxp, auxv;
-        ListaEnlazada[] auxKSP;
-        Resultado auxR = new Resultado();
+    public static void ordenarProbabilidad(double[] probabilidad, ArrayList<Integer> orden){
+        double auxp;
+        int auxi;
         int n = probabilidad.length;
-        float auxf;
         for (int i = 0; i <= n - 1; i++) {
             for (int j = i + 1; j < n; j++) {
                 if (probabilidad[i] > probabilidad[j]) {
@@ -2328,30 +2358,10 @@ public class Utilitarios {
                     probabilidad[i] = probabilidad[j];
                     probabilidad[j] = auxp;
                     
-                    //cambia el orden en el array de rutas establecidas
-                    aux = rutas.get(i);
-                    rutas.set(i,rutas.get(j));
-                    rutas.set(j, aux);
-                    
-                    //cambia el orden en el array de resultados
-                    auxR = resultados.get(i);
-                    resultados.set(i,resultados.get(j));
-                    resultados.set(j, auxR);
-                    
-                    //cambia el orden en el array de rutas elegidas
-                    auxKSP = listaKSP.get(i);
-                    listaKSP.set(i,listaKSP.get(j));
-                    listaKSP.set(j, auxKSP);
-                    
-                    //cambia el orden en el vector de feromonas
-                    auxf = feromonas[i];
-                    feromonas[i] = feromonas[j];
-                    feromonas[j] = auxf;
-                    
-                    //cambia el orden en el vector de visibilidad
-                    auxv = visibilidad[i];
-                    visibilidad[i] = visibilidad[j];
-                    visibilidad[j] = auxv;
+                    //cambiar el orden del vector de indices
+                    auxi = orden.get(i);
+                    orden.set(i,orden.get(j));
+                    orden.set(j, auxi);
                 }
             }
         }
@@ -2375,30 +2385,34 @@ public class Utilitarios {
     }
     
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
-    public static int elegirRuta(double[] p, ArrayList<Integer> indices){
+    public static int elegirRuta(double[] p, ArrayList<Integer> indices, ArrayList<Integer> indexOrden){
         int indice = 0;
+        ArrayList<Integer> indicesProbab = new ArrayList<>();
+        for (int i=0; i<indices.size(); i++){
+            indicesProbab.add(indexOrden.indexOf(indices.get(i)));
+        }
         //sumar todas las probabilidades que siguen en juego
         double sumaProbParticipan = 0;
         int n = p.length;
         for (int i = 0; i <= n - 1; i++) {
-            if (!isInList(indices, i)){
-                sumaProbParticipan = sumaProbParticipan + p[i];
-            }
+            sumaProbParticipan = sumaProbParticipan + p[i];
         }
-        
-        //hallar el valor random entre 0 a el valor máximo de probabilidades en juego
-        Random randomGenerator = new Random();
-        double randomValue = sumaProbParticipan * randomGenerator.nextDouble();
-        
-        //halla el índice que corresponde al valor random, sin tener en cuenta los índices ya elegidos
-        double sumaProb = 0;
-        while (sumaProb < randomValue){
-            if (!isInList(indices, indice)){
+        while (true){
+            //hallar el valor random entre 0 a el valor máximo de probabilidades en juego
+            Random randomGenerator = new Random();
+            double randomValue = sumaProbParticipan * randomGenerator.nextDouble();
+
+            double sumaProb = 0;
+            indice =0;
+            while(sumaProb < randomValue){
                 sumaProb = sumaProb + p[indice];
+                indice++;
             }
-            indice++;
+            if (!isInList(indicesProbab, indice)){
+                    break;
+            }
         }
-        return indice-1;
+        return indice;
     }
     
     //Metodo que calcula la entropia de los enlaces por los que pasa una ruta en particular 
@@ -2474,54 +2488,54 @@ public class Utilitarios {
     }
     
     public static void actualizarTablaEstadoEnlaces(GrafoMatriz G, JTable tabla, int capacidadEnlaces){
-        //estado final de los enlaces
-        int cont = 0;
-        DefaultTableModel modelEstadoEnlaces = (DefaultTableModel) tabla.getModel(); //todos
-
-        //agrega una columna por cada enlace
-        for(int i=0;i<G.getCantidadDeVertices();i++){
-            for(int j=0;j<G.getCantidadDeVertices();j++){
-                if(j>i && G.acceder(i, j)!=null){
-                    modelEstadoEnlaces.addColumn(i + " - " + j); //con el nombre de origen-destino
-                }
-            }
-        }
-
-        //agrega todas las lineas por cada FS
-        modelEstadoEnlaces.setRowCount(capacidadEnlaces);
-
-        //crear matriz de estados de los enlaces
-        for(int i=0;i<G.getCantidadDeVertices();i++){
-            for(int j=0;j<G.getCantidadDeVertices();j++){
-                if(j>i && G.acceder(i, j)!=null){
-                    for(int kk=0;kk<G.acceder(i, j).getFS().length;kk++){
-                        modelEstadoEnlaces.setValueAt(G.acceder(i, j).getFS()[kk].getEstado() + "(" + G.acceder(i, j).getFS()[kk].getTiempo() + ")", kk, cont);
-                    }
-                    cont++;
-                }
-            }
-        }
-        
-        
-        //imprimir en consola
-        //imprime encabezado con los enlaces
-        System.out.print("|");
-        System.out.print("\t");
-        for (int y=0; y < 21; y++) {
-            System.out.print (modelEstadoEnlaces.getColumnName(y));
-          System.out.print("\t");
-        }
-        System.out.println("\\");
-        for (int x=0; x < 10; x++) {
-            System.out.print("|");
-            System.out.print("\t");
-            for (int y=0; y < 21; y++) {
-              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
-              System.out.print("\t");
-            }
-            System.out.println("|");
-        }
-        System.out.println("\\");
+//        //estado final de los enlaces
+//        int cont = 0;
+//        DefaultTableModel modelEstadoEnlaces = (DefaultTableModel) tabla.getModel(); //todos
+//
+//        //agrega una columna por cada enlace
+//        for(int i=0;i<G.getCantidadDeVertices();i++){
+//            for(int j=0;j<G.getCantidadDeVertices();j++){
+//                if(j>i && G.acceder(i, j)!=null){
+//                    modelEstadoEnlaces.addColumn(i + " - " + j); //con el nombre de origen-destino
+//                }
+//            }
+//        }
+//
+//        //agrega todas las lineas por cada FS
+//        modelEstadoEnlaces.setRowCount(capacidadEnlaces);
+//
+//        //crear matriz de estados de los enlaces
+//        for(int i=0;i<G.getCantidadDeVertices();i++){
+//            for(int j=0;j<G.getCantidadDeVertices();j++){
+//                if(j>i && G.acceder(i, j)!=null){
+//                    for(int kk=0;kk<G.acceder(i, j).getFS().length;kk++){
+//                        modelEstadoEnlaces.setValueAt(G.acceder(i, j).getFS()[kk].getEstado() + "(" + G.acceder(i, j).getFS()[kk].getTiempo() + ")", kk, cont);
+//                    }
+//                    cont++;
+//                }
+//            }
+//        }
+//        
+//        
+//        //imprimir en consola
+//        //imprime encabezado con los enlaces
+//        System.out.print("|");
+//        System.out.print("\t");
+//        for (int y=0; y < 21; y++) {
+//            System.out.print (modelEstadoEnlaces.getColumnName(y));
+//          System.out.print("\t");
+//        }
+//        System.out.println("\\");
+//        for (int x=0; x < 10; x++) {
+//            System.out.print("|");
+//            System.out.print("\t");
+//            for (int y=0; y < 21; y++) {
+//              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
+//              System.out.print("\t");
+//            }
+//            System.out.println("|");
+//        }
+//        System.out.println("\\");
     }
 
     private static Nodo obtenerFin(Nodo inicio){
@@ -2573,7 +2587,7 @@ public class Utilitarios {
                 bw = new BufferedWriter(new FileWriter(archivo, true));
             } else {
                 bw = new BufferedWriter(new FileWriter(archivo));
-                bw.write("entropia,msi,bfr,rutas,pathConsec,entropiaUso");
+                bw.write("bloqueo,entropia,msi,bfr,rutas,pathconsec,entropiauso");
                 bw.write("\r\n");
             }
             if(esBloqueo){
