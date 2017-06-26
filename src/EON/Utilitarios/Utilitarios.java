@@ -2401,7 +2401,7 @@ public class Utilitarios {
     
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
     public static int elegirRuta(double[] p, ArrayList<Integer> indices, ArrayList<Integer> indexOrden){
-        int indice = 0;
+        int indice;
         ArrayList<Integer> indicesProbab = new ArrayList<>();
         for (int i=0; i<indices.size(); i++){
             indicesProbab.add(indexOrden.indexOf(indices.get(i)));
@@ -2418,10 +2418,10 @@ public class Utilitarios {
             double randomValue = sumaProbParticipan * randomGenerator.nextDouble();
 
             double sumaProb = 0;
-            indice =0;
+            indice = -1;
             while(sumaProb < randomValue){
-                sumaProb = sumaProb + p[indice];
                 indice++;
+                sumaProb = sumaProb + p[indice];
             }
             if (!isInList(indicesProbab, indice)){
                     break;
