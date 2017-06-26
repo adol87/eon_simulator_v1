@@ -1886,8 +1886,8 @@ public class Utilitarios {
             FileReader fr = new FileReader(archivo);
             BufferedReader br = new BufferedReader(fr);
             while (((linea = br.readLine()) != null)) {
-                String[] line = linea.split(",", 3);
-                model.addRow(new Object[]{(double) Double.parseDouble(line[0]), (double) Double.parseDouble(line[1]), (double) Double.parseDouble(line[2])});
+                String[] line = linea.split(",", 5);
+                model.addRow(new Object[]{(double) Double.parseDouble(line[0]), (double) Double.parseDouble(line[1]), (double) Double.parseDouble(line[2]), (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4])});
                 
             }
         } catch (IOException ioe) {
@@ -2133,7 +2133,7 @@ public class Utilitarios {
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
     public static void seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, JTable tablaEnlaces) throws IOException {
-         int h, cont;
+         int h, cont, cantidadRutasMejor=rutas.size(), mejorHormiga = 0, hormigaActual;
          double entropiaActual, entropiaGrafo;
          double mejoraActual, mejor=0;
          Resultado rparcial;
@@ -2244,27 +2244,31 @@ public class Utilitarios {
                 }
                 cont++;
             }
-            System.out.println("Índices de rutas que eligio la hormiga: "+h);
-            for (int i =0; i<indicesElegidas.size(); i++){
-                System.out.println(""+indicesElegidas.get(i));
-            }
+//            System.out.println("Índices de rutas que eligio la hormiga: "+h);
+//            for (int i =0; i<indicesElegidas.size(); i++){
+//                System.out.println(""+indicesElegidas.get(i));
+//            }
 //            System.out.println("Rutas que eligio la hormiga: "+h);
-            imprimirListaEnlazada(rutasElegidas);
+//            imprimirListaEnlazada(rutasElegidas);
             
-            //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
-            if(mejoraActual>mejor && mejoraActual>mejora){
-//                System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas");
-                mejor = mejoraActual;
-                copiarGrafo(grafoMejor, copiaGrafo, capacidad);
-                //Guarda el mejor conjunto de resultados para posteriormente cambiar en el vector resultados
-                resultadosMejor.clear();
-                rutasMejor.clear();
-                indicesMejor.clear();
-                for (int k=0; k<resultadosActualElegidas.size(); k++){
-                    resultadosMejor.add(resultadosActualElegidas.get(k));
-                    indicesMejor.add(indicesElegidas.get(k));
-                    rutasMejor.add(listaKSP.get(indicesElegidas.get(k))[resultadosActualElegidas.get(k).getCamino()]);
-                }
+            
+            if(mejoraActual>mejor && mejoraActual>mejora){ //si se logro una mejora mas alta
+ //               if(cantidadRutasMejor >= resultadosActualElegidas.size()){ //si la nueva mejora mueve menos rutas o la misma cantidad 
+                    System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas, Hormiga: "+h);
+                    mejor = mejoraActual;
+//                    cantidadRutasMejor = resultadosActualElegidas.size();
+                    copiarGrafo(grafoMejor, copiaGrafo, capacidad);
+                    //Guarda el mejor conjunto de resultados para posteriormente cambiar en el vector resultados
+                    resultadosMejor.clear();
+                    rutasMejor.clear();
+                    indicesMejor.clear();
+                    for (int k=0; k<resultadosActualElegidas.size(); k++){
+                        resultadosMejor.add(resultadosActualElegidas.get(k));
+                        indicesMejor.add(indicesElegidas.get(k));
+                        rutasMejor.add(listaKSP.get(indicesElegidas.get(k))[resultadosActualElegidas.get(k).getCamino()]);
+                        mejorHormiga = h;
+                    }
+//              }
             }
              
             //depositar feromonas de acuerdo al porcentaje de mejora
@@ -2280,7 +2284,7 @@ public class Utilitarios {
         }
         if(mejor!=0){
            copiarGrafo(G, grafoMejor, capacidad);
-           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true);
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true ,mejorHormiga, rutas.size());
            //Retirar resultados viejos del vector resultados, colocar los resultados de la mejor solucion
 //                //CONTROL
 //                for(int k=0; k<resultados.size(); k++ ){
@@ -2299,7 +2303,7 @@ public class Utilitarios {
            }
            System.out.println("Encontró una solucion mejor entre las hormigas y copio el grafoCopia al Grafo original.");
         }else{
-           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false);
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false, mejorHormiga, rutas.size());
            System.out.println("No encontró un resultado mínimo deseado entre las hormigas, no hace nada con el grafo. :(");
         }
 
@@ -2476,7 +2480,7 @@ public class Utilitarios {
         }
     }
     
-    public static void escribirArchivoDefrag (File archivo, int cantRutas, int tiempo, double mejora, boolean solucion) throws IOException{
+    public static void escribirArchivoDefrag (File archivo, int cantRutas, int tiempo, double mejora, boolean solucion, int mejorHormiga, int totalRutas) throws IOException{
         BufferedWriter bw;
         if (archivo.exists()) {
             bw = new BufferedWriter(new FileWriter(archivo, true));
@@ -2489,6 +2493,10 @@ public class Utilitarios {
             bw.write("" + cantRutas);
             bw.write(",");
             bw.write("" + mejora);
+            bw.write(",");
+            bw.write("" + mejorHormiga);
+            bw.write(",");
+            bw.write("" + totalRutas);
             bw.write("\r\n");
             bw.close();
         }else{
@@ -2497,6 +2505,10 @@ public class Utilitarios {
             bw.write("" + 0);
             bw.write(",");
             bw.write("" + 0);
+            bw.write(",");
+            bw.write("x");
+            bw.write(",");
+            bw.write("" + totalRutas);
             bw.write("\r\n");
             bw.close();
         }
