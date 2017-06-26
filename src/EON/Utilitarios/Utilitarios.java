@@ -2020,7 +2020,7 @@ public class Utilitarios {
         //final XYDataset data2 = createDataset2();
         datos.addSeries(series[4]);
         final XYItemRenderer renderer4 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis4 = new NumberAxis("Cant. Light Paths");
+        final NumberAxis rangeAxis4 = new NumberAxis("Cant. L.P.");
         rangeAxis4.setAutoRangeIncludesZero(false);
         final XYPlot subplot4 = new XYPlot(datos, null, rangeAxis4, renderer4);
         subplot4.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
@@ -2029,7 +2029,7 @@ public class Utilitarios {
         // create subplot 5...
         datos.addSeries(series[5]);
         final XYItemRenderer renderer5 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis5 = new NumberAxis("Path Consecutiv.");
+        final NumberAxis rangeAxis5 = new NumberAxis("Path Consec.");
         rangeAxis5.setAutoRangeIncludesZero(false);
         final XYPlot subplot5 = new XYPlot(datos, null, rangeAxis5, renderer5);
         subplot5.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);

@@ -357,7 +357,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaTextoMax.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         etiquetaTextoMax.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         etiquetaTextoMax.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel1.add(etiquetaTextoMax, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 600, 30, 20));
+        jPanel1.add(etiquetaTextoMax, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 600, 30, 20));
 
         jTableResultadosBloqueosMinMax.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -386,7 +386,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTableResultadosBloqueosMinMax);
         jTableResultadosBloqueosMinMax.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 560, 330, 63));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 560, 340, 63));
 
         jTableResultadosBloqueos.setAutoCreateRowSorter(true);
         jTableResultadosBloqueos.setModel(new javax.swing.table.DefaultTableModel(
@@ -422,7 +422,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaTextoMin.setText("min");
         etiquetaTextoMin.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         etiquetaTextoMin.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel1.add(etiquetaTextoMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 590, 30, 20));
+        jPanel1.add(etiquetaTextoMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 590, 30, 20));
 
         etiquetaRSA1.setBackground(new java.awt.Color(255, 102, 102));
         etiquetaRSA1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -491,20 +491,20 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jTableResultadosMinMax);
         jTableResultadosMinMax.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 560, 340, 63));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 560, 350, 63));
 
         etiquetaTextoMin1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaTextoMin1.setText("min");
         etiquetaTextoMin1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         etiquetaTextoMin1.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel1.add(etiquetaTextoMin1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 590, 30, 20));
+        jPanel1.add(etiquetaTextoMin1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 590, 30, 20));
 
         etiquetaTextoMax1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaTextoMax1.setText("max");
         etiquetaTextoMax1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         etiquetaTextoMax1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         etiquetaTextoMax1.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel1.add(etiquetaTextoMax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 600, 30, 20));
+        jPanel1.add(etiquetaTextoMax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 600, 30, 20));
 
         jTabbedPane1.addTab("Datos", jPanel1);
 

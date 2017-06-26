@@ -249,16 +249,16 @@ public class Metricas {
                     entropy=uelink/countlinks;
                     //inicializa el espectro
                     //Calcular el procentaje de uso
-                    for (int w = 0; w < (capacidad); w++) {
-                        OE[w] = 1;
-                    }
+//                    for (int w = 0; w < (capacidad); w++) {
+//                        OE[w] = 1;
+//                    }
                     Nodo n = caminos[k].getInicio();
                     int Total = (G.acceder(n.getDato(), n.getSiguiente().getDato())).getFS().length;
                     //calcula la ocupacion real del espectro
                     for (int j = 0; j < Total; j++) {
                         for (n = caminos[k].getInicio(); n.getSiguiente().getSiguiente() != null; n = n.getSiguiente()) {
                             if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[j].getEstado() == 0) {
-                                OE[j] = 0;
+//                                OE[j] = 0;
                                 suma++;
                                 break;
                             }
