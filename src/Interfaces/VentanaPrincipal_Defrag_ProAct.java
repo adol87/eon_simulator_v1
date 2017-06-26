@@ -158,7 +158,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         textFieldBFRMin = new javax.swing.JTextField();
         etiquetaAnchoFSActual10 = new javax.swing.JLabel();
         etiquetaAnchoFSActual11 = new javax.swing.JLabel();
-        etiquetaAnchoFSActual12 = new javax.swing.JLabel();
         textFieldLightPathMax = new javax.swing.JTextField();
         etiquetaAnchoFSActual13 = new javax.swing.JLabel();
         etiquetaAnchoFSActual14 = new javax.swing.JLabel();
@@ -175,8 +174,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual20 = new javax.swing.JLabel();
         textFieldTiempoDesfrag = new javax.swing.JTextField();
         etiquetaAnchoFSActual21 = new javax.swing.JLabel();
-        etiquetaAnchoFSActual22 = new javax.swing.JLabel();
-        textFieldPorcUso = new javax.swing.JTextField();
         etiquetaAnchoFSActual23 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -581,7 +578,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual6.setText("%");
-        getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 600, 20, 20));
+        getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 590, 20, 20));
 
         textFieldCantHormigas.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldCantHormigas.setText("30");
@@ -590,7 +587,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldCantHormigasActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldCantHormigas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 600, 40, 20));
+        getContentPane().add(textFieldCantHormigas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 590, 40, 20));
 
         etiquetaAnchoFSActual7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual7.setText("Min");
@@ -598,7 +595,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual8.setText("Cant. hormigas:");
-        getContentPane().add(etiquetaAnchoFSActual8, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 600, 100, 20));
+        getContentPane().add(etiquetaAnchoFSActual8, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 590, 100, 20));
 
         etiquetaAnchoFSActual9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         etiquetaAnchoFSActual9.setText("BFR");
@@ -620,10 +617,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         etiquetaAnchoFSActual11.setText("LightPath");
         getContentPane().add(etiquetaAnchoFSActual11, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 490, 70, 20));
-
-        etiquetaAnchoFSActual12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        etiquetaAnchoFSActual12.setText("Max");
-        getContentPane().add(etiquetaAnchoFSActual12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 560, 30, 20));
 
         textFieldLightPathMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldLightPathMax.setText("0");
@@ -696,7 +689,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual19.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual19.setText("0 = No considera");
-        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 560, 100, 20));
+        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 550, 100, 20));
 
         textFieldMejoraACO.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldMejoraACO.setText("10");
@@ -705,11 +698,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldMejoraACOActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldMejoraACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 600, 40, 20));
+        getContentPane().add(textFieldMejoraACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 590, 40, 20));
 
         etiquetaAnchoFSActual20.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        etiquetaAnchoFSActual20.setText("Méjora buscada en ACO:");
-        getContentPane().add(etiquetaAnchoFSActual20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 600, 150, 20));
+        etiquetaAnchoFSActual20.setText("Mejora buscada en ACO:");
+        getContentPane().add(etiquetaAnchoFSActual20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 590, 150, 20));
 
         textFieldTiempoDesfrag.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldTiempoDesfrag.setText("0");
@@ -719,24 +712,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldTiempoDesfragActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldTiempoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 560, 40, 20));
+        getContentPane().add(textFieldTiempoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 550, 40, 20));
 
         etiquetaAnchoFSActual21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual21.setText("Tiempo a Desfrag");
-        getContentPane().add(etiquetaAnchoFSActual21, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 560, 110, 20));
-
-        etiquetaAnchoFSActual22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        etiquetaAnchoFSActual22.setText("% Uso");
-        getContentPane().add(etiquetaAnchoFSActual22, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 540, 60, 20));
-
-        textFieldPorcUso.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldPorcUso.setText("0");
-        textFieldPorcUso.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldPorcUsoActionPerformed(evt);
-            }
-        });
-        getContentPane().add(textFieldPorcUso, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 560, 30, 20));
+        getContentPane().add(etiquetaAnchoFSActual21, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, 110, 20));
 
         etiquetaAnchoFSActual23.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual23.setText("Max");
@@ -801,7 +781,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         double lightPathMax = Double.parseDouble(this.textFieldLightPathMax.getText());
         double pathConsMin = Double.parseDouble(this.textFieldPathConsMin.getText());
         double entroUsoMin = Double.parseDouble(this.textFieldEntroUsoMin.getText());
-        double porcUsoMax = Double.parseDouble(this.textFieldPorcUso.getText());
         int tiempoDesfrag = Integer.parseInt(this.textFieldTiempoDesfrag.getText()); //Tiempo de simulacion indicado por el usuario
 
         GrafoMatriz G[] = new GrafoMatriz[this.algoritmosCompletosParaGraficar.size()]; // Se tiene una matriz de adyacencia por algoritmo RSA elegidos para por el usuario
@@ -1040,9 +1019,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
                         Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
                     }              
-                    if (porcUsoMax > 0 && porcUso >= porcUsoMax){
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    }
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1372,10 +1348,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldTiempoDesfragActionPerformed
 
-    private void textFieldPorcUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldPorcUsoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldPorcUsoActionPerformed
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1445,7 +1417,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaAnchoFSActual1;
     private javax.swing.JLabel etiquetaAnchoFSActual10;
     private javax.swing.JLabel etiquetaAnchoFSActual11;
-    private javax.swing.JLabel etiquetaAnchoFSActual12;
     private javax.swing.JLabel etiquetaAnchoFSActual13;
     private javax.swing.JLabel etiquetaAnchoFSActual14;
     private javax.swing.JLabel etiquetaAnchoFSActual15;
@@ -1456,7 +1427,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaAnchoFSActual2;
     private javax.swing.JLabel etiquetaAnchoFSActual20;
     private javax.swing.JLabel etiquetaAnchoFSActual21;
-    private javax.swing.JLabel etiquetaAnchoFSActual22;
     private javax.swing.JLabel etiquetaAnchoFSActual23;
     private javax.swing.JLabel etiquetaAnchoFSActual3;
     private javax.swing.JLabel etiquetaAnchoFSActual4;
@@ -1528,7 +1498,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JTextField textFieldMSIMin;
     private javax.swing.JTextField textFieldMejoraACO;
     private javax.swing.JTextField textFieldPathConsMin;
-    private javax.swing.JTextField textFieldPorcUso;
     private javax.swing.JTextField textFieldTiempoDesfrag;
     // End of variables declaration//GEN-END:variables
 
