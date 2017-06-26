@@ -1939,7 +1939,7 @@ public class Utilitarios {
         return resultado;
     }
 
-    public static void escribirArchivoResultados(File archivo, int tiempo, int cantB, int cantD, double entropia, double MSI, double BFR, int cantRutas, double pathConsec, double entropiaUso){
+    public static void escribirArchivoResultados(File archivo, int tiempo, int cantB, int cantD, double entropia, double MSI, double BFR, int cantRutas, double pathConsec, double entropiaUso, double porcUso){
         BufferedWriter bw;
         try {
         if (archivo.exists()) {
@@ -1964,6 +1964,8 @@ public class Utilitarios {
         bw.write("" + redondearDecimales(pathConsec, 3));
         bw.write(",");
         bw.write("" + redondearDecimales(entropiaUso, 3));
+        bw.write(",");
+        bw.write("" + redondearDecimales(porcUso, 3));
         bw.write("\r\n");
         bw.close();
         }catch(IOException e){
@@ -2040,6 +2042,15 @@ public class Utilitarios {
         rangeAxis6.setAutoRangeIncludesZero(false);
         final XYPlot subplot6 = new XYPlot(datos, null, rangeAxis6, renderer6);
         subplot6.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
+        datos = new XYSeriesCollection();
+        
+        // create subplot 7...
+        datos.addSeries(series[7]);
+        final XYItemRenderer renderer7 = new StandardXYItemRenderer();
+        final NumberAxis rangeAxis7 = new NumberAxis("% Uso");
+        rangeAxis7.setAutoRangeIncludesZero(false);
+        final XYPlot subplot7 = new XYPlot(datos, null, rangeAxis7, renderer7);
+        subplot7.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
         //datos = new XYSeriesCollection();
 
         //agrega los bloqueos
@@ -2053,6 +2064,7 @@ public class Utilitarios {
             subplot4.addAnnotation(anno);
             subplot5.addAnnotation(anno);
             subplot6.addAnnotation(anno);
+            subplot7.addAnnotation(anno);
 
             ValueMarker marker = new ValueMarker(anno.getX());  // position is the value on the axis
             marker.setPaint(Color.black);
@@ -2064,6 +2076,7 @@ public class Utilitarios {
             subplot4.addDomainMarker(marker);
             subplot5.addDomainMarker(marker);
             subplot6.addDomainMarker(marker);
+            subplot7.addDomainMarker(marker);
         }
 
 
@@ -2078,6 +2091,7 @@ public class Utilitarios {
         plot.add(subplot4, 1);
         plot.add(subplot5, 1);
         plot.add(subplot6, 1);
+        plot.add(subplot7, 1);
         plot.setOrientation(PlotOrientation.VERTICAL);
 
         final JFreeChart chart = new JFreeChart(null,JFreeChart.DEFAULT_TITLE_FONT, plot, true);
@@ -2132,17 +2146,17 @@ public class Utilitarios {
          double[] probabilidad = new double[rutas.size()];
          double sumatoria;
          
-        //imprimir estado de los enlaces
-        System.out.println("Grafo enviado a desfragmentar: ");
-        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
+//        //imprimir estado de los enlaces
+//        System.out.println("Grafo enviado a desfragmentar: ");
+//        actualizarTablaEstadoEnlaces(G,tablaEnlaces,capacidad);
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
          entropiaGrafo = G.entropia();
          
-         //imprimir estado de los enlaces
-        System.out.println("Copia del Grafo: ");
-        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+//         //imprimir estado de los enlaces
+//        System.out.println("Copia del Grafo: ");
+//        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
         
         //inicializarFeromonas y visibilidad
         for (int i =0; i<feromonas.length ; i++){
@@ -2160,9 +2174,12 @@ public class Utilitarios {
             }
             for(int i=0; i<feromonas.length; i++){
                 probabilidad[i] = (feromonas[i]*visibilidad[i])/sumatoria;
+                //imprimir vector de probabilidades
+                System.out.println(probabilidad[i]);
             }
+                        
             //ordenar todos de acuerdo a su probabilidad
-            ordenarProbabilidad(probabilidad, feromonas, visibilidad, rutas, listaKSP, resultados);
+            //ordenarProbabilidad(probabilidad, feromonas, visibilidad, rutas, listaKSP, resultados);
 
             cont = 0;
             
@@ -2174,14 +2191,14 @@ public class Utilitarios {
                 desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
 
                 //imprimir estado de los enlaces
-                System.out.println("Despues de desasignar del grafo copia, cont: " + cont);
+//                System.out.println("Despues de desasignar del grafo copia, cont: " + cont);
                 imprimirListaEnlazada(rutasElegidas);
                 actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                 
                 //ORDENAR LISTA
                 if (rutasElegidas.size()>1){
                     ordenarRutas(resultados, rutasElegidas, indicesElegidas, rutasElegidas.size());
-                    System.out.println("Ordena la lista de rutas a re rutear de acuerdo a la cantidad de FS");
+//                    System.out.println("Ordena la lista de rutas a re rutear de acuerdo a la cantidad de FS");
                 }
                 //volver a rutear con las nuevas condiciones mismo algoritmo
                 int contBloqueos =0;
@@ -2197,22 +2214,22 @@ public class Utilitarios {
                         asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
                         
                         //imprimir estado de los enlaces
-                        System.out.println("Despues de RE rutear la/s ruta/s en el grafo copia: ");
-                        imprimirDemanda(demandaActual);
-                        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
+//                        System.out.println("Despues de RE rutear la/s ruta/s en el grafo copia: ");
+//                        imprimirDemanda(demandaActual);
+//                        actualizarTablaEstadoEnlaces(copiaGrafo,tablaEnlaces,capacidad);
                 
                         //verificar si la nueva asignacion crea una disrupcion
                     } else {
                         contBloqueos++;
-                        System.out.println("El Re Ruteo en el grafo copia fue bloqueo, la demanda fue: ");
-                        imprimirDemanda(demandaActual);
+//                        System.out.println("El Re Ruteo en el grafo copia fue bloqueo, la demanda fue: ");
+//                        imprimirDemanda(demandaActual);
                     }
                 }
                 
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
                     entropiaActual = copiaGrafo.entropia();
-                    System.out.println("Entropia del Grafo Copia: " + entropiaActual);
+//                    System.out.println("Entropia del Grafo Copia: " + entropiaActual);
                     
                     mejoraActual = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 6));
                 } else {
@@ -2225,12 +2242,12 @@ public class Utilitarios {
             for (int i =0; i<indicesElegidas.size(); i++){
                 System.out.println(""+indicesElegidas.get(i));
             }
-            System.out.println("Rutas que eligio la hormiga: "+h);
+//            System.out.println("Rutas que eligio la hormiga: "+h);
             imprimirListaEnlazada(rutasElegidas);
             
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
             if(mejoraActual>mejor && mejoraActual>mejora){
-                System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas");
+//                System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas");
                 mejor = mejoraActual;
                 copiarGrafo(grafoMejor, copiaGrafo, capacidad);
             }
@@ -2474,54 +2491,54 @@ public class Utilitarios {
     }
     
     public static void actualizarTablaEstadoEnlaces(GrafoMatriz G, JTable tabla, int capacidadEnlaces){
-        //estado final de los enlaces
-        int cont = 0;
-        DefaultTableModel modelEstadoEnlaces = (DefaultTableModel) tabla.getModel(); //todos
-
-        //agrega una columna por cada enlace
-        for(int i=0;i<G.getCantidadDeVertices();i++){
-            for(int j=0;j<G.getCantidadDeVertices();j++){
-                if(j>i && G.acceder(i, j)!=null){
-                    modelEstadoEnlaces.addColumn(i + " - " + j); //con el nombre de origen-destino
-                }
-            }
-        }
-
-        //agrega todas las lineas por cada FS
-        modelEstadoEnlaces.setRowCount(capacidadEnlaces);
-
-        //crear matriz de estados de los enlaces
-        for(int i=0;i<G.getCantidadDeVertices();i++){
-            for(int j=0;j<G.getCantidadDeVertices();j++){
-                if(j>i && G.acceder(i, j)!=null){
-                    for(int kk=0;kk<G.acceder(i, j).getFS().length;kk++){
-                        modelEstadoEnlaces.setValueAt(G.acceder(i, j).getFS()[kk].getEstado() + "(" + G.acceder(i, j).getFS()[kk].getTiempo() + ")", kk, cont);
-                    }
-                    cont++;
-                }
-            }
-        }
-        
-        
-        //imprimir en consola
-        //imprime encabezado con los enlaces
-        System.out.print("|");
-        System.out.print("\t");
-        for (int y=0; y < 21; y++) {
-            System.out.print (modelEstadoEnlaces.getColumnName(y));
-          System.out.print("\t");
-        }
-        System.out.println("\\");
-        for (int x=0; x < 10; x++) {
-            System.out.print("|");
-            System.out.print("\t");
-            for (int y=0; y < 21; y++) {
-              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
-              System.out.print("\t");
-            }
-            System.out.println("|");
-        }
-        System.out.println("\\");
+//        //estado final de los enlaces
+//        int cont = 0;
+//        DefaultTableModel modelEstadoEnlaces = (DefaultTableModel) tabla.getModel(); //todos
+//
+//        //agrega una columna por cada enlace
+//        for(int i=0;i<G.getCantidadDeVertices();i++){
+//            for(int j=0;j<G.getCantidadDeVertices();j++){
+//                if(j>i && G.acceder(i, j)!=null){
+//                    modelEstadoEnlaces.addColumn(i + " - " + j); //con el nombre de origen-destino
+//                }
+//            }
+//        }
+//
+//        //agrega todas las lineas por cada FS
+//        modelEstadoEnlaces.setRowCount(capacidadEnlaces);
+//
+//        //crear matriz de estados de los enlaces
+//        for(int i=0;i<G.getCantidadDeVertices();i++){
+//            for(int j=0;j<G.getCantidadDeVertices();j++){
+//                if(j>i && G.acceder(i, j)!=null){
+//                    for(int kk=0;kk<G.acceder(i, j).getFS().length;kk++){
+//                        modelEstadoEnlaces.setValueAt(G.acceder(i, j).getFS()[kk].getEstado() + "(" + G.acceder(i, j).getFS()[kk].getTiempo() + ")", kk, cont);
+//                    }
+//                    cont++;
+//                }
+//            }
+//        }
+//        
+//        
+//        //imprimir en consola
+//        //imprime encabezado con los enlaces
+//        System.out.print("|");
+//        System.out.print("\t");
+//        for (int y=0; y < 21; y++) {
+//            System.out.print (modelEstadoEnlaces.getColumnName(y));
+//          System.out.print("\t");
+//        }
+//        System.out.println("\\");
+//        for (int x=0; x < 10; x++) {
+//            System.out.print("|");
+//            System.out.print("\t");
+//            for (int y=0; y < 21; y++) {
+//              System.out.print (modelEstadoEnlaces.getValueAt(x, y));
+//              System.out.print("\t");
+//            }
+//            System.out.println("|");
+//        }
+//        System.out.println("\\");
     }
 
     private static Nodo obtenerFin(Nodo inicio){
@@ -2566,14 +2583,14 @@ public class Utilitarios {
         }
     }
     
-        public static void escribirArchivoEstados(File archivo, double entropia, double msi, double bfr, double pathConsec, double entropiaUso, boolean esBloqueo, int cantRutas) {
+        public static void escribirArchivoEstados(File archivo, double entropia, double msi, double bfr, double pathConsec, double entropiaUso, boolean esBloqueo, int cantRutas, double porcUso) {
         BufferedWriter bw;
         try {
             if (archivo.exists()) {
                 bw = new BufferedWriter(new FileWriter(archivo, true));
             } else {
                 bw = new BufferedWriter(new FileWriter(archivo));
-                bw.write("entropia,msi,bfr,rutas,pathConsec,entropiaUso");
+                bw.write("entropia,msi,bfr,rutas,pathConsec,entropiaUso,porcUso");
                 bw.write("\r\n");
             }
             if(esBloqueo){
@@ -2593,6 +2610,8 @@ public class Utilitarios {
             bw.write("" + redondearDecimales(pathConsec, 3));
             bw.write(",");
             bw.write("" + redondearDecimales(entropiaUso, 3));
+            bw.write(",");
+            bw.write("" + redondearDecimales(porcUso, 3));
             bw.write("\r\n");
             bw.close();
         }catch(IOException e){

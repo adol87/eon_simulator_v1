@@ -242,7 +242,7 @@ public class Metricas {
                                     UEcont++;
                                 }
                             }
-                            uelink=uelink+((double)UEcont/(G.acceder(t.getDato(), t.getSiguiente().getDato()).getFS().length-1));
+                            uelink=uelink+(double)UEcont;//(G.acceder(t.getDato(), t.getSiguiente().getDato()).getFS().length-1));
                             countlinks++;
                         }
                     }
@@ -270,5 +270,31 @@ public class Metricas {
         }
         promedio = total/caminos.length;
         return promedio;
+    }
+    
+    /*
+    Porcentaje de uso de los FS en todo el grafo - Usado en DefragProAct
+    @param
+    G - red actual
+    capacidad - cantidad de FS por enlace
+    */
+    public static double PorcUsoGrafo (GrafoMatriz G){
+        double contUso = 0;
+        double contTotal = 0;
+        for(int i=0;i<G.getCantidadDeVertices();i++){
+            for(int j=0;j<G.getCantidadDeVertices();j++){
+                if(j>i && G.acceder(i, j)!=null){
+                    for (FrecuencySlots f : G.acceder(i, j).getFS()) {
+                        contTotal++;
+                        if (f.getEstado() == 0) {
+                            contUso++;
+                        }
+                    }
+                }
+            }
+        }
+
+        double porcUso = contUso/contTotal;
+        return porcUso;
     }
 }
