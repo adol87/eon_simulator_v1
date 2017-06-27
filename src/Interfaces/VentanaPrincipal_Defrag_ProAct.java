@@ -882,9 +882,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoEstados = new File(rutaEstados);
             for (int i = 1; i <= tiempoT; i++) {
                 
-                //imprimir estado de los enlaces
-                System.out.println("Grafo al empezar el tiempo: " + i);
-                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+//                //imprimir estado de los enlaces
+//                System.out.println("Grafo al empezar el tiempo: " + i);
+//                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
         
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -900,9 +900,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                         switch (algoritmoAejecutar) {
                             case "FA":
-                                if (i==20){
-                                    System.out.println("tiempo del error");
-                                }
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
@@ -911,18 +908,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
                                     
-                                    //imprimir estado de los enlaces
-                                    System.out.println("Resultado: ");
-                                    Utilitarios.imprimirResultado(r);
-                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
-                                    Utilitarios.imprimirDemanda(demanda);
-                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+//                                    //imprimir estado de los enlaces
+//                                    System.out.println("Resultado: ");
+//                                    Utilitarios.imprimirResultado(r);
+//                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
+//                                    Utilitarios.imprimirDemanda(demanda);
+//                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
                                     esBloqueo = true;
-                                    System.out.println("Hubo bloqueo en el tiempo: " + i + ", demanda: ");
-                                    Utilitarios.imprimirDemanda(demanda);
+//                                    System.out.println("Hubo bloqueo en el tiempo: " + i + ", demanda: ");
+////                                    Utilitarios.imprimirDemanda(demanda);
                                 }
                                 break;
                             case "FA-CA":
@@ -1023,13 +1020,23 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                if(i==tiempoDesfrag){// || i==500 || i==700){
-                    try {
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    } catch (IOException ex) {
-                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+//                if(i==tiempoDesfrag){// || i==500 || i==700){
+//                    try {
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+                
+//                if(i==47 || i==600|| i==927){
+//                    System.out.println("Path Consecutiveness Antes: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
+//                    try {
+//                        Utilitarios.seleccionDeRutasPathConsec(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces, caminosDeDosEnlaces);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                                    System.out.println("Path Consecutiveness Despues: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
+//                }
                 
                 contBloqueos = 0;
                 
@@ -1055,6 +1062,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             if(!archivoDefrag.exists()){
                         try {
                             BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDefrag));
+                            bw.write("" + 0);
+                            bw.write(",");
+                            bw.write("" + 0);
+                            bw.write(",");
                             bw.write("" + 0);
                             bw.write(",");
                             bw.write("" + 0);

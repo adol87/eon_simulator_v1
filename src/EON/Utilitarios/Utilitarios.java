@@ -2,6 +2,7 @@ package EON.Utilitarios;
 
 import EON.*;
 import EON.Algoritmos.*;
+import EON.Metricas.Metricas;
 import Interfaces.VentanaPrincipal_Defrag_ProAct;
 import java.awt.Color;
 import java.awt.Font;
@@ -2285,18 +2286,7 @@ public class Utilitarios {
         if(mejor!=0){
            copiarGrafo(G, grafoMejor, capacidad);
            escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true ,mejorHormiga, rutas.size());
-           //Retirar resultados viejos del vector resultados, colocar los resultados de la mejor solucion
-//                //CONTROL
-//                for(int k=0; k<resultados.size(); k++ ){
-//                    System.out.println(""+k+" :");
-//                    imprimirResultado(resultados.get(k));
-//                }
-//                System.out.println("///////////////////////////INDICES RESULTADOS DE LA MEJORA////////////////////////////");
-//                for(int k=0; k<indicesMejor.size(); k++ ){
-//                    System.out.println("Indice: "+ indicesMejor.get(k));
-//                    imprimirResultado(resultadosMejor.get(k));
-//                }
-           
+           //Retirar resultados viejos del vector resultados, colocar los resultados de la mejor solucion           
            for (int k=0; k<indicesMejor.size(); k++){
                resultados.set(indicesMejor.get(k), resultadosMejor.get(k));
                rutas.set(indicesMejor.get(k), rutasMejor.get(k));
@@ -2308,7 +2298,145 @@ public class Utilitarios {
         }
 
      }
-    
+   
+     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
+    public static void seleccionDeRutasPathConsec(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, JTable tablaEnlaces, ListaEnlazada[] caminosDeDosEnlaces) throws IOException {
+         int h, cont, mejorHormiga=0;
+         double pathConsecActual, pathConsecGrafo;
+         double mejoraActual, mejor=0;
+         Resultado rparcial;
+         GrafoMatriz copiaGrafo =  new GrafoMatriz(G.getCantidadDeVertices());
+         copiaGrafo.insertarDatos(v);
+         GrafoMatriz grafoMejor =  new GrafoMatriz(G.getCantidadDeVertices());
+         grafoMejor.insertarDatos(v);
+         float[] feromonas = new float[rutas.size()];
+         double[] visibilidad = new double[rutas.size()];
+         double[] probabilidad = new double[rutas.size()];
+         double sumatoria;
+         ArrayList<Integer> indexOrden = new ArrayList<>();
+        
+         ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
+         ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
+         pathConsecGrafo = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, G);
+         
+         ArrayList<Resultado> resultadosMejor = new ArrayList<>(); //arrayList que guarda el mejor conjunto de resultados
+         ArrayList<ListaEnlazada> rutasMejor = new ArrayList<>(); //arrayList que guarda el mejor conjunto de resultados
+         ArrayList<Resultado> resultadosActualElegidas = new ArrayList<>(); //ArrayList que guarda el conjunto de resultados de la hormiga actual
+         ArrayList<Integer> indicesMejor = new ArrayList<>(); //arrayList que guarda los indices de las rutas que consiguieron la mejor solucion
+        
+        //inicializarFeromonas y visibilidad
+        for (int i =0; i<feromonas.length ; i++){
+            feromonas[i]=1;
+            ListaEnlazada[] rutaActual = new ListaEnlazada[1];
+            rutaActual[0] = rutas.get(i);
+            visibilidad[i]=1/Metricas.PathConsecutiveness(rutaActual, capacidad, G);
+        }
+        //cargar lista de indices
+        for (int i =0; i<probabilidad.length ; i++){
+            indexOrden.add(i);
+        }
+        for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
+            rutasElegidas.clear();
+            indicesElegidas.clear();
+            mejoraActual=0;
+            //calcular la probabilidad
+            sumatoria=0.0;
+            for(int i=0; i<feromonas.length; i++){
+                sumatoria = sumatoria+(feromonas[indexOrden.get(i)]*visibilidad[indexOrden.get(i)]);
+            }
+            for(int i=0; i<feromonas.length; i++){
+                probabilidad[i] = (feromonas[indexOrden.get(i)]*visibilidad[indexOrden.get(i)])/sumatoria;
+            }
+            //ordenar todos de acuerdo a su probabilidad
+            ordenarProbabilidad(probabilidad, indexOrden);
+
+            cont = 0;
+            
+            while(mejoraActual<mejora && cont<rutas.size()){
+                //Crear la copia del grafo original manualmente
+                copiarGrafo(copiaGrafo, G, capacidad);
+                indicesElegidas.add(indexOrden.get(elegirRuta(probabilidad, indicesElegidas, indexOrden)));
+                rutasElegidas.add(rutas.get(indicesElegidas.get(cont)));
+                desasignarFS_DefragProAct(rutasElegidas, resultados, copiaGrafo, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
+                
+                //ORDENAR LISTA
+                if (rutasElegidas.size()>1){
+                    ordenarRutas(resultados, rutasElegidas, indicesElegidas, rutasElegidas.size());
+                }
+                //volver a rutear con las nuevas condiciones mismo algoritmo
+                int contBloqueos =0;
+                resultadosActualElegidas.clear();
+                for (int i=0; i<rutasElegidas.size(); i++){
+                    int fs = resultados.get(indicesElegidas.get(i)).getFin() - resultados.get(indicesElegidas.get(i)).getInicio();
+                    fs++;
+                    int tVida = G.acceder(rutas.get(indicesElegidas.get(i)).getInicio().getDato(),rutas.get(indicesElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultados.get(indicesElegidas.get(i)).getInicio()].getTiempo();
+                    Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), obtenerFin(rutasElegidas.get(i).getInicio()).getDato(), fs, tVida);
+                    //ListaEnlazada[] ksp = KSP(G, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
+                    ListaEnlazada[] ksp = listaKSP.get(indicesElegidas.get(i));
+                    rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
+                    if (rparcial != null) {
+                        asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0); 
+                        resultadosActualElegidas.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
+                        //verificar si la nueva asignacion crea una disrupcion
+                    } else {
+                        contBloqueos++;
+                    }
+                }
+                
+                //si hubo bloqueo no debe contar como una solucion
+                if(contBloqueos==0){
+                    pathConsecActual = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, copiaGrafo);                    
+                    mejoraActual = ((redondearDecimales(pathConsecActual, 6) * 100)/redondearDecimales(pathConsecGrafo, 6))-100;
+                } else {
+                    mejoraActual = 0;
+                    break;
+                }
+                cont++;
+            }
+            
+            //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
+            if(mejoraActual>mejor && mejoraActual>mejora){
+                System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas");
+                mejor = mejoraActual;
+                copiarGrafo(grafoMejor, copiaGrafo, capacidad);
+                //Guarda el mejor conjunto de resultados para posteriormente cambiar en el vector resultados
+                resultadosMejor.clear();
+                rutasMejor.clear();
+                indicesMejor.clear();
+                for (int k=0; k<resultadosActualElegidas.size(); k++){
+                    resultadosMejor.add(resultadosActualElegidas.get(k));
+                    indicesMejor.add(indicesElegidas.get(k));
+                    rutasMejor.add(listaKSP.get(indicesElegidas.get(k))[resultadosActualElegidas.get(k).getCamino()]);
+                    mejorHormiga = h;
+                }
+                
+            }
+             
+            //depositar feromonas de acuerdo al porcentaje de mejora
+            for(int i=0;i<indicesElegidas.size();i++){
+                feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejor/100)); //TODO agregar feromona de acuerdo a la mejora
+            }
+            
+            //evaporar feromonas
+            for(int i=0;i<feromonas.length;i++){
+                feromonas[i] = (float) (feromonas[i]*0.9); //TODO agregar feromona de acuerdo a la mejora
+            }
+            
+        }
+        if(mejor!=0){
+           copiarGrafo(G, grafoMejor, capacidad);
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true ,mejorHormiga, rutas.size());
+           for (int k=0; k<indicesMejor.size(); k++){
+               resultados.set(indicesMejor.get(k), resultadosMejor.get(k));
+               rutas.set(indicesMejor.get(k), rutasMejor.get(k));
+           }
+           System.out.println("Encontró un mejor entre las hormigas y copio el grafoCopia al Grafo original.");
+        }else{
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false ,mejorHormiga, rutas.size());
+           System.out.println("No encontró un resultado mínimo deseado entre las hormigas, no hace nada con el grafo. :(");
+        }
+
+     }
     //Metodo para realizar la copia de un grafo item por item
     public static void copiarGrafo(GrafoMatriz copia, GrafoMatriz original, int capacidad){
         for(int i=0;i<original.getCantidadDeVertices();i++){
@@ -2506,7 +2634,7 @@ public class Utilitarios {
             bw.write(",");
             bw.write("" + 0);
             bw.write(",");
-            bw.write("x");
+            bw.write(""+-1);
             bw.write(",");
             bw.write("" + totalRutas);
             bw.write("\r\n");
