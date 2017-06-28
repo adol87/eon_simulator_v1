@@ -169,6 +169,7 @@ public class Algoritmos_Defrag_ProAct {
         
         //*Definicion de variables las variables
         int cont; // posicion inicial y final dentro del espectro asi como el contador de FSs contiguos disponibles
+        int sgteBloque;//bandera para avisar que tiene que ir al siguiente bloque
         
 //        int demandaColocada=0; // bandera para controlar si ya se encontro espectro disponible para la demanda.
         int [] OE= new int[capacidad]; //Ocupacion de Espectro.
@@ -198,12 +199,13 @@ public class Algoritmos_Defrag_ProAct {
             
             //encuentra las posibles asignaciones
             cont=0;
+            sgteBloque = 0; 
             for(int i=0;i<capacidad;i++){
-                if(OE[i]==1){
+                if(OE[i]==1 && sgteBloque == 0){
                     cont++;
-                }
-                else{
+                }else if (OE[i]==0){
                     cont=0;
+                    sgteBloque = 0;
                 }
                 //si se encontro un bloque valido, tomamos en cuenta el ksp
                 if(cont==demanda.getNroFS()){
@@ -211,7 +213,9 @@ public class Algoritmos_Defrag_ProAct {
                     inicios.add(i - cont + 1);
                     kspUbicados.add(ksp[k]);
                     indiceKsp.add(k);
-//                    break; //solo agrega la 
+                    sgteBloque = 1;
+                    cont = 0;
+//                    break; //solo agrega el primero que encuentra
                 }
             }
             k++;
@@ -224,7 +228,7 @@ public class Algoritmos_Defrag_ProAct {
         
         //cuenta los cortes para cada posible asiganción
 //        int cutsSlot; //cantidad de cortes
-        int ind = 0; //aux indice del ksp actual
+        int ind = 0; //aux indice del kspUbicado actual
         int cutAux = 0; //cant de cortes del camino ksp
         int cuts = 999; //el menor corte, 999 como referencia inicial
         Resultado r;
@@ -235,11 +239,11 @@ public class Algoritmos_Defrag_ProAct {
         ArrayList<Integer> indKSPUbicMenCuts = new ArrayList<>();
         ArrayList<Integer> indKSPUbicMenCutsMenDesalig = new ArrayList<>();
         
-        //por cada índice (FS fin) de los posibles caminos de cada KSP ubicado
+        //por cada índice de los posibles caminos de cada KSP ubicado
         for (ListaEnlazada kspUbi : kspUbicados){
             for (Nodo n = kspUbi.getInicio(); n.getSiguiente().getSiguiente() != null; n = n.getSiguiente()) {
-                if (ind != 0 && ind < capacidad - 1) { //para que no tome los bordes sup e inf
-                    if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[fines.get(ind) - 1].getEstado() == 1
+                if (inicios.get(ind) != 0 && fines.get(ind) < capacidad - 1) { //para que no tome los bordes sup e inf
+                    if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[inicios.get(ind) - 1].getEstado() == 1
                             && G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[fines.get(ind) + 1].getEstado() == 1) {
                         cutAux = cutAux + 1;
                     }
@@ -248,11 +252,13 @@ public class Algoritmos_Defrag_ProAct {
             //encuentra el/los menor/es
             if (cutAux < cuts) {
                 //si hay un menor al menor, limpia el vector y solo deja ese
+                cuts = cutAux;
                 indKSPUbicMenCuts.clear();
                 indKSPUbicMenCuts.add(ind);
             }else if(cutAux == cuts){
                 indKSPUbicMenCuts.add(ind);
             }
+            ind++;
         }
         
         //si hay un solo menor cut entonces es elegido, sino se calcula el alineamiento de los menores
@@ -262,35 +268,36 @@ public class Algoritmos_Defrag_ProAct {
             r.setFin(fines.get(indKSPUbicMenCuts.get(0)));
             r.setInicio(inicios.get(indKSPUbicMenCuts.get(0)));
         }else {
-            //calcula el missaligment de cada uno
+            //calcula el desalineamiento de cada uno
             for (int indMenorCuts : indKSPUbicMenCuts) {
                 DesalineacionAux = Utilitarios.contarDesalineamiento(kspUbicados.get(indMenorCuts), G, capacidad, fines.get(indMenorCuts));
 
                 if (DesalineacionAux < DesalineacionFinal) {
                     //si hay un menor al menor, limpia el vector y solo deja ese
+                    DesalineacionFinal = DesalineacionAux;
                     indKSPUbicMenCutsMenDesalig.clear();
                     indKSPUbicMenCutsMenDesalig.add(indMenorCuts);
                 }else if(DesalineacionAux == DesalineacionFinal){
                     indKSPUbicMenCutsMenDesalig.add(indMenorCuts);
                 }
             }
-        }
-        
-        //si hay un solo menor cut con menor desalineación entonces es elegido, sino envie al shorter KSP y hace first Fit
-        if (indKSPUbicMenCutsMenDesalig.size() == 1){
-            r = new Resultado();
-            r.setCamino(indiceKsp.get(indKSPUbicMenCutsMenDesalig.get(0)));
-            r.setFin(fines.get(indKSPUbicMenCutsMenDesalig.get(0)));
-            r.setInicio(inicios.get(indKSPUbicMenCutsMenDesalig.get(0)));
-        }else {
-            //calcula el shorter KSP y hace first Fit
-            ListaEnlazada[] kspMenCutsMensDesalig = new ListaEnlazada[indKSPUbicMenCutsMenDesalig.size()];
-            for(int i=0;i<indKSPUbicMenCutsMenDesalig.size();i++){
-                //agregar a una lista enlazada solo los ksp que cumplen las condiciones
-                kspMenCutsMensDesalig[i] = kspUbicados.get(indKSPUbicMenCutsMenDesalig.get(i));
+            
+            //si hay un solo menor cut con menor desalineación entonces es elegido, sino envie al shorter KSP y hace first Fit
+            if (indKSPUbicMenCutsMenDesalig.size() == 1){
+                r = new Resultado();
+                r.setCamino(indiceKsp.get(indKSPUbicMenCutsMenDesalig.get(0)));
+                r.setFin(fines.get(indKSPUbicMenCutsMenDesalig.get(0)));
+                r.setInicio(inicios.get(indKSPUbicMenCutsMenDesalig.get(0)));
+            }else {
+                //calcula el shorter KSP y hace first Fit
+                ListaEnlazada[] kspMenCutsMensDesalig = new ListaEnlazada[indKSPUbicMenCutsMenDesalig.size()];
+                for(int i=0;i<indKSPUbicMenCutsMenDesalig.size();i++){
+                    //agregar a una lista enlazada solo los ksp que cumplen las condiciones
+                    kspMenCutsMensDesalig[i] = kspUbicados.get(indKSPUbicMenCutsMenDesalig.get(i));
+                }
+                //hacer KSP_FF entre ellas
+                r = Algoritmos.KSP_RF_Algorithm(G, demanda, kspMenCutsMensDesalig, capacidad);
             }
-            //hacer KSP_FF entre ellas
-            r = Algoritmos.KSP_RF_Algorithm(G, demanda, kspMenCutsMensDesalig, capacidad);
         }
 
         return r;
