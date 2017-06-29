@@ -1917,7 +1917,7 @@ public class Utilitarios {
         int b;
         double s, a, aux, auxB, auxHT;
         double e = Math.E;
-        a = (Math.random() * 1) + 0;
+        a = Math.random();
         b = 1;
         auxB = (double) b;
         auxHT = (double) ht;

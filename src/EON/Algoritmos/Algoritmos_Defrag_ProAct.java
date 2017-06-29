@@ -231,7 +231,7 @@ public class Algoritmos_Defrag_ProAct {
         int ind = 0; //aux indice del kspUbicado actual
         int cutAux = 0; //cant de cortes del camino ksp
         int cuts = 999; //el menor corte, 999 como referencia inicial
-        Resultado r;
+        Resultado r = new Resultado();
         int DesalineacionAux;
         int DesalineacionFinal = 999;
         
@@ -258,12 +258,12 @@ public class Algoritmos_Defrag_ProAct {
             }else if(cutAux == cuts){
                 indKSPUbicMenCuts.add(ind);
             }
+            cutAux = 0;
             ind++;
         }
         
         //si hay un solo menor cut entonces es elegido, sino se calcula el alineamiento de los menores
         if (indKSPUbicMenCuts.size() == 1){
-            r = new Resultado();
             r.setCamino(indiceKsp.get(indKSPUbicMenCuts.get(0)));
             r.setFin(fines.get(indKSPUbicMenCuts.get(0)));
             r.setInicio(inicios.get(indKSPUbicMenCuts.get(0)));
@@ -284,19 +284,48 @@ public class Algoritmos_Defrag_ProAct {
             
             //si hay un solo menor cut con menor desalineación entonces es elegido, sino envie al shorter KSP y hace first Fit
             if (indKSPUbicMenCutsMenDesalig.size() == 1){
-                r = new Resultado();
                 r.setCamino(indiceKsp.get(indKSPUbicMenCutsMenDesalig.get(0)));
                 r.setFin(fines.get(indKSPUbicMenCutsMenDesalig.get(0)));
                 r.setInicio(inicios.get(indKSPUbicMenCutsMenDesalig.get(0)));
-            }else {
-                //calcula el shorter KSP y hace first Fit
-                ListaEnlazada[] kspMenCutsMensDesalig = new ListaEnlazada[indKSPUbicMenCutsMenDesalig.size()];
-                for(int i=0;i<indKSPUbicMenCutsMenDesalig.size();i++){
-                    //agregar a una lista enlazada solo los ksp que cumplen las condiciones
-                    kspMenCutsMensDesalig[i] = kspUbicados.get(indKSPUbicMenCutsMenDesalig.get(i));
+            }else { //calcula el shorter KSP y hace first Fit  
+                //encontrar el ksp más corto
+                int tamKspMasCorto = 999;
+                int indKspMasCorto = -1;
+                for (int indMenCutsMenDesalig : indKSPUbicMenCutsMenDesalig) {
+                    if (kspUbicados.get(indMenCutsMenDesalig).getTamanho() - 1 < tamKspMasCorto){
+                        indKspMasCorto = indMenCutsMenDesalig;
+                        tamKspMasCorto = kspUbicados.get(indMenCutsMenDesalig).getTamanho() - 1;
+                    }
                 }
-                //hacer KSP_FF entre ellas
-                r = Algoritmos.KSP_RF_Algorithm(G, demanda, kspMenCutsMensDesalig, capacidad);
+                //buscar el indice first fit
+                //Inicializadomos el espectro, inicialmente todos los FSs estan libres
+                for(int i=0;i<capacidad;i++){
+                    OE[i]=1;
+                }
+                //Calcular la ocupacion del espectro para cada camino k
+                for(int i=0;i<capacidad;i++){
+                    for(Nodo n=ksp[indiceKsp.get(indKspMasCorto)].getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
+                        if(G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS()[i].getEstado()==0){
+                            OE[i]=0;
+                            break;
+                        }
+                    }
+                }
+                cont=0; 
+                for(int i=0;i<capacidad;i++){
+                    if(OE[i]==1){
+                        cont++;
+                    }else if (OE[i]==0){
+                        cont=0;
+                    }
+                    //si se encontro un bloque valido, tomamos en cuenta el ksp
+                    if(cont==demanda.getNroFS()){ //si o si va a encontrar ya que es un ksp en kspUbicados
+                        r.setCamino(indiceKsp.get(indKspMasCorto));
+                        r.setFin(i);
+                        r.setInicio(i - cont + 1);
+                        break; //solo el primero que encuentra
+                    }
+                }
             }
         }
 
