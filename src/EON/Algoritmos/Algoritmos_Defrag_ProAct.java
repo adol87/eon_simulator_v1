@@ -169,9 +169,9 @@ public class Algoritmos_Defrag_ProAct {
             ind++;
         }
         
-        r.setCamino(indiceKsp.get(ind));
-        r.setFin(fines.get(ind));
-        r.setInicio(inicios.get(ind));
+        r.setCamino(indiceKsp.get(caminoElegido));
+        r.setFin(fines.get(caminoElegido));
+        r.setInicio(inicios.get(caminoElegido));
         return r;
     }
     
