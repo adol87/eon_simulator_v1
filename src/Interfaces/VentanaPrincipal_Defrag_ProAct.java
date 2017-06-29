@@ -311,6 +311,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         textFieldFSmaximo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldFSmaximo.setText("10");
+        textFieldFSmaximo.setToolTipText("");
         textFieldFSmaximo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldFSmaximoActionPerformed(evt);
@@ -882,9 +883,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoEstados = new File(rutaEstados);
             for (int i = 1; i <= tiempoT; i++) {
                 
-//                //imprimir estado de los enlaces
-//                System.out.println("Grafo al empezar el tiempo: " + i);
-//                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+                //imprimir estado de los enlaces
+                System.out.println("Grafo al empezar el tiempo: " + i);
+                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
         
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -900,6 +901,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                         switch (algoritmoAejecutar) {
                             case "FA":
+                                if(i==14){
+                                    System.out.println("empieza el kilombo");
+                                }
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
@@ -908,12 +912,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
                                     
-//                                    //imprimir estado de los enlaces
-//                                    System.out.println("Resultado: ");
-//                                    Utilitarios.imprimirResultado(r);
-//                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
-//                                    Utilitarios.imprimirDemanda(demanda);
-//                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+                                    //imprimir estado de los enlaces
+                                    System.out.println("Resultado: ");
+                                    Utilitarios.imprimirResultado(r);
+                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
+                                    Utilitarios.imprimirDemanda(demanda);
+                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;

@@ -849,26 +849,26 @@ public class Utilitarios {
         ArrayList<Integer> caminosFinales = new ArrayList<Integer>();
         ArrayList<Integer> fSlots = new ArrayList<Integer>();
         int caminoFinal = 0;
-        int cutAux = 0;
+//        int cutAux = 0;
         //int slots=0;
-        int m = 1; //controla que los cortes no esten de seguido
-        boolean filaLibre = false;
-        ArrayList<Integer> indices = new ArrayList<Integer>();
+//        int m = 1; //controla que los cortes no esten de seguido
+//        boolean filaLibre = false;
+//        ArrayList<Integer> indices = new ArrayList<Integer>();
 
         ArrayList<Integer> indicesL = new ArrayList<Integer>();
 
         for (int k = 0; k < ksp.size(); k++) {
 
-            cutsSlot = nroCuts(ksp.get(k), G, capacidad);
+            cutsSlot = nroCuts(ksp.get(k), G, capacidad); //TIENE QUE TRAER UN ARRAYLIST CON TODOS LOS CORTES MENORES DE ESTE KSP, PUEDE HABER MAS DE UNO
 
-            if (cutsSlot != null) {
+            if (cutsSlot != null) { //POR CADA CORTE MENOR ENCONTRADO EN EL KSP
 
                 //atender
                 if (cutsFinales.size() < 1) {
                     cutsFinales.add(cutsSlot[0]);
                     caminosFinales.add(k);
                     fSlots.add(cutsSlot[1]);
-                } else if (cutsFinales.get(cutsFinales.size() - 1) > cutsSlot[0]) {
+                } else if (cutsFinales.get(cutsFinales.size() - 1) > cutsSlot[0]) { //SI YA HABÍAN DOS MENORS IGUALES, ESTE REEMPLAZA SOLO EL ÚLTIMO
                     cutsFinales.set(cutsFinales.size() - 1, cutsSlot[1]);
                     caminosFinales.set(caminosFinales.size() - 1, k);
                     fSlots.set(fSlots.size() - 1, cutsSlot[1]);
@@ -882,7 +882,7 @@ public class Utilitarios {
         }
 
         if (cutsFinales.size() > 1) {
-            caminoFinal = calcularAlineacion(ksp, G, capacidad, caminosFinales, indicesL, fSlots);
+            caminoFinal = calcularAlineacion(ksp, G, capacidad, caminosFinales, fSlots); //SI HAY DOS CON LA MISMA CANT DE ALINEACIONES, NO TOMA EN CUENTA PARA HACER MIN KSP Y FIRSFIT
         } else if (cutsFinales.size() == 1) {
             caminoFinal = caminosFinales.get(0);
         } else {
@@ -956,15 +956,15 @@ public class Utilitarios {
         int slots = -1;
 
         int[] cortesSlots = new int[2];
-        ArrayList<Integer> cutsFinales = new ArrayList<Integer>();
-        ArrayList<Integer> caminosFinales = new ArrayList<Integer>();
-        ArrayList<Integer> fSlots = new ArrayList<Integer>();
-        int caminoFinal = 0;
+//        ArrayList<Integer> cutsFinales = new ArrayList<Integer>();
+//        ArrayList<Integer> caminosFinales = new ArrayList<Integer>();
+//        ArrayList<Integer> fSlots = new ArrayList<Integer>();
+//        int caminoFinal = 0;
         int cutAux = 0;
 
-        ArrayList<Integer> indices = new ArrayList<Integer>();
+//        ArrayList<Integer> indices = new ArrayList<Integer>();
 
-        ArrayList<Integer> indicesL = new ArrayList<Integer>();
+        ArrayList<Integer> indicesL;
 
         indicesL = buscarIndices(ksp, G, capacidad);
 
@@ -1023,17 +1023,17 @@ public class Utilitarios {
     @return
         indice del camino mas corto y menor misaligment
      */
-    public static int calcularAlineacion(ArrayList<ListaEnlazada> ksp, GrafoMatriz G, int capacidad, ArrayList<Integer> caminos, ArrayList<Integer> indicesL, ArrayList<Integer> fSlots) {
+    public static int calcularAlineacion(ArrayList<ListaEnlazada> ksp, GrafoMatriz G, int capacidad, ArrayList<Integer> caminos, ArrayList<Integer> fSlots) {
 
-        Integer[] alineacion = new Integer[indicesL.size()];
+//        Integer[] alineacion = new Integer[indicesL.size()];
         int alineacionAux = 0;
         int alineacionFinal = 999;
         int indiceFinal = -1;
-        ArrayList<Integer> desalineado = new ArrayList<Integer>();
+//        ArrayList<Integer> desalineado = new ArrayList<Integer>();
 
         for (int k = 0; k < caminos.size(); k++) {
 
-            alineacionAux = contarDesalineamiento(ksp.get(caminos.get(k)), G, capacidad, indicesL, fSlots.get(k));
+            alineacionAux = contarDesalineamiento(ksp.get(caminos.get(k)), G, capacidad, fSlots.get(k));
 
             if (alineacionAux < alineacionFinal) {
                 alineacionFinal = alineacionAux;
@@ -1056,7 +1056,7 @@ public class Utilitarios {
      @return
         int con el nro de desalineamiento
      */
-    public static int contarDesalineamiento(ListaEnlazada ksp, GrafoMatriz G, int capacidad, ArrayList<Integer> indicesL, int fSlots) {
+    public static int contarDesalineamiento(ListaEnlazada ksp, GrafoMatriz G, int capacidad, int fSlots) {
 
         int alineacionAux = 0;
         int nActual, nSgte, nAnterior = -1;
@@ -1917,7 +1917,7 @@ public class Utilitarios {
         int b;
         double s, a, aux, auxB, auxHT;
         double e = Math.E;
-        a = (Math.random());
+        a = Math.random();
         b = 1;
         auxB = (double) b;
         auxHT = (double) ht;

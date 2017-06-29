@@ -193,7 +193,7 @@ public class Algoritmos_Defrag {
                 
                 
                 //contar los desalineamientos
-                double desalineamiento = (double)Utilitarios.contarDesalineamiento(kspUbicados.get(i), G, capacidad, indiceL, cortesSlots[1]);
+                double desalineamiento = (double)Utilitarios.contarDesalineamiento(kspUbicados.get(i), G, capacidad, cortesSlots[1]);
                 
                 double capacidadLibre = (double)Utilitarios.contarCapacidadLibre(kspUbicados.get(i),G,capacidad);
                 
@@ -436,7 +436,7 @@ public class Algoritmos_Defrag {
                 double slotsDemanda = demanda.getNroFS();
                 
                 //contar los desalineamientos
-                double desalineamiento = (double)Utilitarios.contarDesalineamiento(kspUbicados.get(i), G, capacidad, indiceL, cortesSlots[1]);
+                double desalineamiento = (double)Utilitarios.contarDesalineamiento(kspUbicados.get(i), G, capacidad, cortesSlots[1]);
                 
                 double capacidadLibre = (double)Utilitarios.contarCapacidadLibre(kspUbicados.get(i),G,capacidad);
                 
