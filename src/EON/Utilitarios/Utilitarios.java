@@ -1917,7 +1917,7 @@ public class Utilitarios {
         int b;
         double s, a, aux, auxB, auxHT;
         double e = Math.E;
-        a = (Math.random() * 1) + 0;
+        a = (Math.random());
         b = 1;
         auxB = (double) b;
         auxHT = (double) ht;
@@ -2255,7 +2255,7 @@ public class Utilitarios {
             
             if(mejoraActual>mejor && mejoraActual>mejora){ //si se logro una mejora mas alta
  //               if(cantidadRutasMejor >= resultadosActualElegidas.size()){ //si la nueva mejora mueve menos rutas o la misma cantidad 
-                    System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas, Hormiga: "+h);
+                    System.out.println("Mejor actual: " + redondearDecimales(mejoraActual, 2) + "%, con "+rutasElegidas.size() + " rutas re ruteadas, Hormiga: "+h);
                     mejor = mejoraActual;
 //                    cantidadRutasMejor = resultadosActualElegidas.size();
                     copiarGrafo(grafoMejor, copiaGrafo, capacidad);
@@ -2396,7 +2396,7 @@ public class Utilitarios {
             
             //si hay una mejor solucion, reemplazar el grafo guardado por el grafo de la mejor solucion
             if(mejoraActual>mejor && mejoraActual>mejora){
-                System.out.println("Mejor actual: " + mejoraActual + ", con "+rutasElegidas.size() + " rutas re ruteadas");
+                System.out.println("Mejor actual: " + redondearDecimales(mejoraActual, 2) + "%, con "+rutasElegidas.size() + " rutas re ruteadas");
                 mejor = mejoraActual;
                 copiarGrafo(grafoMejor, copiaGrafo, capacidad);
                 //Guarda el mejor conjunto de resultados para posteriormente cambiar en el vector resultados
@@ -2742,7 +2742,7 @@ public class Utilitarios {
                 bw = new BufferedWriter(new FileWriter(archivo, true));
             } else {
                 bw = new BufferedWriter(new FileWriter(archivo));
-                bw.write("entropia,msi,bfr,rutas,pathConsec,entropiaUso,porcUso");
+                bw.write("entropia,msi,bfr,rutas,pathconsec,entropiauso,porcuso");
                 bw.write("\r\n");
             }
             if(esBloqueo){
@@ -2772,5 +2772,14 @@ public class Utilitarios {
 
         return;
     }
+        
+        public static double calcularProbabilidadDeBloqueo (double msi){
+            double probabilidad = 0.0, resultado = 0.0, aux=0.0;
+            double e = Math.E;
+            resultado = (0.058479*msi)-20.469756;
+            aux = (Math.pow(e, (resultado)));
+            probabilidad = aux / (1+aux);
+            return probabilidad;
+        }
     
 }
