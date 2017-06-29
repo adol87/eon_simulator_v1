@@ -26,14 +26,15 @@ public class Algoritmos_Defrag_ProAct {
     public static Resultado Def_FACA(GrafoMatriz G, Demanda demanda,ListaEnlazada [] ksp,int capacidad){
         
         //*Definicion de variables las variables
-        int inicio=0, fin=0,cont; // posicion inicial y final dentro del espectro asi como el contador de FSs contiguos disponibles
+        int cont; // posicion inicial y final dentro del espectro asi como el contador de FSs contiguos disponibles
+        int sgteBloque;//bandera para avisar que tiene que ir al siguiente bloque
         
-        int demandaColocada=0; // bandera para controlar si ya se encontro espectro disponible para la demanda.
+//        int demandaColocada=0; // bandera para controlar si ya se encontro espectro disponible para la demanda.
         int [] OE= new int[capacidad]; //Ocupacion de Espectro.
-        ArrayList<ListaEnlazada> kspUbicados = new ArrayList<ListaEnlazada>();
-        ArrayList<Integer> inicios = new ArrayList<Integer>();
-        ArrayList<Integer> fines = new ArrayList<Integer>();
-        ArrayList<Integer> indiceKsp = new ArrayList<Integer>();
+        ArrayList<ListaEnlazada> kspUbicados = new ArrayList<>();
+        ArrayList<Integer> inicios = new ArrayList<>();
+        ArrayList<Integer> fines = new ArrayList<>();
+        ArrayList<Integer> indiceKsp = new ArrayList<>();
 
         //Probamos para cada camino, si existe espectro para ubicar la damanda
         int k=0;
@@ -53,115 +54,124 @@ public class Algoritmos_Defrag_ProAct {
                     }
                 }
             }
-           
-            inicio=fin=cont=0;
+            
+            //encuentra las posibles asignaciones
+            cont=0;
+            sgteBloque = 0; 
             for(int i=0;i<capacidad;i++){
-                if(OE[i]==1){
-                    inicio=i;
-                    cont=0; //faltó esta inicialización del contador.
-                    for(int j=inicio;j<capacidad;j++){
-                        if(OE[j]==1){
-                            cont++;
-                        }
-                        else{
-                            cont=0;
-                            break;
-                        }
-                        //si se encontro un bloque valido, salimos de todos los bloques
-                        if(cont==demanda.getNroFS()){
-                            fin=j;
-                            fines.add(fin);
-                            inicios.add(inicio);
-                            demandaColocada=1;
-                            kspUbicados.add(ksp[k]);
-                            indiceKsp.add(k);
-                            //inicio=fin=cont=0;
-                            break;
-                        }
-                    }
+                if(OE[i]==1 && sgteBloque == 0){
+                    cont++;
+                }else if (OE[i]==0){
+                    cont=0;
+                    sgteBloque = 0;
                 }
-                if(demandaColocada==1){ //SOLO TIENE EN CUENTA EL PRIMER CAMINO POSIBLE DEL KSP
-                    demandaColocada = 0;
-                    break;
+                //si se encontro un bloque valido, tomamos en cuenta el ksp
+                if(cont==demanda.getNroFS()){
+                    fines.add(i);
+                    inicios.add(i - cont + 1);
+                    kspUbicados.add(ksp[k]);
+                    indiceKsp.add(k);
+                    sgteBloque = 1;
+                    cont = 0;
+//                    break; //solo agrega el primero que encuentra
                 }
             }
             k++;
         }
         
-        /*if(demandaColocada==0){
-                return null; // Si no se encontro, en ningun camino un bloque contiguo de FSs, retorna null.
-        }*/
-        
-        if (kspUbicados.isEmpty()){
+        if (kspUbicados.isEmpty()){ //bloqueo
             //System.out.println("Desubicado");
             return null;
         }
         
-        int [] cortesSlots = new int [2];
-        double corte = -1;
-        double Fcmt = 9999999;
+        //cuenta los cortes para cada posible asiganción
+//        int cutsSlot; //cantidad de cortes
+        int ind = 0; //aux indice del kspUbicado actual
+        int corte = 999; //cant de cortes de la opcion del ksp
+        Resultado r = new Resultado();
         double FcmtAux = -1;
-        
+        double Fcmt = 9999999;
         int caminoElegido = -1;
-
-        //controla que exista un resultado
-        boolean nulo = true;
-
-        ArrayList<Integer> indiceL = new ArrayList<Integer>();
+        boolean nulo = true; //controla que exista un resultado
         
-        //contar los cortes de cada candidato
-        for (int i=0; i<kspUbicados.size(); i++){
-            cortesSlots = Utilitarios.nroCuts(kspUbicados.get(i), G, capacidad);
-            if (cortesSlots != null){
-                corte = (double)cortesSlots[0];
-                
-                indiceL = Utilitarios.buscarIndices(kspUbicados.get(i), G, capacidad);
-                
-                
-                //contar los desalineamientos
-                double desalineamiento = (double)Utilitarios.contarDesalineamiento(kspUbicados.get(i), G, capacidad, cortesSlots[1]);
-                
-                double capacidadLibre = (double)Utilitarios.contarCapacidadLibre(kspUbicados.get(i),G,capacidad);
-                
-                double saltos = (double)Utilitarios.calcularSaltos(kspUbicados.get(i));
-                
-                
-                double vecinos = (double)Utilitarios.contarVecinos(kspUbicados.get(i),G,capacidad);
-                
-
-                
-                FcmtAux = corte + (desalineamiento/(demanda.getNroFS()*vecinos)) + (saltos *(demanda.getNroFS()/capacidadLibre)); 
-                
-                if (FcmtAux<Fcmt){
-                    Fcmt = FcmtAux;
-                    caminoElegido = i;
+        //por cada índice de los posibles caminos de cada KSP ubicado
+        for (ListaEnlazada kspUbi : kspUbicados){
+            corte = 0;
+            for (Nodo n = kspUbi.getInicio(); n.getSiguiente().getSiguiente() != null; n = n.getSiguiente()) {
+                if (inicios.get(ind) != 0 && fines.get(ind) < capacidad - 1) { //para que no tome los bordes sup e inf
+                    if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[inicios.get(ind) - 1].getEstado() == 1
+                            && G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[fines.get(ind) + 1].getEstado() == 1) {
+                        corte = corte + 1;
+                    }
                 }
-                
-                nulo = false;
-                if (caminoElegido==-1){
-                    System.out.println("Camino Elegido = -1 ..................");
-                }
-                
             }
+            
+            //calcula el desalineamiento de cada uno
+            int Desalineacion = 0;
+            int nActual, nSgte, nAnterior = -1;
+            int nSgteSgte = -1;
+            for (Nodo n = kspUbi.getInicio(); n.getSiguiente().getSiguiente() != null; n = n.getSiguiente()) {
+                for (int i = 0; i < G.getCantidadDeVertices(); i++) {
+                    nActual = n.getDato();
+                    nSgte = n.getSiguiente().getDato();
+
+                    try {
+                        if (n.getSiguiente().getSiguiente() != null) {
+                            nSgteSgte = n.getSiguiente().getSiguiente().getDato();
+                        }
+                    } catch (Exception e) {
+                        //exploto
+                        System.out.println("No le salio sgte de sgte");
+                        e.printStackTrace();
+                    }
+
+                    if (G.acceder(i, nActual) != null && i != nSgte && i != nActual && i != nAnterior) {
+                        for(int fsd = inicios.get(ind); fsd <= inicios.get(ind) + demanda.getNroFS() - 1; fsd++){
+                            if (G.acceder(i, nActual).getFS()[fsd].getEstado() == 1) {
+                                Desalineacion = Desalineacion + 1;
+                            } else {
+                                Desalineacion = Desalineacion - 1;
+                            }
+                        }
+                    }
+
+                    if (G.acceder(nSgte, i) != null && i != nActual && i != nSgte && i != nAnterior && i != nSgteSgte) {
+                        for(int fsd = inicios.get(ind); fsd <= inicios.get(ind) + demanda.getNroFS() - 1; fsd++){
+                            if (G.acceder(nSgte, i).getFS()[fsd].getEstado() == 1) {
+                                Desalineacion = Desalineacion + 1;
+                            } else {
+                                Desalineacion = Desalineacion - 1;
+                            }
+                        }
+                    }
+                }
+                nAnterior = n.getDato();
+            }
+            
+            //calcular la capacidad actual
+            double capacidadLibre = (double)Utilitarios.contarCapacidadLibre(kspUbi,G,capacidad);
+        
+            double saltos = (double)Utilitarios.calcularSaltos(kspUbi);
+            double vecinos = (double)Utilitarios.contarVecinos(kspUbi,G,capacidad);
+            
+            FcmtAux = corte + (Desalineacion/(demanda.getNroFS()*vecinos)) + (saltos *(demanda.getNroFS()/capacidadLibre)); 
+            
+            if (FcmtAux<Fcmt){
+                Fcmt = FcmtAux;
+                caminoElegido = ind;
+            }
+
+            nulo = false;
+            if (caminoElegido==-1){
+                System.out.println("Camino Elegido = -1 ..................");
+            }
+        
+            ind++;
         }
         
-        if (caminoElegido==-1){
-            System.out.println("Camino Elegido = -1 ..................");
-        }
-        //caminoElegido = Utilitarios.contarCuts(kspUbicados, G, capacidad);
-    
-        if (nulo || caminoElegido==-1){
-            return null;
-        }
-        
-        Resultado r= new Resultado();
-        /*r.setCamino(k-1);
-        r.setFin(fin);
-        r.setInicio(inicio);*/
-        
-        r.setCamino(indiceKsp.get(caminoElegido));
-        r.setFin(fines.get(caminoElegido));
-        r.setInicio(inicios.get(caminoElegido));
+        r.setCamino(indiceKsp.get(ind));
+        r.setFin(fines.get(ind));
+        r.setInicio(inicios.get(ind));
         return r;
     }
     
@@ -232,7 +242,6 @@ public class Algoritmos_Defrag_ProAct {
         int cutAux = 0; //cant de cortes del camino ksp
         int cuts = 999; //el menor corte, 999 como referencia inicial
         Resultado r = new Resultado();
-        int DesalineacionAux;
         int DesalineacionFinal = 999;
         
         //vectores con los menores cortes
@@ -269,8 +278,48 @@ public class Algoritmos_Defrag_ProAct {
             r.setInicio(inicios.get(indKSPUbicMenCuts.get(0)));
         }else {
             //calcula el desalineamiento de cada uno
-            for (int indMenorCuts : indKSPUbicMenCuts) {
-                DesalineacionAux = Utilitarios.contarDesalineamiento(kspUbicados.get(indMenorCuts), G, capacidad, fines.get(indMenorCuts));
+            for (int indMenorCuts : indKSPUbicMenCuts) {                
+                int DesalineacionAux = 0;
+                int nActual, nSgte, nAnterior = -1;
+                int nSgteSgte = -1;
+                for (Nodo n = kspUbicados.get(indMenorCuts).getInicio(); n.getSiguiente().getSiguiente() != null; n = n.getSiguiente()) {
+                    for (int i = 0; i < G.getCantidadDeVertices(); i++) {
+                        nActual = n.getDato();
+                        nSgte = n.getSiguiente().getDato();
+
+                        try {
+                            if (n.getSiguiente().getSiguiente() != null) {
+                                nSgteSgte = n.getSiguiente().getSiguiente().getDato();
+                            }
+                        } catch (Exception e) {
+                            //exploto
+                            System.out.println("No le salio sgte de sgte");
+                            e.printStackTrace();
+                        }
+
+                        if (G.acceder(i, nActual) != null && i != nSgte && i != nActual && i != nAnterior) {
+                            for(int fsd = inicios.get(indMenorCuts); fsd <= inicios.get(indMenorCuts) + demanda.getNroFS() - 1; fsd++){
+                                if (G.acceder(i, nActual).getFS()[fsd].getEstado() == 1) {
+                                    DesalineacionAux = DesalineacionAux + 1;
+                                } else {
+                                    DesalineacionAux = DesalineacionAux - 1;
+                                }
+                            }
+                        }
+
+                        if (G.acceder(nSgte, i) != null && i != nActual && i != nSgte && i != nAnterior && i != nSgteSgte) {
+                            for(int fsd = inicios.get(indMenorCuts); fsd <= inicios.get(indMenorCuts) + demanda.getNroFS() - 1; fsd++){
+                                if (G.acceder(nSgte, i).getFS()[fsd].getEstado() == 1) {
+                                    DesalineacionAux = DesalineacionAux + 1;
+                                } else {
+                                    DesalineacionAux = DesalineacionAux - 1;
+                                }
+                            }
+                        }
+                    }
+                    nAnterior = n.getDato();
+
+                }
 
                 if (DesalineacionAux < DesalineacionFinal) {
                     //si hay un menor al menor, limpia el vector y solo deja ese
