@@ -35,6 +35,7 @@ public class Algoritmos_Defrag_ProAct {
         ArrayList<Integer> inicios = new ArrayList<>();
         ArrayList<Integer> fines = new ArrayList<>();
         ArrayList<Integer> indiceKsp = new ArrayList<>();
+        ArrayList<Integer> indKSPUbicMenFcmt = new ArrayList<>();
 
         //Probamos para cada camino, si existe espectro para ubicar la damanda
         int k=0;
@@ -92,7 +93,6 @@ public class Algoritmos_Defrag_ProAct {
         double FcmtAux = -1;
         double Fcmt = 9999999;
         int caminoElegido = -1;
-        boolean nulo = true; //controla que exista un resultado
         
         //por cada índice de los posibles caminos de cada KSP ubicado
         for (ListaEnlazada kspUbi : kspUbicados){
@@ -108,44 +108,27 @@ public class Algoritmos_Defrag_ProAct {
             
             //calcula el desalineamiento de cada uno
             int Desalineacion = 0;
-            int nActual, nSgte, nAnterior = -1;
-            int nSgteSgte = -1;
+            int bandEsRuta = 0;
             for (Nodo n = kspUbi.getInicio(); n.getSiguiente().getSiguiente() != null; n = n.getSiguiente()) {
                 for (int i = 0; i < G.getCantidadDeVertices(); i++) {
-                    nActual = n.getDato();
-                    nSgte = n.getSiguiente().getDato();
-
-                    try {
-                        if (n.getSiguiente().getSiguiente() != null) {
-                            nSgteSgte = n.getSiguiente().getSiguiente().getDato();
-                        }
-                    } catch (Exception e) {
-                        //exploto
-                        System.out.println("No le salio sgte de sgte");
-                        e.printStackTrace();
-                    }
-
-                    if (G.acceder(i, nActual) != null && i != nSgte && i != nActual && i != nAnterior) {
-                        for(int fsd = inicios.get(ind); fsd <= inicios.get(ind) + demanda.getNroFS() - 1; fsd++){
-                            if (G.acceder(i, nActual).getFS()[fsd].getEstado() == 1) {
-                                Desalineacion = Desalineacion + 1;
-                            } else {
-                                Desalineacion = Desalineacion - 1;
+                    if(G.acceder(n.getDato(), i)!=null){ //si son vecinos
+                        bandEsRuta = 0;
+                        for (Nodo nn = kspUbi.getInicio(); nn.getSiguiente().getSiguiente() != null; nn = nn.getSiguiente()) {
+                            if(nn.getDato() == i){ //si es parte de la ruta
+                                bandEsRuta = 1;
                             }
                         }
-                    }
-
-                    if (G.acceder(nSgte, i) != null && i != nActual && i != nSgte && i != nAnterior && i != nSgteSgte) {
-                        for(int fsd = inicios.get(ind); fsd <= inicios.get(ind) + demanda.getNroFS() - 1; fsd++){
-                            if (G.acceder(nSgte, i).getFS()[fsd].getEstado() == 1) {
-                                Desalineacion = Desalineacion + 1;
-                            } else {
-                                Desalineacion = Desalineacion - 1;
+                        if(bandEsRuta == 0){
+                            for(int fsd = inicios.get(ind); fsd <= inicios.get(ind) + demanda.getNroFS() - 1; fsd++){
+                                if (G.acceder(i, n.getDato()).getFS()[fsd].getEstado() == 1) {
+                                    Desalineacion = Desalineacion + 1;
+                                } else {
+                                    Desalineacion = Desalineacion - 1;
+                                }
                             }
                         }
                     }
                 }
-                nAnterior = n.getDato();
             }
             
             //calcular la capacidad actual
@@ -158,20 +141,61 @@ public class Algoritmos_Defrag_ProAct {
             
             if (FcmtAux<Fcmt){
                 Fcmt = FcmtAux;
-                caminoElegido = ind;
-            }
-
-            nulo = false;
-            if (caminoElegido==-1){
-                System.out.println("Camino Elegido = -1 ..................");
+                indKSPUbicMenFcmt.clear();
+                indKSPUbicMenFcmt.add(ind);
+            }else if(FcmtAux==Fcmt){
+                indKSPUbicMenFcmt.add(ind);
             }
         
             ind++;
         }
         
-        r.setCamino(indiceKsp.get(caminoElegido));
-        r.setFin(fines.get(caminoElegido));
-        r.setInicio(inicios.get(caminoElegido));
+        if (indKSPUbicMenFcmt.size() == 1){
+            r.setCamino(indiceKsp.get(indKSPUbicMenFcmt.get(0)));
+            r.setFin(fines.get(indKSPUbicMenFcmt.get(0)));
+            r.setInicio(inicios.get(indKSPUbicMenFcmt.get(0)));
+        }else{
+            //encontrar el ksp más corto
+            int tamKspMasCorto = 999;
+            int indKspMasCorto = -1;
+            for (int indMenCutsMenDesalig : indKSPUbicMenFcmt) {
+                if (kspUbicados.get(indMenCutsMenDesalig).getTamanho() - 1 < tamKspMasCorto){
+                    indKspMasCorto = indMenCutsMenDesalig;
+                    tamKspMasCorto = kspUbicados.get(indMenCutsMenDesalig).getTamanho() - 1;
+                }
+            }
+            //buscar el indice first fit
+            //Inicializadomos el espectro, inicialmente todos los FSs estan libres
+            for(int i=0;i<capacidad;i++){
+                OE[i]=1;
+            }
+            //Calcular la ocupacion del espectro para cada camino k
+            for(int i=0;i<capacidad;i++){
+                for(Nodo n=ksp[indiceKsp.get(indKspMasCorto)].getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
+                    if(G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS()[i].getEstado()==0){
+                        OE[i]=0;
+                        break;
+                    }
+                }
+            }
+            cont=0; 
+            for(int i=0;i<capacidad;i++){
+                if(OE[i]==1){
+                    cont++;
+                }else if (OE[i]==0){
+                    cont=0;
+                }
+                //si se encontro un bloque valido, tomamos en cuenta el ksp
+                if(cont==demanda.getNroFS()){ //si o si va a encontrar ya que es un ksp en kspUbicados
+                    r.setCamino(indiceKsp.get(indKspMasCorto));
+                    r.setFin(i);
+                    r.setInicio(i - cont + 1);
+                    break; //solo el primero que encuentra
+                }
+            }
+        }
+        
+
         return r;
     }
     
@@ -279,54 +303,38 @@ public class Algoritmos_Defrag_ProAct {
         }else {
             //calcula el desalineamiento de cada uno
             for (int indMenorCuts : indKSPUbicMenCuts) {                
-                int DesalineacionAux = 0;
-                int nActual, nSgte, nAnterior = -1;
-                int nSgteSgte = -1;
+                //calcula el desalineamiento de cada uno
+                int Desalineacion = 0;
+                int bandEsRuta = 0;
                 for (Nodo n = kspUbicados.get(indMenorCuts).getInicio(); n.getSiguiente().getSiguiente() != null; n = n.getSiguiente()) {
                     for (int i = 0; i < G.getCantidadDeVertices(); i++) {
-                        nActual = n.getDato();
-                        nSgte = n.getSiguiente().getDato();
-
-                        try {
-                            if (n.getSiguiente().getSiguiente() != null) {
-                                nSgteSgte = n.getSiguiente().getSiguiente().getDato();
-                            }
-                        } catch (Exception e) {
-                            //exploto
-                            System.out.println("No le salio sgte de sgte");
-                            e.printStackTrace();
-                        }
-
-                        if (G.acceder(i, nActual) != null && i != nSgte && i != nActual && i != nAnterior) {
-                            for(int fsd = inicios.get(indMenorCuts); fsd <= inicios.get(indMenorCuts) + demanda.getNroFS() - 1; fsd++){
-                                if (G.acceder(i, nActual).getFS()[fsd].getEstado() == 1) {
-                                    DesalineacionAux = DesalineacionAux + 1;
-                                } else {
-                                    DesalineacionAux = DesalineacionAux - 1;
+                        if(G.acceder(n.getDato(), i)!=null){ //si son vecinos
+                            bandEsRuta = 0;
+                            for (Nodo nn = kspUbicados.get(indMenorCuts).getInicio(); nn.getSiguiente().getSiguiente() != null; nn = nn.getSiguiente()) {
+                                if(nn.getDato() == i){ //si es parte de la ruta
+                                    bandEsRuta = 1;
+                                    break;
                                 }
                             }
-                        }
-
-                        if (G.acceder(nSgte, i) != null && i != nActual && i != nSgte && i != nAnterior && i != nSgteSgte) {
-                            for(int fsd = inicios.get(indMenorCuts); fsd <= inicios.get(indMenorCuts) + demanda.getNroFS() - 1; fsd++){
-                                if (G.acceder(nSgte, i).getFS()[fsd].getEstado() == 1) {
-                                    DesalineacionAux = DesalineacionAux + 1;
-                                } else {
-                                    DesalineacionAux = DesalineacionAux - 1;
+                            if(bandEsRuta == 0){
+                                for(int fsd = inicios.get(indMenorCuts); fsd <= inicios.get(indMenorCuts) + demanda.getNroFS() - 1; fsd++){
+                                    if (G.acceder(i, n.getDato()).getFS()[fsd].getEstado() == 1) {
+                                        Desalineacion = Desalineacion + 1;
+                                    } else {
+                                        Desalineacion = Desalineacion - 1;
+                                    }
                                 }
                             }
                         }
                     }
-                    nAnterior = n.getDato();
-
                 }
 
-                if (DesalineacionAux < DesalineacionFinal) {
+                if (Desalineacion < DesalineacionFinal) {
                     //si hay un menor al menor, limpia el vector y solo deja ese
-                    DesalineacionFinal = DesalineacionAux;
+                    DesalineacionFinal = Desalineacion;
                     indKSPUbicMenCutsMenDesalig.clear();
                     indKSPUbicMenCutsMenDesalig.add(indMenorCuts);
-                }else if(DesalineacionAux == DesalineacionFinal){
+                }else if(Desalineacion == DesalineacionFinal){
                     indKSPUbicMenCutsMenDesalig.add(indMenorCuts);
                 }
             }

@@ -150,19 +150,85 @@ public class Metricas {
     ListaEnlazada[] caminos - todos los caminos de dos enlaces de la red
     */
     public static double PathConsecutiveness (ListaEnlazada[] caminos, int capacidad, GrafoMatriz G){
+        int ind = 0;
+        double suma=0;
+        double promedio;
+        
+        int OE[] = new int[(capacidad)];
+        int sgteBloque;//bandera para avisar que tiene que ir al siguiente bloque
+        int cgb = 0;//contador global de bloques
+        double PCaux;
+        double sum, cfs;
+        
+        for(ListaEnlazada camino : caminos){
+            //Inicializadomos el espectro, inicialmente todos los FSs estan libres
+            for(int i=0;i<capacidad;i++){
+                OE[i]=1;
+            }
+            //Calcular la ocupacion del espectro para cada camino k
+            for(int i=0;i<capacidad;i++){
+                for(Nodo n=camino.getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
+                   //System.out.println("v1 "+n.getDato()+" v2 "+n.getSiguiente().getDato()+" cant vertices "+G.getCantidadDeVertices()+" i "+i+" FSs "+G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS().length);
+                    if(G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS()[i].getEstado()==0){
+                        OE[i]=0;
+                        break;
+                    }
+                }
+            }
+            
+            //calcular cantidad de bloques libres
+            sgteBloque = 0; 
+            for(int i=0;i<capacidad;i++){
+                if(OE[i]==1 && sgteBloque == 0){
+                    cgb++;
+                    sgteBloque = 1;
+                }else if (OE[i]==0){
+                    sgteBloque = 0;
+                }
+            }
+ 
+            PCaux = 0;
+            sum = 0;
+            cfs = 0;
+            for(Nodo n = camino.getInicio(); n.getSiguiente().getSiguiente()!=null; n = n.getSiguiente()){
+                //contador  frecuency slots
+                for(int i = 0; i < capacidad - 2; i++){
+                    sum += G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS()[i].getEstado() * G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS()[i + 1].getEstado(); //suma solo si son FS libres consecutivos
+                    if (G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS()[i].getEstado() == 1) {
+                        cfs++;
+                    }
+                }
+                if (G.acceder(n.getDato(),n.getSiguiente().getDato()).getFS()[capacidad - 1].getEstado() == 1) {
+                    cfs++;
+                }
+            }
+            
+            PCaux = (sum / cgb) * (cfs / capacidad);
+            
+            suma = suma + PCaux;
+            
+            ind++;
+        }
+        
+        promedio = suma/caminos.length; //k =44 y hay 100 caminos???
+        
+        return promedio;
+    }
+    
+    public static double PathConsecutiveness2 (ListaEnlazada[] caminos, int capacidad, GrafoMatriz G){
         int k = 0;
         float cl = 0;
         double suma=0;
         double promedio;
         int OE[] = new int[(capacidad)];
         
-        while (caminos.length > k && caminos[k] != null) {
+        while (caminos.length > k && caminos[k] != null) { //esto no es redundante?
             //inicializa el espectro
             for (int w = 0; w < (capacidad); w++) {
                 OE[w] = 1;
             }
-            Nodo t = caminos[k].getInicio();
-            int Total = (G.acceder(t.getDato(), t.getSiguiente().getDato())).getFS().length;
+            Nodo t = caminos[k].getInicio(); //la asignación no se usa creo
+            int Total = (G.acceder(t.getDato(), t.getSiguiente().getDato())).getFS().length; //capacidad?
             //calcula la ocupacion real del espectro
             for (int j = 0; j < Total; j++) {
                 for (t = caminos[k].getInicio(); t.getSiguiente().getSiguiente() != null; t = t.getSiguiente()) {
@@ -173,14 +239,14 @@ public class Metricas {
                 }
             }
             int vector[] = new int[2];
-            List<int[]> BloquesE = new LinkedList<int[]>(); //no necesito bloques
+            List<int[]> BloquesE = new LinkedList<>(); //no necesito bloques
             int cgb = 0;//contador global de bloques
             for (int c = 0; c < OE.length; c++) {//calcula la cantidad de bloques
                 int i = 0, f = 0;
                 if (OE[c] == 1) {
                     cgb++;
                     i = f = c;
-                    for (; c < OE.length; c++) {
+                    for (; c < OE.length; c++) { //esto modifica el valor de c del for anterior?
                         if (OE[c] == 0 || c == OE.length - 1) { //si encuentra un slot ocupado o si es el final de OE
                             f = c;
                             vector[0] = i;
