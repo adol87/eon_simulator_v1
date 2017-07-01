@@ -2559,6 +2559,10 @@ public class Utilitarios {
                     break;
             }
         }
+        
+        if (indice > p.length - 1 || indice < 0){
+            System.out.println("oh ooh, mando índice: " + indice + ", máximo: " + p.length);
+        }
         return indice;
     }
     

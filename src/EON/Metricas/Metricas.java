@@ -152,6 +152,7 @@ public class Metricas {
     public static double PathConsecutiveness (ListaEnlazada[] caminos, int capacidad, GrafoMatriz G){
         double suma=0;
         double promedio;
+        int ind = 0; //variable para saber cuantos de los caminos enviados son válidos para hacer el promedio
         
         int OE[] = new int[(capacidad)];
         int sgteBloque;//bandera para avisar que tiene que ir al siguiente bloque
@@ -159,7 +160,7 @@ public class Metricas {
         double PCaux;
         double sum, cfs;
         
-        for(ListaEnlazada camino : caminos){
+        for(ListaEnlazada camino : caminos){ //solo toma en cuenta los no null
             if (camino != null){
                 //Inicializadomos el espectro, inicialmente todos los FSs estan libres
                 for(int i=0;i<capacidad;i++){
@@ -207,10 +208,12 @@ public class Metricas {
                 PCaux = (sum / cgb) * (cfs / capacidad);
 
                 suma = suma + PCaux;
+                
+                ind++;
             }
         }
         
-        promedio = suma/caminos.length; //k =44 y hay 100 caminos???
+        promedio = suma/ind;
         
         return promedio;
     }

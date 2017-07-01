@@ -175,6 +175,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         textFieldTiempoDesfrag = new javax.swing.JTextField();
         etiquetaAnchoFSActual21 = new javax.swing.JLabel();
         etiquetaAnchoFSActual23 = new javax.swing.JLabel();
+        textFieldPeriodoDesfrag = new javax.swing.JTextField();
+        etiquetaAnchoFSActual22 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -690,7 +692,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual19.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual19.setText("0 = No considera");
-        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 550, 100, 20));
+        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 530, 100, 20));
 
         textFieldMejoraACO.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldMejoraACO.setText("10");
@@ -722,6 +724,20 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual23.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual23.setText("Max");
         getContentPane().add(etiquetaAnchoFSActual23, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 510, 30, 20));
+
+        textFieldPeriodoDesfrag.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        textFieldPeriodoDesfrag.setText("0");
+        textFieldPeriodoDesfrag.setToolTipText("");
+        textFieldPeriodoDesfrag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldPeriodoDesfragActionPerformed(evt);
+            }
+        });
+        getContentPane().add(textFieldPeriodoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 550, 40, 20));
+
+        etiquetaAnchoFSActual22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        etiquetaAnchoFSActual22.setText("Período Desfrag");
+        getContentPane().add(etiquetaAnchoFSActual22, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 550, 110, 20));
 
         getAccessibleContext().setAccessibleDescription("");
 
@@ -783,6 +799,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         double pathConsMin = Double.parseDouble(this.textFieldPathConsMin.getText());
         double entroUsoMin = Double.parseDouble(this.textFieldEntroUsoMin.getText());
         int tiempoDesfrag = Integer.parseInt(this.textFieldTiempoDesfrag.getText()); //Tiempo de simulacion indicado por el usuario
+        int periodoDesfrag = Integer.parseInt(this.textFieldPeriodoDesfrag.getText()); //Tiempo de simulacion indicado por el usuario
+        int ultimoDesfrag = periodoDesfrag;
+        
 
         GrafoMatriz G[] = new GrafoMatriz[this.algoritmosCompletosParaGraficar.size()]; // Se tiene una matriz de adyacencia por algoritmo RSA elegidos para por el usuario
         ListaEnlazada[] caminosDeDosEnlaces = null;
@@ -1015,7 +1034,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
                         Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
                     }                
-                    if (pathConsMin > 0 && pathConsec <= pathConsMin){
+                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
                         Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
                     }                
                     if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
@@ -1025,6 +1044,15 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
+                if(i==ultimoDesfrag){// || i==500 || i==700){
+                    ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
                 if(i==tiempoDesfrag){// || i==500 || i==700){
                     try {
                         Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
@@ -1033,7 +1061,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     }
                 }
                 
-//                if(i==47 || i==600|| i==927){
+//                if(i==300 || i==713 || i==800){
 //                    System.out.println("Path Consecutiveness Antes: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
 //                    try {
 //                        Utilitarios.seleccionDeRutasPathConsec(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces, caminosDeDosEnlaces);
@@ -1364,6 +1392,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldTiempoDesfragActionPerformed
 
+    private void textFieldPeriodoDesfragActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldPeriodoDesfragActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldPeriodoDesfragActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1443,6 +1475,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaAnchoFSActual2;
     private javax.swing.JLabel etiquetaAnchoFSActual20;
     private javax.swing.JLabel etiquetaAnchoFSActual21;
+    private javax.swing.JLabel etiquetaAnchoFSActual22;
     private javax.swing.JLabel etiquetaAnchoFSActual23;
     private javax.swing.JLabel etiquetaAnchoFSActual3;
     private javax.swing.JLabel etiquetaAnchoFSActual4;
@@ -1514,6 +1547,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JTextField textFieldMSIMin;
     private javax.swing.JTextField textFieldMejoraACO;
     private javax.swing.JTextField textFieldPathConsMin;
+    private javax.swing.JTextField textFieldPeriodoDesfrag;
     private javax.swing.JTextField textFieldTiempoDesfrag;
     // End of variables declaration//GEN-END:variables
 
