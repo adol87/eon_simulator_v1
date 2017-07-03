@@ -902,9 +902,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoEstados = new File(rutaEstados);
             for (int i = 1; i <= tiempoT; i++) {
                 
-                //imprimir estado de los enlaces
-                System.out.println("Grafo al empezar el tiempo: " + i);
-                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+//                //imprimir estado de los enlaces
+//                System.out.println("Grafo al empezar el tiempo: " + i);
+//                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
         
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -1018,7 +1018,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     porcUso = Metricas.PorcUsoGrafo(G[a]);
                     Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso,porcUso);
                 }
+                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
+                System.out.println("El porcentaje de Uso es: "+porcUso);
 
+                
                 
 //                //desfragmentación
                 try {
@@ -1044,22 +1047,22 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                if(i==ultimoDesfrag){// || i==500 || i==700){
-                    ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
-                    try {
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    } catch (IOException ex) {
-                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                
-                if(i==tiempoDesfrag){// || i==500 || i==700){
-                    try {
-                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-                    } catch (IOException ex) {
-                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+//                if(i==86){// || i==500 || i==700){
+//                    ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
+//                    try {
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//                
+//                if(i==tiempoDesfrag){// || i==500 || i==700){
+//                    try {
+//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
                 
 //                if(i==300 || i==713 || i==800){
 //                    System.out.println("Path Consecutiveness Antes: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
