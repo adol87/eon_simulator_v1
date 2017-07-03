@@ -2758,7 +2758,7 @@ public class Utilitarios {
                 bw = new BufferedWriter(new FileWriter(archivo, true));
             } else {
                 bw = new BufferedWriter(new FileWriter(archivo));
-                bw.write("entropia,msi,bfr,rutas,pathconsec,entropiauso,porcuso");
+                bw.write("bloqueo,entropia,msi,bfr,rutas,pathconsec,entropiauso,porcuso");
                 bw.write("\r\n");
             }
             if(esBloqueo){
