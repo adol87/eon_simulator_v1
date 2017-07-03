@@ -2778,17 +2778,20 @@ public class Utilitarios {
     }
         
         public static double calcularProbabilidadDeBloqueo (double entropia, double msi, double bfr, double pathConsec,double entropiaUso, double porcUso, int rutas){
-            double resultado = 0.0, aux=0.0;
-            float probabilidad = 0;
+            double probabilidad = 0.0, resultado = 0.0, aux=0.0;
             double e = Math.E;
-            resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
+            //primera formula
+            //resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
+            resultado = (-137.3690*entropia)+(3689.0928*bfr)+(-0.4861*rutas)+(-5.3776*pathConsec)+(23.5029*entropiaUso)+(-433.2762*porcUso)+(-11.5475*msi)+1963.5518;
+            //segunda formula
+            //resultado = (-3.7101*entropia)+(288.4515*bfr)+(0.5280*rutas)+(5.0762*pathConsec)+(0.7617*entropiaUso)+(-216.5551*porcUso)+(-1.6310*msi)+304.0107;
             aux = (Math.pow(e, (resultado)));
             
-            probabilidad = (float) (aux / (1+aux));
+            probabilidad = 1 / (1+aux);
             if(probabilidad*100 == 100){
                 System.out.print("");
             }
-            return probabilidad*100;
+            return probabilidad;
         }
     
 }
