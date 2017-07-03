@@ -49,7 +49,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private int HoldingTime; // Erlang / Lambda
     private int FsMinimo; // Cantidad mínima de FS por enlace
     private int FsMaximo; // Cantidad máxima de FS por enlace
-    private double entropia, msi, bfr, pathConsec, entropiaUso, porcUso;
+    private double entropia, msi, bfr, pathConsec, entropiaUso, porcUso, probBloqueo;
     private ArrayList<Integer> rutasEstablecidas; //guarda el tiempo de vida de las rutas ya establecidas por el algoritmo RSA
     private ArrayList<ListaEnlazada> arrayRutas;//Guarda la lista enlazada que representa a la ruta establecida por el algoritmo RSA
     private ArrayList<Resultado> resultadoRuteo;//Guarda los resutados del algoritmo para saber en que FS fue ubicada la demanda
@@ -367,14 +367,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso"
+                "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso", "Prob Bloq"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+                java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -397,14 +397,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Tiempo", "Demandas", "Bloqueos", "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso"
+                "Tiempo", "Demandas", "Bloqueos", "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso", "Prob Bloq"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -438,14 +438,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Tiempo", "Demandas", "Bloqueos", "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso"
+                "Tiempo", "Demandas", "Bloqueos", "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso", "Prob Bloq"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false, true, true, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -472,14 +472,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso"
+                "Entropía", "MSI", "BFR", "LightPaths", "PathConse", "Entr/uso", "% Uso", "Prob Bloq"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+                java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1009,17 +1009,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
                 for (int a = 0; a < RSA.size(); a++) {
                     //Escribimos el archivo de resultados
-                    entropia = msi = bfr = pathConsec = entropiaUso = 0.0;
+                    entropia = msi = bfr = pathConsec = entropiaUso = probBloqueo = 0.0;
                     entropia = G[a].entropia();
                     msi = Metricas.MSI(G[a], capacidadPorEnlace);
                     bfr = Metricas.BFR(G[a], capacidadPorEnlace);
                     pathConsec = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
                     entropiaUso = Metricas.EntropiaPorUso(caminosDeDosEnlaces, capacidadPorEnlace, G[a]);
                     porcUso = Metricas.PorcUsoGrafo(G[a]);
-                    Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso,porcUso);
+                    probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
+                    Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso,porcUso,probBloqueo);
                 }
-                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
-                System.out.println("El porcentaje de Uso es: "+porcUso);
+//                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
+//                System.out.println("El porcentaje de Uso es: "+porcUso);
 
                 
                 
@@ -1120,8 +1121,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             List<XYTextAnnotation> annotation = new LinkedList<>();
             String linea;
             int contLinea = 0;
-            XYSeries series[] = new XYSeries[8];
-            XYSeriesCollection datos = new XYSeriesCollection();
+            XYSeries series[] = new XYSeries[9];
             
             //tablas
             DefaultTableModel modelBloqueos = (DefaultTableModel) this.jTableResultadosBloqueos.getModel(); //todos
@@ -1139,19 +1139,20 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 series[5] = new XYSeries("Path Consecutiveness");
                 series[6] = new XYSeries("Entropía por su uso");
                 series[7] = new XYSeries("% Uso");
+                series[8] = new XYSeries("Prob Bloqueo");
 
                 while (((linea = br.readLine()) != null)) {
                     contLinea++;
-                    String[] line = linea.split(",", 10);
+                    String[] line = linea.split(",", 11);
                     
                     //agrega a la tabla los Resultados
-                        modelResultados.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8]), (double) Double.parseDouble(line[9])});
+                        modelResultados.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8]), (double) Double.parseDouble(line[9]), (double) Double.parseDouble(line[10])});
                     
                     //agrega en annotation todos los bloqueos para después agregarlos a los gráficos
                     if ((double) Double.parseDouble(line[2]) > 0) {
                         annotation.add(new XYTextAnnotation(line[2], (double) Double.parseDouble(line[0]), 0.02));
                         //agrega a la tabla los bloqueos
-                        modelBloqueos.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8]), (double) Double.parseDouble(line[9])});
+                        modelBloqueos.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8]), (double) Double.parseDouble(line[9]), (double) Double.parseDouble(line[10])});
                     }
 
                     series[0].add(contLinea, (double) Double.parseDouble(line[2]));
@@ -1162,6 +1163,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     series[5].add(contLinea, (double) Double.parseDouble(line[7]));
                     series[6].add(contLinea, (double) Double.parseDouble(line[8]));
                     series[7].add(contLinea, (double) Double.parseDouble(line[9]));
+                    series[8].add(contLinea, (double) Double.parseDouble(line[10]));
                 }
                 
                 //hallar el max y min de los resultados
@@ -1240,6 +1242,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         ArrayList<Double> list4 = new ArrayList<>();
         ArrayList<Double> list5 = new ArrayList<>();
         ArrayList<Double> list6 = new ArrayList<>();
+        ArrayList<Double> list7 = new ArrayList<>();
         for(int i = 0; i < Tabla.getRowCount(); i++){
             list0.add(Double.parseDouble(Tabla.getValueAt(i,3).toString()));
             list1.add(Double.parseDouble(Tabla.getValueAt(i,4).toString()));
@@ -1248,6 +1251,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             list4.add(Double.parseDouble(Tabla.getValueAt(i,7).toString()));
             list5.add(Double.parseDouble(Tabla.getValueAt(i,8).toString()));
             list6.add(Double.parseDouble(Tabla.getValueAt(i,9).toString()));
+            list7.add(Double.parseDouble(Tabla.getValueAt(i,10).toString()));
         }
         
         Double maxEntro;
@@ -1264,6 +1268,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         Double minEntroUso;
         Double maxPorcUso;
         Double minPorcUso;
+        Double maxPorcBloqueo;
+        Double minPorcBloqueo;
         
         maxEntro = Collections.max(list0);
         minEntro = Collections.min(list0);
@@ -1279,11 +1285,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         minEntroUso = Collections.min(list5);
         maxPorcUso = Collections.max(list6);
         minPorcUso = Collections.min(list6);
+        maxPorcBloqueo = Collections.max(list7);
+        minPorcBloqueo = Collections.min(list7);
         
         
         //agrega a la tabla los bloqueos
-        model.addRow(new Object[]{minEntro, minMSI, minBRF, minLP, minPC, minEntroUso,minPorcUso});
-        model.addRow(new Object[]{maxEntro, maxMSI, maxBRF, maxLP, maxPC, maxEntroUso,maxPorcUso});
+        model.addRow(new Object[]{minEntro, minMSI, minBRF, minLP, minPC, minEntroUso,minPorcUso,maxPorcBloqueo});
+        model.addRow(new Object[]{maxEntro, maxMSI, maxBRF, maxLP, maxPC, maxEntroUso,maxPorcUso,minPorcBloqueo});
 //        Tmax.setText(Integer.toString(max));
 //        Tmin.setText(Integer.toString(min));
     }
