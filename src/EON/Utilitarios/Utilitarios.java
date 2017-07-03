@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -2780,12 +2779,12 @@ public class Utilitarios {
         
         public static double calcularProbabilidadDeBloqueo (double entropia, double msi, double bfr, double pathConsec,double entropiaUso, double porcUso, int rutas){
             double resultado = 0.0, aux=0.0;
-            BigInteger probabilidad;
+            float probabilidad = 0;
             double e = Math.E;
             resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
             aux = (Math.pow(e, (resultado)));
             
-            probabilidad = (aux / (1+aux));
+            probabilidad = (float) (aux / (1+aux));
             if(probabilidad*100 == 100){
                 System.out.print("");
             }
