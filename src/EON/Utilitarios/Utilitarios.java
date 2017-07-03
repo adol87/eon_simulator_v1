@@ -1940,7 +1940,7 @@ public class Utilitarios {
         return resultado;
     }
 
-    public static void escribirArchivoResultados(File archivo, int tiempo, int cantB, int cantD, double entropia, double MSI, double BFR, int cantRutas, double pathConsec, double entropiaUso, double porcUso){
+    public static void escribirArchivoResultados(File archivo, int tiempo, int cantB, int cantD, double entropia, double MSI, double BFR, int cantRutas, double pathConsec, double entropiaUso, double porcUso, double probBloqueo){
         BufferedWriter bw;
         try {
         if (archivo.exists()) {
@@ -1967,6 +1967,8 @@ public class Utilitarios {
         bw.write("" + redondearDecimales(entropiaUso, 3));
         bw.write(",");
         bw.write("" + redondearDecimales(porcUso, 3));
+        bw.write(",");
+        bw.write("" + redondearDecimales(probBloqueo, 3));
         bw.write("\r\n");
         bw.close();
         }catch(IOException e){
@@ -2017,11 +2019,21 @@ public class Utilitarios {
         subplot3.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
         datos = new XYSeriesCollection();
         
-        // create subplot 3...
+//        // create subplot 3...
+//        //final XYDataset data2 = createDataset2();
+//        datos.addSeries(series[4]);
+//        final XYItemRenderer renderer4 = new StandardXYItemRenderer();
+//        final NumberAxis rangeAxis4 = new NumberAxis("Cant. L.P.");
+//        rangeAxis4.setAutoRangeIncludesZero(false);
+//        final XYPlot subplot4 = new XYPlot(datos, null, rangeAxis4, renderer4);
+//        subplot4.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
+//        datos = new XYSeriesCollection();
+
+        // create subplot 3... alternativo
         //final XYDataset data2 = createDataset2();
-        datos.addSeries(series[4]);
+        datos.addSeries(series[8]);
         final XYItemRenderer renderer4 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis4 = new NumberAxis("Cant. L.P.");
+        final NumberAxis rangeAxis4 = new NumberAxis("Prob Bloqueo");
         rangeAxis4.setAutoRangeIncludesZero(false);
         final XYPlot subplot4 = new XYPlot(datos, null, rangeAxis4, renderer4);
         subplot4.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
