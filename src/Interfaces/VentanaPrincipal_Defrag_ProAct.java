@@ -1057,13 +1057,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                    }
 //                }
 //                
-//                if(i==tiempoDesfrag){// || i==500 || i==700){
-//                    try {
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
+                if(i==tiempoDesfrag){// || i==500 || i==700){
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 
 //                if(i==300 || i==713 || i==800){
 //                    System.out.println("Path Consecutiveness Antes: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));

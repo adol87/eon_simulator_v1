@@ -52,7 +52,7 @@ public class Utilitarios {
      * *************************************************************
      */
     /*Algoritmo de los k caminos mas cortos*/
-    public static ListaEnlazada[] KSP(GrafoMatriz G, int s, int d, int k) {
+    public static ListaEnlazada[] KSP_viejo(GrafoMatriz G, int s, int d, int k) {
         ListaEnlazada A[] = new ListaEnlazada[k];
         A[0] = Dijkstra(G, s, d);
         ListaEnlazada B[] = new ListaEnlazada[100];
@@ -151,36 +151,60 @@ public class Utilitarios {
         return A;
     }
     
-    public static ListaEnlazada[] KSP_nuevo(GrafoMatriz G, int o, int d, int k) {
+    public static ListaEnlazada[] KSP(GrafoMatriz G, int o, int d, int k) {
         ListaEnlazada ksp[] = new ListaEnlazada[k];
         ListaEnlazada posiblesCaminos[] = new ListaEnlazada[100]; //no creo que hallan m[as de 100 combinaciones antes de que encuentre la cant k sp
-        int termino = 0; //bandera para saber si recorrió el grafo y no encontró más caminos a seguir
+//        int termino = 0; //bandera para saber si recorrió el grafo y no encontró más caminos a seguir
         int cont = 0; //contado de sh encontrados
-        int primera = 0; //bandera para saber si es la primera opci;on del nodo, para saber si agregar o crea un nuevo posibleCamino
+        int primera; //bandera para saber si es la primera opci;on del nodo, para saber si agregar o crea un nuevo posibleCamino
         int tamañoPC = 1;
+        int nuevosPC = 0;
         int hayPCSinTerminar = 0;
-
-        posiblesCaminos[0].insertarAlComienzo(o);
+        ListaEnlazada base = new ListaEnlazada();
+        int actual; //nro nodo controlado actualmente
+        int bandEsRuta = 0;
         
-        while(ksp[k-1] != null || termino == 1){ //que esté lleno el vector ksp o que ya recorra todo
+        base.insertarAlfinal(o);
+
+        posiblesCaminos[0] = copiarRuta(base);
+        
+        while(ksp[k-1] == null){ //que esté lleno el vector ksp o que ya recorra todo
+            tamañoPC = tamañoPC + nuevosPC;
+            nuevosPC = 0;
             for(int i = 0; i < tamañoPC && cont < k; i++){ // de 0 a cant de caminos posibles y si aún no consiguió la cant k que busca
+                hayPCSinTerminar = 1; //si al terminar todos los caminos todos llegaron al destino este valor no cambia y luego con el if termina
                 primera = 0;
+                actual = posiblesCaminos[i].getFin().getDato();
+                base = copiarRuta(posiblesCaminos[i]);
                 if(posiblesCaminos[i].getFin().getDato() != d){ //solo si este posible camino aún no llegó a destino
                     hayPCSinTerminar = 0;
+                    //primero preguntar si de acá ya me puedo ir al destino
+                    if(G.acceder(actual, d)!=null){ //llego al destino
+                        posiblesCaminos[i].insertarAlfinal(d); //inserta el destino al final
+                        primera = 1; //las siguientes tiene que crear uno de vuelta
+                        //agrega a la lista de ksp a retornar
+                        ksp[cont] = posiblesCaminos[i]; //se puede pio copiar el ksp así? ja
+                        cont++;
+                    }
                     for(int j=0;j<G.getCantidadDeVertices() && cont < k;j++){ // de 0 a cant de caminos nodos y si aún no consiguió la cant k que busca
-                        if(G.acceder(posiblesCaminos[i].getFin().getDato(), j)!=null){
-                            if (primera == 0){
-                                posiblesCaminos[i].insertarAlfinal(j);
-                                primera = 1; //las siguientes tiene que crear uno de vuelta
-                            }else{ //crea un posible camino nuevo con el mismo antecedente
-                                posiblesCaminos[tamañoPC] = posiblesCaminos[i]; //agrega al final
-                                posiblesCaminos[tamañoPC].insertarAlfinal(j);
-                                tamañoPC++; //tamaño usado del vector
+                        bandEsRuta = 0; //bandera para saber si j es parte ya de la ruta para descartar
+                        if(G.acceder(actual, j)!=null && j != d){ //que halla camino y que sea diferente al destino porque ese ya probé antes
+                            //sin volver a un nodo ya visitado
+                            for (Nodo nn = posiblesCaminos[i].getInicio(); nn.getSiguiente() != null; nn = nn.getSiguiente()) {
+                                if(nn.getDato() == j){ //si es parte de la ruta
+                                    bandEsRuta = 1;
+                                    break;
+                                }
                             }
-                            if(j == d){ //si ya es el nodo destino
-                                //agrega a la lista de ksp a retornar
-                                ksp[cont] = posiblesCaminos[i]; //se puede pio copiar el ksp así? ja
-                                cont++;
+                            if (bandEsRuta == 0){ //este nodo ya es parte de la ruta
+                                if (primera == 0){
+                                    posiblesCaminos[i].insertarAlfinal(j);
+                                    primera = 1; //las siguientes tiene que crear uno de vuelta
+                                }else{ //crea un posible camino nuevo con el mismo antecedente
+                                    posiblesCaminos[tamañoPC + nuevosPC] = copiarRuta(base); //agrega al final
+                                    posiblesCaminos[tamañoPC + nuevosPC].insertarAlfinal(j);
+                                    nuevosPC++; //tamaño usado del vector
+                                }
                             }
                         }
                     }
@@ -191,6 +215,16 @@ public class Utilitarios {
                 break;
             }
         }
+        
+        //agregar el último nodo con el valor que no usamos pero tiene en cuenta para recorrer los nodos
+        for(int i = 0; i < k && ksp[i] != null; i++){ //por cada ksp encontrado
+            ksp[i].insertarAlfinal(99);
+        }
+        
+        if (ksp.length <k) {
+            System.out.println("no lleno ksp: " + ksp.length);
+        }
+                
         
         return ksp;
     }
@@ -2848,6 +2882,19 @@ public class Utilitarios {
             System.out.print("");
         }
         return probabilidad;
+    }
+    
+    /*Metodo para copiar ListaEnlazada*/
+    public static ListaEnlazada copiarRuta(ListaEnlazada original) {
+        ListaEnlazada copia = new ListaEnlazada();
+        //copia.insertarAlComienzo(original.getInicio().getDato());
+        Nodo nod = original.getInicio();
+        for (; nod.getSiguiente() != null; nod = nod.getSiguiente()) {
+            copia.insertarAlfinal(nod.getDato());
+        }
+        copia.insertarAlfinal(nod.getDato()); //inserta el nodo final de la distancia
+        
+        return copia;
     }
     
 }
