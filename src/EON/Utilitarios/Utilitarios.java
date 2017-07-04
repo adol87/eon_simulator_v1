@@ -150,6 +150,50 @@ public class Utilitarios {
         }
         return A;
     }
+    
+    public static ListaEnlazada[] KSP_nuevo(GrafoMatriz G, int o, int d, int k) {
+        ListaEnlazada ksp[] = new ListaEnlazada[k];
+        ListaEnlazada posiblesCaminos[] = new ListaEnlazada[100]; //no creo que hallan m[as de 100 combinaciones antes de que encuentre la cant k sp
+        int termino = 0; //bandera para saber si recorrió el grafo y no encontró más caminos a seguir
+        int cont = 0; //contado de sh encontrados
+        int primera = 0; //bandera para saber si es la primera opci;on del nodo, para saber si agregar o crea un nuevo posibleCamino
+        int tamañoPC = 1;
+        int hayPCSinTerminar = 0;
+
+        posiblesCaminos[0].insertarAlComienzo(o);
+        
+        while(ksp[k-1] != null || termino == 1){ //que esté lleno el vector ksp o que ya recorra todo
+            for(int i = 0; i < tamañoPC && cont < k; i++){ // de 0 a cant de caminos posibles y si aún no consiguió la cant k que busca
+                primera = 0;
+                if(posiblesCaminos[i].getFin().getDato() != d){ //solo si este posible camino aún no llegó a destino
+                    hayPCSinTerminar = 0;
+                    for(int j=0;j<G.getCantidadDeVertices() && cont < k;j++){ // de 0 a cant de caminos nodos y si aún no consiguió la cant k que busca
+                        if(G.acceder(posiblesCaminos[i].getFin().getDato(), j)!=null){
+                            if (primera == 0){
+                                posiblesCaminos[i].insertarAlfinal(j);
+                                primera = 1; //las siguientes tiene que crear uno de vuelta
+                            }else{ //crea un posible camino nuevo con el mismo antecedente
+                                posiblesCaminos[tamañoPC] = posiblesCaminos[i]; //agrega al final
+                                posiblesCaminos[tamañoPC].insertarAlfinal(j);
+                                tamañoPC++; //tamaño usado del vector
+                            }
+                            if(j == d){ //si ya es el nodo destino
+                                //agrega a la lista de ksp a retornar
+                                ksp[cont] = posiblesCaminos[i]; //se puede pio copiar el ksp así? ja
+                                cont++;
+                            }
+                        }
+                    }
+                }
+            }
+            if(hayPCSinTerminar == 1){ //ya controló todos
+                //no encontró la cant k de SP
+                break;
+            }
+        }
+        
+        return ksp;
+    }
 
     /*Algoritmo encargado de retornar el resultado del algoritmo de Dijkstra 
       en una lista enlazada con los nodos del camino mas corto.*/
@@ -2118,8 +2162,8 @@ public class Utilitarios {
     
     //halla todos los caminos tomados de a dos de una topología
     public static ListaEnlazada[] hallarCaminosTomadosDeADos(double [][][] v, int cantNodos, int cantEnlaces) {
-        int promedioGrados = (cantEnlaces * 2)/cantNodos;
-        int cantCaminosDosEnlaces = (cantEnlaces * promedioGrados) / 2; // = (cantEnlaces * cantEnlaces / cantNodos)
+//        int promedioGrados = (cantEnlaces * 2)/cantNodos;
+//        int cantCaminosDosEnlaces = (cantEnlaces * promedioGrados) / 2; // = (cantEnlaces * cantEnlaces / cantNodos)
         ListaEnlazada A[] = new ListaEnlazada[100];
         ListaEnlazada P;
         int cont = 0; //cuenta los resultados
@@ -2789,21 +2833,21 @@ public class Utilitarios {
         return;
     }
         
-        public static double calcularProbabilidadDeBloqueo (double entropia, double msi, double bfr, double pathConsec,double entropiaUso, double porcUso, int rutas){
-            double probabilidad = 0.0, resultado = 0.0, aux=0.0;
-            double e = Math.E;
-            //primera formula
-            //resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
-            resultado = (-137.3690*entropia)+(3689.0928*bfr)+(-0.4861*rutas)+(-5.3776*pathConsec)+(23.5029*entropiaUso)+(-433.2762*porcUso)+(-11.5475*msi)+1963.5518;
-            //segunda formula
-            //resultado = (-3.7101*entropia)+(288.4515*bfr)+(0.5280*rutas)+(5.0762*pathConsec)+(0.7617*entropiaUso)+(-216.5551*porcUso)+(-1.6310*msi)+304.0107;
-            aux = (Math.pow(e, (resultado)));
-            
-            probabilidad = 1 / (1+aux);
-            if(probabilidad*100 == 100){
-                System.out.print("");
-            }
-            return probabilidad;
+    public static double calcularProbabilidadDeBloqueo (double entropia, double msi, double bfr, double pathConsec,double entropiaUso, double porcUso, int rutas){
+        double probabilidad = 0.0, resultado = 0.0, aux=0.0;
+        double e = Math.E;
+        //primera formula
+        //resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
+        resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
+        //segunda formula
+        //resultado = (-3.7101*entropia)+(288.4515*bfr)+(0.5280*rutas)+(5.0762*pathConsec)+(0.7617*entropiaUso)+(-216.5551*porcUso)+(-1.6310*msi)+304.0107;
+        aux = (Math.pow(e, (resultado)));
+
+        probabilidad = aux / (1+aux);
+        if(probabilidad*100 == 100){
+            System.out.print("");
         }
+        return probabilidad;
+    }
     
 }
