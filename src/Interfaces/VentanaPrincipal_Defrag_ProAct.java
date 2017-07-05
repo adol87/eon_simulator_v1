@@ -45,6 +45,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
     private int Erlang, rutas;
     private boolean esBloqueo;
+    private boolean haybloqueos;
     private int Lambda, contBloqueos;
     private int HoldingTime; // Erlang / Lambda
     private int FsMinimo; // Cantidad mínima de FS por enlace
@@ -901,7 +902,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoDefrag = new File(rutaDefrag);
             File archivoEstados = new File(rutaEstados);
             for (int i = 1; i <= tiempoT; i++) {
-                
+                haybloqueos = false;
 //                //imprimir estado de los enlaces
 //                System.out.println("Grafo al empezar el tiempo: " + i);
 //                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
@@ -941,6 +942,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     contB[a]++;
                                     contBloqueos++;
                                     esBloqueo = true;
+                                    haybloqueos = true;
 //                                    System.out.println("Hubo bloqueo en el tiempo: " + i + ", demanda: ");
 ////                                    Utilitarios.imprimirDemanda(demanda);
                                 }
@@ -957,6 +959,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     contB[a]++;
                                     contBloqueos++;
                                     esBloqueo = true;
+                                    haybloqueos = true;
                                 }
                                 break;
                            case "MTLSC":
@@ -970,6 +973,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     contB[a]++;
                                     contBloqueos++;
                                     esBloqueo = true;
+                                    haybloqueos = true;
                                 }
                                 break;
                         }
@@ -1019,8 +1023,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
                     Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso,porcUso,probBloqueo);
                 }
-//                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
-//                System.out.println("El porcentaje de Uso es: "+porcUso);
+                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
+                System.out.println("El porcentaje de Uso es: "+porcUso);
+
 
                 
                 
@@ -1048,14 +1053,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-//                if(i==86){// || i==500 || i==700){
-//                    ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
-//                    try {
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
+                if(haybloqueos){// || i==500 || i==700){
+                    ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
 //                
 //                if(i==tiempoDesfrag){// || i==500 || i==700){
 //                    try {
@@ -1065,7 +1070,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                    }
 //                }
                 
-//                if(i==300 || i==713 || i==800){
+//                if(haybloqueos){
 //                    System.out.println("Path Consecutiveness Antes: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
 //                    try {
 //                        Utilitarios.seleccionDeRutasPathConsec(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces, caminosDeDosEnlaces);
