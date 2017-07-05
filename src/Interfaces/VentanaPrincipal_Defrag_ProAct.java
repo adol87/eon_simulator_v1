@@ -178,6 +178,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual23 = new javax.swing.JLabel();
         textFieldPeriodoDesfrag = new javax.swing.JTextField();
         etiquetaAnchoFSActual22 = new javax.swing.JLabel();
+        etiquetaAnchoFSActual24 = new javax.swing.JLabel();
+        textFieldProbBloqueoMin = new javax.swing.JTextField();
+        etiquetaAnchoFSActual25 = new javax.swing.JLabel();
+        textFieldProbBloqueoMax = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -534,25 +538,34 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jTableResultadosDefrag.setAutoCreateRowSorter(true);
         jTableResultadosDefrag.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Tiempo", "Cant. Rutas", "Mejora %"
+                "Tiempo", "Rutas Activas", "Mejora %", "Mejor Hormiga", "Rutas Modificadas"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
+        jTableResultadosDefrag.setColumnSelectionAllowed(true);
         jScrollPane7.setViewportView(jTableResultadosDefrag);
 
-        jPanel2.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 240, 610));
+        jPanel2.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 360, 610));
 
         jTabbedPane1.addTab("Desfragmentaciones", jPanel2);
 
@@ -582,7 +595,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual6.setText("%");
-        getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 590, 20, 20));
+        getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 610, 20, 20));
 
         textFieldCantHormigas.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldCantHormigas.setText("30");
@@ -591,7 +604,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldCantHormigasActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldCantHormigas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 590, 40, 20));
+        getContentPane().add(textFieldCantHormigas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 610, 40, 20));
 
         etiquetaAnchoFSActual7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual7.setText("Min");
@@ -599,7 +612,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual8.setText("Cant. hormigas:");
-        getContentPane().add(etiquetaAnchoFSActual8, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 590, 100, 20));
+        getContentPane().add(etiquetaAnchoFSActual8, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 610, 100, 20));
 
         etiquetaAnchoFSActual9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         etiquetaAnchoFSActual9.setText("BFR");
@@ -693,7 +706,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual19.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual19.setText("0 = No considera");
-        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 530, 100, 20));
+        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 640, 100, 20));
 
         textFieldMejoraACO.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldMejoraACO.setText("10");
@@ -702,11 +715,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldMejoraACOActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldMejoraACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 590, 40, 20));
+        getContentPane().add(textFieldMejoraACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 610, 40, 20));
 
         etiquetaAnchoFSActual20.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual20.setText("Mejora buscada en ACO:");
-        getContentPane().add(etiquetaAnchoFSActual20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 590, 150, 20));
+        getContentPane().add(etiquetaAnchoFSActual20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 610, 150, 20));
 
         textFieldTiempoDesfrag.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldTiempoDesfrag.setText("0");
@@ -716,11 +729,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldTiempoDesfragActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldTiempoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 550, 40, 20));
+        getContentPane().add(textFieldTiempoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, 40, 20));
 
         etiquetaAnchoFSActual21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual21.setText("Tiempo a Desfrag");
-        getContentPane().add(etiquetaAnchoFSActual21, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, 110, 20));
+        getContentPane().add(etiquetaAnchoFSActual21, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 540, 110, 20));
 
         etiquetaAnchoFSActual23.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual23.setText("Max");
@@ -734,11 +747,39 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldPeriodoDesfragActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldPeriodoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 550, 40, 20));
+        getContentPane().add(textFieldPeriodoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 570, 40, 20));
 
         etiquetaAnchoFSActual22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual22.setText("Período Desfrag");
-        getContentPane().add(etiquetaAnchoFSActual22, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 550, 110, 20));
+        getContentPane().add(etiquetaAnchoFSActual22, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 570, 110, 20));
+
+        etiquetaAnchoFSActual24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        etiquetaAnchoFSActual24.setText("Prob. Bloqueo Min");
+        getContentPane().add(etiquetaAnchoFSActual24, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 540, 110, 20));
+
+        textFieldProbBloqueoMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        textFieldProbBloqueoMin.setText("0");
+        textFieldProbBloqueoMin.setToolTipText("");
+        textFieldProbBloqueoMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldProbBloqueoMinActionPerformed(evt);
+            }
+        });
+        getContentPane().add(textFieldProbBloqueoMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 540, 40, 20));
+
+        etiquetaAnchoFSActual25.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        etiquetaAnchoFSActual25.setText("Prob. Bloqueo Max");
+        getContentPane().add(etiquetaAnchoFSActual25, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 570, 110, 20));
+
+        textFieldProbBloqueoMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        textFieldProbBloqueoMax.setText("0");
+        textFieldProbBloqueoMax.setToolTipText("");
+        textFieldProbBloqueoMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldProbBloqueoMaxActionPerformed(evt);
+            }
+        });
+        getContentPane().add(textFieldProbBloqueoMax, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 570, 40, 20));
 
         getAccessibleContext().setAccessibleDescription("");
 
@@ -801,6 +842,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         double entroUsoMin = Double.parseDouble(this.textFieldEntroUsoMin.getText());
         int tiempoDesfrag = Integer.parseInt(this.textFieldTiempoDesfrag.getText()); //Tiempo de simulacion indicado por el usuario
         int periodoDesfrag = Integer.parseInt(this.textFieldPeriodoDesfrag.getText()); //Tiempo de simulacion indicado por el usuario
+        double probBloqMin = Double.parseDouble(this.textFieldProbBloqueoMin.getText());
+        double probBloqMax = Double.parseDouble(this.textFieldProbBloqueoMax.getText());
         int ultimoDesfrag = periodoDesfrag;
         
 
@@ -992,6 +1035,16 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         porcUso = Metricas.PorcUsoGrafo(G[a]);
                         Utilitarios.escribirArchivoEstados(archivoEstados, entropia, msi, bfr, pathConsec, entropiaUso, esBloqueo, rutasEstablecidas.size(),porcUso);
                     }
+                    
+                    //desfragmentar si la prob de bloque es alta
+                    probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
+                    if((probBloqMin != 0 && probBloqMax != 0) && probBloqMin < probBloqueo && probBloqueo < probBloqMax){// || i==500 || i==700){
+                        try {
+                            Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                        } catch (IOException ex) {
+                            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
                 //Disminuir el tiempo de vida de todas las rutas en la red
                 for (int j = 0; j < RSA.size(); j++) {
@@ -1023,9 +1076,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
                     Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso,porcUso,probBloqueo);
                 }
-                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
-                System.out.println("El porcentaje de Uso es: "+porcUso);
-
+//                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
+//                System.out.println("El porcentaje de Uso es: "+porcUso);
 
                 
                 
@@ -1062,13 +1114,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     }
                 }
 //                
-//                if(i==tiempoDesfrag){// || i==500 || i==700){
-//                    try {
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
+                if(i==tiempoDesfrag){// || i==500 || i==700){
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 
 //                if(haybloqueos){
 //                    System.out.println("Path Consecutiveness Antes: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
@@ -1412,6 +1464,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldPeriodoDesfragActionPerformed
 
+    private void textFieldProbBloqueoMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldProbBloqueoMinActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldProbBloqueoMinActionPerformed
+
+    private void textFieldProbBloqueoMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldProbBloqueoMaxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldProbBloqueoMaxActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1493,6 +1553,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaAnchoFSActual21;
     private javax.swing.JLabel etiquetaAnchoFSActual22;
     private javax.swing.JLabel etiquetaAnchoFSActual23;
+    private javax.swing.JLabel etiquetaAnchoFSActual24;
+    private javax.swing.JLabel etiquetaAnchoFSActual25;
     private javax.swing.JLabel etiquetaAnchoFSActual3;
     private javax.swing.JLabel etiquetaAnchoFSActual4;
     private javax.swing.JLabel etiquetaAnchoFSActual5;
@@ -1564,6 +1626,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JTextField textFieldMejoraACO;
     private javax.swing.JTextField textFieldPathConsMin;
     private javax.swing.JTextField textFieldPeriodoDesfrag;
+    private javax.swing.JTextField textFieldProbBloqueoMax;
+    private javax.swing.JTextField textFieldProbBloqueoMin;
     private javax.swing.JTextField textFieldTiempoDesfrag;
     // End of variables declaration//GEN-END:variables
 
