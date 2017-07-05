@@ -1956,7 +1956,7 @@ public class Utilitarios {
         return demandas;
     }
     
-        public static void cargarTablaResultadosDefrag(File archivo, JTable tabla) throws FileNotFoundException, IOException {
+    public static void cargarTablaResultadosDefrag(File archivo, JTable tabla) throws FileNotFoundException, IOException {
             
         String linea;
         DefaultTableModel model = (DefaultTableModel) tabla.getModel(); //bloqueos
@@ -2374,7 +2374,7 @@ public class Utilitarios {
         }
         if(mejor!=0){
            copiarGrafo(G, grafoMejor, capacidad);
-           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, true ,mejorHormiga, rutas.size());
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejor, true ,mejorHormiga, rutas.size());
            //Retirar resultados viejos del vector resultados, colocar los resultados de la mejor solucion           
            for (int k=0; k<indicesMejor.size(); k++){
                resultados.set(indicesMejor.get(k), resultadosMejor.get(k));
@@ -2382,7 +2382,7 @@ public class Utilitarios {
            }
            System.out.println("Encontró una solucion mejor entre las hormigas y copio el grafoCopia al Grafo original.");
         }else{
-           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejora, false, mejorHormiga, rutas.size());
+           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejor, false, mejorHormiga, rutas.size());
            System.out.println("No encontró un resultado mínimo deseado entre las hormigas, no hace nada con el grafo. :(");
         }
 
@@ -2711,25 +2711,25 @@ public class Utilitarios {
         if (solucion){
             bw.write("" + tiempo);
             bw.write(",");
-            bw.write("" + cantRutas);
+            bw.write("" + totalRutas);
             bw.write(",");
             bw.write("" + mejora);
             bw.write(",");
             bw.write("" + mejorHormiga);
             bw.write(",");
-            bw.write("" + totalRutas);
+            bw.write("" + cantRutas);
             bw.write("\r\n");
             bw.close();
         }else{
             bw.write("" + tiempo);
             bw.write(",");
-            bw.write("" + 0);
+            bw.write("" + totalRutas);
             bw.write(",");
             bw.write("" + 0);
             bw.write(",");
             bw.write(""+-1);
             bw.write(",");
-            bw.write("" + totalRutas);
+            bw.write("" + 0);
             bw.write("\r\n");
             bw.close();
         }
@@ -2871,7 +2871,7 @@ public class Utilitarios {
         double e = Math.E;
         //primera formula
         //resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
-        resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
+        resultado = (-0.08207*rutas)+(95.39104*porcUso)+(-30.74927);
         //segunda formula
         //resultado = (-3.7101*entropia)+(288.4515*bfr)+(0.5280*rutas)+(5.0762*pathConsec)+(0.7617*entropiaUso)+(-216.5551*porcUso)+(-1.6310*msi)+304.0107;
         aux = (Math.pow(e, (resultado)));
