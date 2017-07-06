@@ -2090,6 +2090,7 @@ public class Utilitarios {
         // create subplot 3...
         datos.addSeries(series[3]);
         final XYItemRenderer renderer3 = new StandardXYItemRenderer();
+        renderer3.setSeriesPaint(0, new Color(0x80, 0x00, 0x80));
         final NumberAxis rangeAxis3 = new NumberAxis("BFR");
         rangeAxis3.setAutoRangeIncludesZero(false);
         final XYPlot subplot3 = new XYPlot(datos, null, rangeAxis3, renderer3);
@@ -2872,6 +2873,8 @@ public class Utilitarios {
         //primera formula
         //resultado = (137.3690*entropia)+(-3689.0928*bfr)+(0.4861*rutas)+(5.3776*pathConsec)+(-23.5029*entropiaUso)+(433.2762*porcUso)+(11.5475*msi)-1963.5518;
         resultado = (-0.08207*rutas)+(95.39104*porcUso)+(-30.74927);
+//        resultado = (0.05279*entropiaUso)+(26.96105*bfr)+(-34.31472); //10000t_260E_2L_1FS10
+//        resultado = (29.45110*porcUso)+(0.30784*entropia)+(-29.95134); //15000t_280E_2L_1FS10
         //segunda formula
         //resultado = (-3.7101*entropia)+(288.4515*bfr)+(0.5280*rutas)+(5.0762*pathConsec)+(0.7617*entropiaUso)+(-216.5551*porcUso)+(-1.6310*msi)+304.0107;
         aux = (Math.pow(e, (resultado)));
@@ -2894,6 +2897,16 @@ public class Utilitarios {
         copia.insertarAlfinal(nod.getDato()); //inserta el nodo final de la distancia
         
         return copia;
+    }
+    
+    public static void reiniciarJTableRows(javax.swing.JTable Tabla){
+        DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
+        while(modelo.getRowCount()>0)modelo.removeRow(0);
+    }
+    
+    public static void reiniciarJTableColumns(javax.swing.JTable Tabla){
+        DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
+        modelo.setColumnCount(0);
     }
     
 }

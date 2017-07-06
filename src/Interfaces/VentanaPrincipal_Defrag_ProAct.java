@@ -802,13 +802,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         this.algoritmosCompletosParaGraficar.clear();
         
         //borramos los resultados que están en las tablas
-        reiniciarJTableRows(this.jTableResultados);
-        reiniciarJTableRows(this.jTableResultadosMinMax);
-        reiniciarJTableRows(this.jTableResultadosBloqueos);
-        reiniciarJTableRows(this.jTableResultadosBloqueosMinMax);
-        reiniciarJTableRows(this.jTableEstadoEnlaces);
-        reiniciarJTableColumns(this.jTableEstadoEnlaces);
-        reiniciarJTableRows(this.jTableResultadosDefrag);
+        Utilitarios.reiniciarJTableRows(this.jTableResultados);
+        Utilitarios.reiniciarJTableRows(this.jTableResultadosMinMax);
+        Utilitarios.reiniciarJTableRows(this.jTableResultadosBloqueos);
+        Utilitarios.reiniciarJTableRows(this.jTableResultadosBloqueosMinMax);
+        Utilitarios.reiniciarJTableRows(this.jTableEstadoEnlaces);
+        Utilitarios.reiniciarJTableColumns(this.jTableEstadoEnlaces);
+        Utilitarios.reiniciarJTableRows(this.jTableResultadosDefrag);
         
         //parámetros ACO
         double mejoraACO = Double.parseDouble(this.textFieldMejoraACO.getText());
@@ -946,9 +946,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoEstados = new File(rutaEstados);
             for (int i = 1; i <= tiempoT; i++) {
                 haybloqueos = false;
-//                //imprimir estado de los enlaces
-//                System.out.println("Grafo al empezar el tiempo: " + i);
-//                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+                //imprimir estado de los enlaces
+                System.out.println("Grafo al empezar el tiempo: " + i);
+                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
         
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -975,19 +975,19 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
                                     
-//                                    //imprimir estado de los enlaces
-//                                    System.out.println("Resultado: ");
-//                                    Utilitarios.imprimirResultado(r);
-//                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
-//                                    Utilitarios.imprimirDemanda(demanda);
-//                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+                                    //imprimir estado de los enlaces
+                                    System.out.println("Resultado: ");
+                                    Utilitarios.imprimirResultado(r);
+                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
+                                    Utilitarios.imprimirDemanda(demanda);
+                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
                                 } else {
                                     contB[a]++;
                                     contBloqueos++;
                                     esBloqueo = true;
                                     haybloqueos = true;
-//                                    System.out.println("Hubo bloqueo en el tiempo: " + i + ", demanda: ");
-////                                    Utilitarios.imprimirDemanda(demanda);
+                                    System.out.println("Hubo bloqueo en el tiempo: " + i + ", demanda: ");
+                                    Utilitarios.imprimirDemanda(demanda);
                                 }
                                 break;
                             case "FA-CA":
@@ -1104,16 +1104,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-//                if(haybloqueos){// || i==500 || i==700){
-//                    ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
-//                    try {
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-//                
+                
+                //no modificar          
+                if(i == ultimoDesfrag){// || i==500 || i==700){
+                    ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
+                    try {
+                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+//              
+                //no modificar
                 if(i==tiempoDesfrag){// || i==500 || i==700){
                     try {
                         Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, this.jTableEstadoEnlaces);
@@ -1122,6 +1124,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     }
                 }
                 
+                //ESTE SI PODES MODIFICAR
 //                if(haybloqueos){
 //                    System.out.println("Path Consecutiveness Antes: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
 //                    try {
@@ -1347,8 +1350,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         
         
         //agrega a la tabla los bloqueos
-        model.addRow(new Object[]{minEntro, minMSI, minBRF, minLP, minPC, minEntroUso,minPorcUso,maxPorcBloqueo});
-        model.addRow(new Object[]{maxEntro, maxMSI, maxBRF, maxLP, maxPC, maxEntroUso,maxPorcUso,minPorcBloqueo});
+        model.addRow(new Object[]{minEntro, minMSI, minBRF, minLP, minPC, minEntroUso,minPorcUso,minPorcBloqueo});
+        model.addRow(new Object[]{maxEntro, maxMSI, maxBRF, maxLP, maxPC, maxEntroUso,maxPorcUso,maxPorcBloqueo});
 //        Tmax.setText(Integer.toString(max));
 //        Tmin.setText(Integer.toString(min));
     }
@@ -1397,16 +1400,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             etiquetaImagenTopologia.setOpaque(false);
         }
     }
-    
-    public static void reiniciarJTableRows(javax.swing.JTable Tabla){
-        DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
-        while(modelo.getRowCount()>0)modelo.removeRow(0);
-    }
-    
-    public static void reiniciarJTableColumns(javax.swing.JTable Tabla){
-        DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
-        modelo.setColumnCount(0);
-    }
+   
     
     private void textFieldLambdaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldLambdaActionPerformed
         // TODO add your handling code here:
