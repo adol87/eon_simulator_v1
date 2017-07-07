@@ -2286,7 +2286,7 @@ public class Utilitarios {
         //Inicializacion de feromonas y visibilidad
         for (int i =0; i<feromonas.length ; i++){
             feromonas[i]=1;
-            visibilidad[i]=calculoVisibilidad(porEnt, porBfr, porPath, rutas.get(i),capacidad,G);
+            visibilidad[i]=calculoVisibilidad(porEnt, porBfr, porPath, rutas.get(i),capacidad,G,FSMinPC);
         }
         for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
             rutasElegidas.clear();
@@ -2336,7 +2336,7 @@ public class Utilitarios {
                 
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
-                    mejoraActual = calculoMejora(porEnt, porBfr, porPath, copiaGrafo, entropiaGrafo, bfrGrafo, pathGrafo, capacidad, caminosDeDosEnlaces);
+                    mejoraActual = calculoMejora(porEnt, porBfr, porPath, copiaGrafo, entropiaGrafo, bfrGrafo, pathGrafo, capacidad, caminosDeDosEnlaces,FSMinPC);
                 } else {
                     mejoraActual = 0;
                     break; //Verificar si esto es necesario
@@ -2822,9 +2822,6 @@ public class Utilitarios {
         }
         for (int i=0; i<maxBlocks.size(); i++){
             sumaEnlaces = sumaEnlaces + maxBlocks.get(i);
-        }
-        for (){
-        
         }
         return (sumaEnlaces/G.getCantidadEnlaces()); 
     }
