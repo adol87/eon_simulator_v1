@@ -2286,7 +2286,7 @@ public class Utilitarios {
         }
         //Selecciona el objetivo del algoritmo ACO
         switch (objetivoAco) {
-                case "Entropia":
+                case "Entropía":
                     porPath = false;
                     porEnt = true;
                     porBfr = false;
