@@ -2240,11 +2240,14 @@ public class Utilitarios {
         double resultado = 0.0;
         double entropiaActual = 0.0;
         double pathConsecActual = 0.0;
+        double bfrActual = 0.0;
         if(porEnt){
             entropiaActual = copiaGrafo.entropia();                    
             resultado = 100 - ((redondearDecimales(entropiaActual, 6) * 100)/redondearDecimales(entropiaGrafo, 6));
         }
         if(porBfr){
+            bfrActual = Metricas.BFR(copiaGrafo, capacidad);
+            resultado = 100 - ((redondearDecimales(bfrActual, 6) * 100)/redondearDecimales(bfrActual, 6));
         }
         if(porPath){
             pathConsecActual = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, copiaGrafo, fsMinPC);                    
@@ -2254,9 +2257,9 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static boolean seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, ListaEnlazada[] caminosDeDosEnlaces, JTable tablaEnlaces, int FSMinPC) throws IOException {
+    public static boolean seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, ListaEnlazada[] caminosDeDosEnlaces, JTable tablaEnlaces, int FSMinPC, String objetivoAco) throws IOException {
          int h, cont, cantidadRutasMejor=rutas.size(), mejorHormiga = 0;
-         boolean porEnt = true, porBfr = false, porPath = false;
+         boolean porEnt = false, porBfr = false, porPath = false;
          double entropiaGrafo = 0, bfrGrafo = 0, pathGrafo = 0;
          double mejoraActual, mejor=0;
          Resultado rparcial;
@@ -2277,10 +2280,30 @@ public class Utilitarios {
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
          ArrayList<Integer> indicesElegidas = new ArrayList<>(); //guarda los indices de las rutas elegidas por la hormiga
-         entropiaGrafo = G.entropia();
-         pathGrafo = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, G, FSMinPC);
+         
         for (int i =0; i<probabilidad.length ; i++){
             indexOrden.add(i);
+        }
+        //Selecciona el objetivo del algoritmo ACO
+        switch (objetivoAco) {
+                case "Entropia":
+                    porPath = false;
+                    porEnt = true;
+                    porBfr = false;
+                    entropiaGrafo = G.entropia();
+                    break;
+                case "Path Consecutiveness":
+                    porPath = true;
+                    porEnt = false;
+                    porBfr = false;
+                    pathGrafo = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, G, FSMinPC);
+                    break;
+                case "BFR":
+                    porPath = false;
+                    porEnt = false;
+                    porBfr = true;
+                    bfrGrafo = Metricas.BFR(G, capacidad);
+                    break;
         }
 
         //Inicializacion de feromonas y visibilidad
@@ -2823,7 +2846,11 @@ public class Utilitarios {
         for (int i=0; i<maxBlocks.size(); i++){
             sumaEnlaces = sumaEnlaces + maxBlocks.get(i);
         }
-        return (sumaEnlaces/G.getCantidadEnlaces()); 
+        int cantEnlaces = 0;
+        for (Nodo n= ruta.getInicio(); n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
+            cantEnlaces++;
+        }
+        return (sumaEnlaces/cantEnlaces); 
     }
     
     public static void reiniciarJTableRows(javax.swing.JTable Tabla){
