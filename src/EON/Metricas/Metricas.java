@@ -149,7 +149,7 @@ public class Metricas {
     capacidad - cantidad de FS por enlace
     ListaEnlazada[] caminos - todos los caminos de dos enlaces de la red
     */
-    public static double PathConsecutiveness (ListaEnlazada[] caminos, int capacidad, GrafoMatriz G){
+    public static double PathConsecutiveness (ListaEnlazada[] caminos, int capacidad, GrafoMatriz G, int FSMinPC){
         double suma=0;
         double promedio;
         int ind = 0; //variable para saber cuantos de los caminos enviados son válidos para hacer el promedio
@@ -159,6 +159,7 @@ public class Metricas {
         int cgb = 0;//contador global de bloques
         double PCaux;
         double sum, cfs;
+        int contFSMinPC = 0; //contador para saber si tiene el mínimo de espacio para ser considerado libre
         
         for(ListaEnlazada camino : caminos){ //solo toma en cuenta los no null
             if (camino != null){
@@ -166,6 +167,7 @@ public class Metricas {
                 for(int i=0;i<capacidad;i++){
                     OE[i]=1;
                 }
+                
                 //Calcular la ocupacion del espectro para cada camino k
                 for(int i=0;i<capacidad;i++){
                     for(Nodo n=camino.getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
@@ -174,6 +176,27 @@ public class Metricas {
                             OE[i]=0;
                             break;
                         }
+                    }
+                }
+                
+                //ocupa los bloques con cant de FS menores al mínimo
+                for(int i=0;i<capacidad;i++){
+                    contFSMinPC = 0; //reset
+                    if(OE[i] == 1){
+                        for(int j=i;j<capacidad;j++){
+                            if(OE[i] == 1){
+                                contFSMinPC++;
+                            }else{
+                                break;
+                            }
+                        }
+                        if(contFSMinPC < FSMinPC){
+                            //poner como ocupados
+                            for(int k=0;k < contFSMinPC;k++){
+                                OE[i + k]=0;
+                            }
+                        }
+                        i = i + contFSMinPC; //para que ya no controle los siguientes que ya controló
                     }
                 }
 
@@ -202,8 +225,6 @@ public class Metricas {
                 if(OE[capacidad - 1] == 1){
                     cfs++;
                 }
-                
-                
 
                 PCaux = (sum / cgb) * (cfs / capacidad);
 
