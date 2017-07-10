@@ -302,7 +302,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 50, 20));
 
         textFieldLambda.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldLambda.setText("3");
+        textFieldLambda.setText("5");
         textFieldLambda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldLambdaActionPerformed(evt);
