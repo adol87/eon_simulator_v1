@@ -1077,7 +1077,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             haybloqueos = true;
                                         }
                                     }else{
-                                        System.out.println("Desfragmento en el tiempo: "+i+"pero no logro evitar e bloqueo");
                                         contB[a]++;
                                         contBloqueos++;
                                         esBloqueo = true;
