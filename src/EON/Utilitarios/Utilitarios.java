@@ -1956,22 +1956,32 @@ public class Utilitarios {
         return demandas;
     }
     
-    public static void cargarTablaResultadosDefrag(File archivo, JTable tabla) throws FileNotFoundException, IOException {
+    //devuelve un vector con la cantidad de desfragmentaciones y la cantidad de rutas reruteadas
+    public static Integer[] cargarTablaResultadosDefrag(File archivo, JTable tabla) throws FileNotFoundException, IOException {
             
         String linea;
         DefaultTableModel model = (DefaultTableModel) tabla.getModel(); //bloqueos
+        Integer[] resultados = new Integer[2];
+        resultados[0] = 0;
+        resultados[1] = 0;
         
         try {
             FileReader fr = new FileReader(archivo);
             BufferedReader br = new BufferedReader(fr);
             while (((linea = br.readLine()) != null)) {
                 String[] line = linea.split(",", 5);
-                model.addRow(new Object[]{(double) Double.parseDouble(line[0]), (double) Double.parseDouble(line[1]), (double) Double.parseDouble(line[2]), (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4])});
+                model.addRow(new Object[]{Integer.parseInt(line[0]), Integer.parseInt(line[1]), (double) Double.parseDouble(line[2]), Integer.parseInt(line[3]), Integer.parseInt(line[4])});
                 
+                if(Integer.parseInt(line[0]) != 0 && Integer.parseInt(line[4]) > 0){
+                    resultados[0] = resultados[0] + 1;
+                    resultados[1] = resultados[1] + Integer.parseInt(line[4]);
+                }
             }
         } catch (IOException ioe) {
             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ioe);  
         }
+        
+        return resultados;
     }
 
 

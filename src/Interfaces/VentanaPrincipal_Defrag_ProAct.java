@@ -39,13 +39,15 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private Topologias Redes; // topologias disponibles
 
     private int tiempoTotal; // Iiempo que dura una simualcion
-    String redSeleccionada;
+    private String redSeleccionada;
     private double anchoFS; // ancho de un FS en los enlaces
     private int capacidadPorEnlace; // cantidad de FSs por enlace en la topologia elegida
 
+    private String metodo;
+    
     private int Erlang, rutas;
     private boolean esBloqueo;
-    private boolean haybloqueos, encontroSolucion = false,esReactivo=true;
+    private boolean haybloqueos, encontroSolucion = false;
     private int Lambda, contBloqueos;
     private int HoldingTime; // Erlang / Lambda
     private int FsMinimo; // Cantidad mínima de FS por enlace
@@ -81,6 +83,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         this.etiquetaDemandasTotales.setVisible(false);
         this.etiquetaTextoDemandasTotales.setVisible(false);
         this.etiquetaBloqueosTotales.setVisible(false);
+        this.etiquetaCantDesfrag.setVisible(false);
+        this.etiquetaCantDesfrag.setVisible(false);
+        this.etiquetaCantRutasReruteadas.setVisible(false);
+        this.etiquetaCantRutasReruteadas.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -103,7 +109,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         spinnerErlang = new javax.swing.JSpinner();
         jLabel6 = new javax.swing.JLabel();
         textFieldCapacidadEnlace = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
         listaRedes = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -179,15 +184,17 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         textFieldProbBloqueoMin = new javax.swing.JTextField();
         etiquetaAnchoFSActual25 = new javax.swing.JLabel();
         textFieldProbBloqueoMax = new javax.swing.JTextField();
-        etiquetaTextoBloqueosTotales1 = new javax.swing.JLabel();
-        etiquetaTotalReruteadas = new javax.swing.JLabel();
+        etiquetaTextoCantRutasReruteadas = new javax.swing.JLabel();
+        etiquetaCantRutasReruteadas = new javax.swing.JLabel();
         etiquetaCantDesfrag = new javax.swing.JLabel();
-        etiquetaTextoBloqueosTotales2 = new javax.swing.JLabel();
+        etiquetaTextoCantDesfrag = new javax.swing.JLabel();
         etiquetaAnchoFSActual12 = new javax.swing.JLabel();
         textFieldRutasARerutear = new javax.swing.JTextField();
         etiquetaAnchoFSActual26 = new javax.swing.JLabel();
         etiquetaTopologia1 = new javax.swing.JLabel();
         objetivoACO = new javax.swing.JComboBox<>();
+        Metodo = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -274,10 +281,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         textFieldCapacidadEnlace.setText("50");
         getContentPane().add(textFieldCapacidadEnlace, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, 50, -1));
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel9.setText("Parámetros de Desfragmentación");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, -1));
-
         listaRedes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NSFNet", "USNet", "ARPA-2" }));
         listaRedes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -299,7 +302,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 50, 20));
 
         textFieldLambda.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldLambda.setText("2");
+        textFieldLambda.setText("3");
         textFieldLambda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldLambdaActionPerformed(evt);
@@ -311,8 +314,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 390, 30, 20));
 
         textFieldFSminimo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldFSminimo.setText("4");
+        textFieldFSminimo.setText("1");
         textFieldFSminimo.setToolTipText("");
+        textFieldFSminimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldFSminimoActionPerformed(evt);
+            }
+        });
         getContentPane().add(textFieldFSminimo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 390, 30, 20));
 
         etiquetaAnchoFSActual3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -323,7 +331,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 390, 30, 20));
 
         textFieldFSmaximo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldFSmaximo.setText("10");
+        textFieldFSmaximo.setText("8");
         textFieldFSmaximo.setToolTipText("");
         textFieldFSmaximo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -568,7 +576,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTableResultadosDefrag.setColumnSelectionAllowed(true);
         jScrollPane7.setViewportView(jTableResultadosDefrag);
 
         jPanel2.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 360, 610));
@@ -779,17 +786,17 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         });
         getContentPane().add(textFieldProbBloqueoMax, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 550, 40, 20));
 
-        etiquetaTextoBloqueosTotales1.setText("Total Rutas Reruteadas:");
-        getContentPane().add(etiquetaTextoBloqueosTotales1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 10, 140, 20));
+        etiquetaTextoCantRutasReruteadas.setText("Total Rutas Reruteadas:");
+        getContentPane().add(etiquetaTextoCantRutasReruteadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 10, 140, 20));
 
-        etiquetaTotalReruteadas.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        getContentPane().add(etiquetaTotalReruteadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 10, 50, 20));
+        etiquetaCantRutasReruteadas.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        getContentPane().add(etiquetaCantRutasReruteadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 10, 50, 20));
 
         etiquetaCantDesfrag.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         getContentPane().add(etiquetaCantDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 10, 50, 20));
 
-        etiquetaTextoBloqueosTotales2.setText("Cant. Desfragmentaciones:");
-        getContentPane().add(etiquetaTextoBloqueosTotales2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 10, -1, 20));
+        etiquetaTextoCantDesfrag.setText("Cant. Desfragmentaciones:");
+        getContentPane().add(etiquetaTextoCantDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 10, -1, 20));
 
         etiquetaAnchoFSActual12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual12.setText("%");
@@ -821,6 +828,19 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         });
         getContentPane().add(objetivoACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 590, 110, -1));
 
+        Metodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Desfragmentar", "Reactivo", "DT Fijo", "Según un paper" }));
+        Metodo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MetodoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(Metodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 432, 170, 30));
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel9.setText("Método");
+        jLabel9.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, -1));
+
         getAccessibleContext().setAccessibleDescription("");
 
         pack();
@@ -849,6 +869,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         Utilitarios.reiniciarJTableRows(this.jTableEstadoEnlaces);
         Utilitarios.reiniciarJTableColumns(this.jTableEstadoEnlaces);
         Utilitarios.reiniciarJTableRows(this.jTableResultadosDefrag);
+        
+        //método
+        this.metodo = (String) this.Metodo.getSelectedItem(); // obtenemos la topologia seleccionada
         
         //parámetros ACO
         double mejoraACO = Double.parseDouble(this.textFieldMejoraACO.getText());
@@ -1032,8 +1055,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
 //                                    Utilitarios.imprimirDemanda(demanda);
 //                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
-                                } else {
-                                    if(esReactivo){
+                                } else {                                    
+                                    if(metodo == "Reactivo"){
                                         try {
                                             encontroSolucion = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                         } catch (IOException ex) {
@@ -1053,7 +1076,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             esBloqueo = true;
                                             haybloqueos = true;
                                         }
-                                    }    
+                                    }else{
+                                        System.out.println("Desfragmento en el tiempo: "+i+"pero no logro evitar e bloqueo");
+                                        contB[a]++;
+                                        contBloqueos++;
+                                        esBloqueo = true;
+                                        haybloqueos = true;
+                                    }  
                                 }
                                 break;
                             case "FA-CA":
@@ -1303,13 +1332,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             }
             
             //tabla desfragmentaciones
+            Integer[] resultDefrags = new Integer[2];
             String rutaResultadosDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
             File archivoResultadosDefrag = new File(rutaResultadosDefrag);
             try {
-                Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
+                resultDefrags = Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
             } catch (IOException ex) {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            //imprime los resultados en la pantalla
+            this.etiquetaCantDesfrag.setText("" + resultDefrags[0]);
+            this.etiquetaCantRutasReruteadas.setText("" + resultDefrags[1]);
 
 
             //Utilitarios.GraficarResultado(prob, this.panelResultado, "Resultado de la Simulación", RSA, paso);
@@ -1320,6 +1354,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             this.etiquetaDemandasTotales.setVisible(true);
             this.etiquetaTextoDemandasTotales.setVisible(true);
             this.etiquetaBloqueosTotales.setVisible(true);
+            this.etiquetaTextoCantDesfrag.setVisible(true);
+            this.etiquetaCantDesfrag.setVisible(true);
+            this.etiquetaTextoCantRutasReruteadas.setVisible(true);
+            this.etiquetaCantRutasReruteadas.setVisible(true);
 
             ////////Vaciar listas para las siguientes simulaciones///////////////
             /////////////////////////////////////////////////////////////////////
@@ -1527,6 +1565,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_objetivoACOActionPerformed
 
+    private void MetodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MetodoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MetodoActionPerformed
+
+    private void textFieldFSminimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFSminimoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldFSminimoActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1591,6 +1637,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> Metodo;
     private javax.swing.JButton botonEjecutarSimulacion;
     private javax.swing.JLabel etiquetaAnchoFSActual;
     private javax.swing.JLabel etiquetaAnchoFSActual1;
@@ -1621,6 +1668,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaAnchoFSActual9;
     private javax.swing.JLabel etiquetaBloqueosTotales;
     private javax.swing.JLabel etiquetaCantDesfrag;
+    private javax.swing.JLabel etiquetaCantRutasReruteadas;
     private javax.swing.JLabel etiquetaCapacidadActual;
     private javax.swing.JLabel etiquetaDemandasTotales;
     private javax.swing.JLabel etiquetaError;
@@ -1629,8 +1677,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaRSA2;
     private javax.swing.JLabel etiquetaRSA3;
     private javax.swing.JLabel etiquetaTextoBloqueosTotales;
-    private javax.swing.JLabel etiquetaTextoBloqueosTotales1;
-    private javax.swing.JLabel etiquetaTextoBloqueosTotales2;
+    private javax.swing.JLabel etiquetaTextoCantDesfrag;
+    private javax.swing.JLabel etiquetaTextoCantRutasReruteadas;
     private javax.swing.JLabel etiquetaTextoDemandasTotales;
     private javax.swing.JLabel etiquetaTextoMax;
     private javax.swing.JLabel etiquetaTextoMax1;
@@ -1639,7 +1687,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaTiempoActual;
     private javax.swing.JLabel etiquetaTopologia;
     private javax.swing.JLabel etiquetaTopologia1;
-    private javax.swing.JLabel etiquetaTotalReruteadas;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
