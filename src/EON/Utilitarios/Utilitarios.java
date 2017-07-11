@@ -2233,15 +2233,18 @@ public class Utilitarios {
     }
     public static double calculoVisibilidad(boolean porEnt, boolean porBfr, boolean porPath, ListaEnlazada ruta, int capacidad, GrafoMatriz G, int fsMinPC){
         double resultado = 0.0;
+        double pathAux = 0;
         if(porEnt){
             resultado = entropiaDeRuta(ruta, capacidad, G);
         }
         if(porBfr){
+            resultado = BFRdeRuta(ruta, capacidad, G);
         }
         if(porPath){
             ListaEnlazada[] rutaActual = new ListaEnlazada[1];
             rutaActual[0] = ruta;
-            resultado = 1/Metricas.PathConsecutiveness(rutaActual, capacidad, G, fsMinPC);
+            pathAux = Metricas.PathConsecutiveness(rutaActual, capacidad, G, fsMinPC);
+            resultado = capacidad-1-pathAux; //Para invertir la relacion
         }
         return resultado;
     }
