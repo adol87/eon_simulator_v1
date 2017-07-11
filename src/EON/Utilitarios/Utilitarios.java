@@ -2260,7 +2260,7 @@ public class Utilitarios {
         }
         if(porBfr){
             bfrActual = Metricas.BFR(copiaGrafo, capacidad);
-            resultado = 100 - ((redondearDecimales(bfrActual, 6) * 100)/redondearDecimales(bfrActual, 6));
+            resultado = 100 - ((redondearDecimales(bfrActual, 6) * 100)/redondearDecimales(bfrGrafo, 6));
         }
         if(porPath){
             pathConsecActual = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, copiaGrafo, fsMinPC);                    
@@ -2830,10 +2830,11 @@ public class Utilitarios {
     }
     
     public static double BFRdeRuta(ListaEnlazada ruta, int capacidad, GrafoMatriz G){
-        int contSeguido = 0, mayorSeguido = 0, contOcupados = 0;
+        int contSeguido = 0, mayorSeguido = 0, contOcupados;
         double sumaEnlaces=0;
         ArrayList<Integer> maxBlocks = new ArrayList<>();
         for(Nodo n=ruta.getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
+                        contOcupados = 0;
                         for (int k=0; k<capacidad; k++){
                             //1= libre 0 = Ocupado
                             if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[k].getEstado()==1){
@@ -2862,6 +2863,10 @@ public class Utilitarios {
         int cantEnlaces = 0;
         for (Nodo n= ruta.getInicio(); n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
             cantEnlaces++;
+        }
+        double result = sumaEnlaces/cantEnlaces;
+        if (result<0){
+            System.out.println("");
         }
         return (sumaEnlaces/cantEnlaces); 
     }

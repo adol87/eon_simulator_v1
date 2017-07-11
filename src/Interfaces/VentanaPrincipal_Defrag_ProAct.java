@@ -1057,6 +1057,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
                                 } else {                                    
                                     if(metodo == "Reactivo"){
+                                        System.out.println("Inicia desfragmentacion en el tiempo "+i+"con "+arrayRutas.size()+" rutas activas");
                                         try {
                                             encontroSolucion = Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                         } catch (IOException ex) {
