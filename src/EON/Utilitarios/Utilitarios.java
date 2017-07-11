@@ -2107,25 +2107,25 @@ public class Utilitarios {
         subplot3.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
         datos = new XYSeriesCollection();
         
-//        // create subplot 3...
-//        //final XYDataset data2 = createDataset2();
-//        datos.addSeries(series[4]);
-//        final XYItemRenderer renderer4 = new StandardXYItemRenderer();
-//        final NumberAxis rangeAxis4 = new NumberAxis("Cant. L.P.");
-//        rangeAxis4.setAutoRangeIncludesZero(false);
-//        final XYPlot subplot4 = new XYPlot(datos, null, rangeAxis4, renderer4);
-//        subplot4.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
-//        datos = new XYSeriesCollection();
-
-        // create subplot 3... alternativo
+        // create subplot 3...
         //final XYDataset data2 = createDataset2();
-        datos.addSeries(series[8]);
+        datos.addSeries(series[4]);
         final XYItemRenderer renderer4 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis4 = new NumberAxis("Prob Bloqueo");
+        final NumberAxis rangeAxis4 = new NumberAxis("Cant. L.P.");
         rangeAxis4.setAutoRangeIncludesZero(false);
         final XYPlot subplot4 = new XYPlot(datos, null, rangeAxis4, renderer4);
         subplot4.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
         datos = new XYSeriesCollection();
+
+//        // create subplot 3... alternativo
+//        //final XYDataset data2 = createDataset2();
+//        datos.addSeries(series[8]);
+//        final XYItemRenderer renderer4 = new StandardXYItemRenderer();
+//        final NumberAxis rangeAxis4 = new NumberAxis("Prob Bloqueo");
+//        rangeAxis4.setAutoRangeIncludesZero(false);
+//        final XYPlot subplot4 = new XYPlot(datos, null, rangeAxis4, renderer4);
+//        subplot4.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
+//        datos = new XYSeriesCollection();
 
         // create subplot 5...
         datos.addSeries(series[5]);
@@ -2270,7 +2270,7 @@ public class Utilitarios {
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
-    public static boolean seleccionDeRutas(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, ListaEnlazada[] caminosDeDosEnlaces, JTable tablaEnlaces, int FSMinPC, String objetivoAco) throws IOException {
+    public static boolean desfragmentacionACO(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, ListaEnlazada[] caminosDeDosEnlaces, JTable tablaEnlaces, int FSMinPC, String objetivoAco) throws IOException {
          int h, cont, cantidadRutasMejor=rutas.size(), mejorHormiga = 0;
          boolean porEnt = false, porBfr = false, porPath = false;
          double entropiaGrafo = 0, bfrGrafo = 0, pathGrafo = 0;
@@ -2547,7 +2547,7 @@ public class Utilitarios {
 
             double sumaProb = 0;
             indice = -1;
-            while(sumaProb < randomValue){
+            while(sumaProb <= randomValue){
                 indice++;
                 sumaProb = sumaProb + p[indice];
             }
@@ -2879,6 +2879,89 @@ public class Utilitarios {
     public static void reiniciarJTableColumns(javax.swing.JTable Tabla){
         DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
         modelo.setColumnCount(0);
+    }
+    
+    //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
+    public static Integer[] desfragmentacionPeoresRutas(double [][][]v, GrafoMatriz g, int capacidad, ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> resultadoRuteo, ArrayList<ListaEnlazada[]> listaKSP, String metrica, Double porcentaje, int FSMinPC){
+        int[] indicesRutasElegidas;
+        Integer[] resultado = new Integer[2];
+        indicesRutasElegidas = elegirPeoresRutas(g, capacidad, rutas, metrica, porcentaje, FSMinPC);
+        
+        desasignarFS_DefragProAct(rutasElegidas, resultadoRuteo, g, indicesElegidas); //desasignamos los FS de las rutas a reconfigurar
+        
+        //rerutea las rutas elegidas
+        for (int i=0; i<rutasElegidas.size(); i++){
+            int fs = resultadoRuteo.get(indicesElegidas.get(i)).getFin() - resultadoRuteo.get(indicesElegidas.get(i)).getInicio();
+            fs++;
+            int tVida = G.acceder(rutas.get(indicesElegidas.get(i)).getInicio().getDato(),rutas.get(indicesElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultadoRuteo.get(indicesElegidas.get(i)).getInicio()].getTiempo();
+            Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), obtenerFin(rutasElegidas.get(i).getInicio()).getDato(), fs, tVida);
+            //ListaEnlazada[] ksp = KSP(G, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
+            ListaEnlazada[] ksp = listaKSP.get(indicesElegidas.get(i));
+            rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
+            if (rparcial != null) {
+                asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
+                resultadosActualElegidas.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
+            } else {
+                contBloqueos++;
+            }
+        }
+        
+        return resultado;
+    }
+    
+    //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades, retorna el indice de las rutas elegidas
+    public static int[] elegirPeoresRutas(GrafoMatriz g, int capacidad, ArrayList<ListaEnlazada> rutas, String metrica, Double porcentaje, int FSMinPC){
+        Double[][] metricaRutas = new Double[rutas.size()][2]; //guardo la métrica para ordenar de cada ruta
+        Double[][] auxMetricaRutas = new Double[1][2];
+        Boolean descentente = true;
+        
+        int cantRutas = (int) (rutas.size() * porcentaje); //calcula la cant de rutas de acuerdo al porcentaje
+        int[] indiceRutasElegidas = new int[cantRutas];
+        
+        //guardar la métrica de cada ruta
+        for (int i = 0; i == rutas.size() - 1; i++){
+            metricaRutas[i][1] = Double.parseDouble("" + i);
+            if("Entropía".equals(metrica)){
+                metricaRutas[i][0] = entropiaDeRuta(rutas.get(i), capacidad, g);
+                descentente = true;
+            }else if("Path Consecutiveness".equals(metrica)){
+                ListaEnlazada[] ruta = new ListaEnlazada[1];
+                ruta[0] = rutas.get(i);
+                metricaRutas[i][0] = Metricas.PathConsecutiveness(ruta, capacidad, g, FSMinPC);
+                descentente = false;
+            }else if("BFR".equals(metrica)){
+                metricaRutas[i][0] = BFRdeRuta(rutas.get(i), capacidad, g);
+                descentente = true;
+            }else{
+                System.out.println("ERROR. Esta métrica no la conozco: " + metrica);
+            }
+        }
+        
+        //encontrar y ordenar los "cantRutas" más grandes descendente
+        for (int i = 0; i == rutas.size() - 1; i++){
+            for(int j = i + 1; j == rutas.size() - 1; j++){
+                if((descentente && metricaRutas[j][0] > metricaRutas[i][0]) || (!descentente && metricaRutas[j][0] < metricaRutas[i][0])){
+                    //guarda en aux los datos del que va a reemplazar primero
+                    auxMetricaRutas[0][0] = metricaRutas[i][0];
+                    auxMetricaRutas[0][1] = metricaRutas[i][1];
+
+                    //reemplaza
+                    metricaRutas[i][0] = metricaRutas[j][0];
+                    metricaRutas[i][1] = metricaRutas[j][1];
+
+                    //copia el aux al que reemplazo
+                    metricaRutas[j][0] = auxMetricaRutas[0][0];
+                    metricaRutas[j][1] = auxMetricaRutas[0][1];
+                }
+            }
+        }
+        
+        //cargar los peores
+        for(int i = 0; i == cantRutas - 1; i++){
+            indiceRutasElegidas[i] = metricaRutas[i][1].intValue();
+        }
+
+        return indiceRutasElegidas;
     }
     
 }
