@@ -225,17 +225,16 @@ public class Metricas {
                 if(OE[capacidad - 1] == 1){
                     cfs++;
                 }
-
-                PCaux = (sum / cgb) * (cfs / capacidad);
-
+                if(cgb==0){
+                    PCaux=0;
+                }else{
+                    PCaux = (sum / cgb) * (cfs / capacidad);
+                }
                 suma = suma + PCaux;
-                
                 ind++;
             }
         }
-        
         promedio = suma/ind;
-        
         return promedio;
     }
     
