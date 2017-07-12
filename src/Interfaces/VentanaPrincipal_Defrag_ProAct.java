@@ -1081,7 +1081,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                         switch (algoritmoAejecutar) {
                             case "FA":
-                                if(i==191){
+                                if(i==203){
                                     System.out.println("empieza el kilombo");
                                 }
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
@@ -1091,13 +1091,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     arrayRutas.add(ksp[r.getCamino()]);
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
-                                    
-                                    //imprimir estado de los enlaces
-//                                    System.out.println("Resultado: ");
-//                                    Utilitarios.imprimirResultado(r);
-//                                    System.out.println("Tiempo: " + i + ". Grafo después de asignar demanda: ");
-//                                    Utilitarios.imprimirDemanda(demanda);
-//                                    Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
+
                                 } else {                                    
                                     if(metodo == "Reactivo"){
                                         System.out.println("Inicia desfragmentacion en el tiempo "+i+"con "+arrayRutas.size()+" rutas activas");
@@ -1105,7 +1099,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             if (metodoDesfrag == "ACO"){
                                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                             }else{
-                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                                 //suma el resultado
                                                 etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo[0]));
                                                 etiquetaCantDesfrag.setText("" + (int) (Integer.parseInt("" + etiquetaCantDesfrag.getText()) + resultadoReRuteo[1]));
@@ -1113,7 +1107,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                         } catch (IOException ex) {
                                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                                         }
-                                        r = Algoritmos_Defrag_ProAct.Def_FACA(G[a], demanda, ksp, capacidadPorEnlace);
+                                        r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
                                         if (r != null) {
                                             Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                             rutasEstablecidas.add(demanda.getTiempo());
@@ -1121,7 +1115,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             resultadoRuteo.add(r);
                                             listaKSP.add(ksp);
                                         } else{
-                                            System.out.println("Desfragmento en el tiempo: "+i+"pero no logro evitar e bloqueo");
+                                            System.out.println("Desfragmento en el tiempo: "+i+"pero no logro evitar el bloqueo");
                                             contB[a]++;
                                             contBloqueos++;
                                             esBloqueo = true;
@@ -1149,7 +1143,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             if (metodoDesfrag == "ACO"){
                                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                             }else{
-                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                                 //suma el resultado
                                                 etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
                                                 etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
@@ -1217,7 +1211,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                             if (metodoDesfrag == "ACO"){
                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                             }else{
-                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                 //suma el resultado
                                 etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
                                 etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
@@ -1294,7 +1288,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                             if (metodoDesfrag == "ACO"){
                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                             }else{
-                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                 //suma el resultado
                                 etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
                                 etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);

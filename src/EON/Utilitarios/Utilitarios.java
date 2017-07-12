@@ -2510,6 +2510,19 @@ public class Utilitarios {
         }
     }
     
+        public static void ordenarIndices(ArrayList<Integer> lista){
+        int auxi;
+        for (int i = 0; i <= lista.size() - 1; i++) {
+            for (int j = i + 1; j < lista.size(); j++) {
+                if (lista.get(i) > lista.get(j)) {
+                    auxi = lista.get(i);
+                    lista.set(i, lista.get(j));
+                    lista.set(j, auxi);
+                }
+            }
+        }
+    }
+    
     //Metodo que realiza el re-ruteo de las rutas seleccionadas por las hormigas
     public static Resultado realizarRuteo(String algoritmo, Demanda demanda,  GrafoMatriz grafoCopia, ListaEnlazada ksp[], int capacidadE){
         Resultado r = null;
@@ -2882,7 +2895,7 @@ public class Utilitarios {
     }
     
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
-    public static Integer[] desfragmentacionPeoresRutas(double [][][]v, GrafoMatriz G, int capacidad, ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> resultadoRuteo, ArrayList<ListaEnlazada[]> listaKSP, String metrica, Double porcentaje, int FSMinPC, String algoritmoAejecutar){
+    public static Integer[] desfragmentacionPeoresRutas(double [][][]v, GrafoMatriz G, int capacidad, ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> resultadoRuteo, ArrayList<ListaEnlazada[]> listaKSP, String metrica, Double porcentaje, int FSMinPC, String algoritmoAejecutar, ArrayList<Integer> rutasEstablecidas){
         ArrayList<Integer> indicesRutasElegidas;
         int contBloqueos = 0;
         ArrayList<Integer> demandasBloqueadas =  new ArrayList<>();
@@ -2926,13 +2939,24 @@ public class Utilitarios {
             }
         }
         
+//esto vamos a usar en caso de que cuando haya blooqueo se tenga que cancelar la desfragmentacion, segun lo que diga el profe
+//        if(contBloqueos!=0){
+//            resultado[0]=0;
+//            resultado[1]=contBloqueos;
+//            return resultado;
+//        }
+        
         //Saca de las listas a los bloqueados
         cont=0;
+        if(demandasBloqueadas.size()>1){
+            ordenarIndices(indicesRutasElegidas);
+        }
         for(int k=0; k<indicesRutasElegidas.size(); k++){
             if(isInList(demandasBloqueadas, indicesRutasElegidas.get(k))){
                 listaKSP.remove(indicesRutasElegidas.get(k)-cont);
                 rutas.remove(indicesRutasElegidas.get(k)-cont);
                 resultadoRuteo.remove(indicesRutasElegidas.get(k)-cont);
+                rutasEstablecidas.remove(indicesRutasElegidas.get(k)-cont);
                 cont++;
             }
         }
