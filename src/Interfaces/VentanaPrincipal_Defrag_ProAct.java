@@ -192,9 +192,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         textFieldRutasARerutear = new javax.swing.JTextField();
         etiquetaAnchoFSActual26 = new javax.swing.JLabel();
         etiquetaTopologia1 = new javax.swing.JLabel();
-        objetivoACO = new javax.swing.JComboBox<>();
-        Metodo = new javax.swing.JComboBox<>();
+        ComboMetodoDesfrag = new javax.swing.JComboBox<>();
+        ComboMetodo = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
+        etiquetaTopologia2 = new javax.swing.JLabel();
+        ComboObjetivoReruteo = new javax.swing.JComboBox<>();
+        ComboObjetivoACO = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -234,7 +237,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaTopologia, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 90, 60, 20));
 
         etiquetaError.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        getContentPane().add(etiquetaError, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 650, 200, 40));
+        getContentPane().add(etiquetaError, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 670, 200, 30));
 
         etiquetaCapacidadActual.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaCapacidadActual.setText("Capacidad");
@@ -271,7 +274,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jLabel4.setText("Tráfico Máximo");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 90, 20));
 
-        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(100, 1, 1500, 50));
+        spinnerErlang.setModel(new javax.swing.SpinnerNumberModel(400, 1, 1500, 50));
         getContentPane().add(spinnerErlang, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, 50, -1));
 
         jLabel6.setText("Erlang");
@@ -608,7 +611,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual6.setText("%");
-        getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 590, 20, 20));
+        getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 580, 20, 20));
 
         textFieldCantHormigas.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldCantHormigas.setText("30");
@@ -617,7 +620,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldCantHormigasActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldCantHormigas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 620, 40, 20));
+        getContentPane().add(textFieldCantHormigas, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 610, 40, 20));
 
         etiquetaAnchoFSActual7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         etiquetaAnchoFSActual7.setText("Min");
@@ -625,7 +628,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual8.setText("Cant. hormigas:");
-        getContentPane().add(etiquetaAnchoFSActual8, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 620, 100, 20));
+        getContentPane().add(etiquetaAnchoFSActual8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 610, 100, 20));
 
         etiquetaAnchoFSActual9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         etiquetaAnchoFSActual9.setText("BFR");
@@ -711,20 +714,20 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual19.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual19.setText("0 = No considera");
-        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 670, 100, 20));
+        getContentPane().add(etiquetaAnchoFSActual19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 680, 100, 20));
 
         textFieldMejoraACO.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldMejoraACO.setText("10");
+        textFieldMejoraACO.setText("20");
         textFieldMejoraACO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldMejoraACOActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldMejoraACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 590, 40, 20));
+        getContentPane().add(textFieldMejoraACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 580, 40, 20));
 
         etiquetaAnchoFSActual20.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual20.setText("Mejora buscada en ACO:");
-        getContentPane().add(etiquetaAnchoFSActual20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 590, 150, 20));
+        getContentPane().add(etiquetaAnchoFSActual20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 580, 150, 20));
 
         textFieldTiempoDesfrag.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldTiempoDesfrag.setText("0");
@@ -800,7 +803,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
         etiquetaAnchoFSActual12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual12.setText("%");
-        getContentPane().add(etiquetaAnchoFSActual12, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 620, 20, 20));
+        getContentPane().add(etiquetaAnchoFSActual12, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 580, 20, 20));
 
         textFieldRutasARerutear.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldRutasARerutear.setText("30");
@@ -809,37 +812,58 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 textFieldRutasARerutearActionPerformed(evt);
             }
         });
-        getContentPane().add(textFieldRutasARerutear, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 620, 40, 20));
+        getContentPane().add(textFieldRutasARerutear, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 580, 40, 20));
 
         etiquetaAnchoFSActual26.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual26.setText("Rutas a Rerutear:");
-        getContentPane().add(etiquetaAnchoFSActual26, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 620, 150, 20));
+        getContentPane().add(etiquetaAnchoFSActual26, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 580, 110, 20));
 
         etiquetaTopologia1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         etiquetaTopologia1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaTopologia1.setText("Objetivo ACO");
-        getContentPane().add(etiquetaTopologia1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 590, -1, 20));
+        getContentPane().add(etiquetaTopologia1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 640, -1, 20));
 
-        objetivoACO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR" }));
-        objetivoACO.addActionListener(new java.awt.event.ActionListener() {
+        ComboMetodoDesfrag.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Peores Rutas", "ACO" }));
+        ComboMetodoDesfrag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                objetivoACOActionPerformed(evt);
+                ComboMetodoDesfragActionPerformed(evt);
             }
         });
-        getContentPane().add(objetivoACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 590, 110, -1));
+        getContentPane().add(ComboMetodoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 440, 140, -1));
 
-        Metodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Desfragmentar", "Reactivo", "DT Fijo" }));
-        Metodo.addActionListener(new java.awt.event.ActionListener() {
+        ComboMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Desfragmentar", "Reactivo", "DT Fijo" }));
+        ComboMetodo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MetodoActionPerformed(evt);
+                ComboMetodoActionPerformed(evt);
             }
         });
-        getContentPane().add(Metodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 432, 170, 30));
+        getContentPane().add(ComboMetodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 432, 170, 30));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel9.setText("Método");
         jLabel9.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, -1));
+
+        etiquetaTopologia2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        etiquetaTopologia2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        etiquetaTopologia2.setText("Objetivo Peores Rutas");
+        getContentPane().add(etiquetaTopologia2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 610, -1, 20));
+
+        ComboObjetivoReruteo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR" }));
+        ComboObjetivoReruteo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboObjetivoReruteoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ComboObjetivoReruteo, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 610, 110, -1));
+
+        ComboObjetivoACO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR" }));
+        ComboObjetivoACO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboObjetivoACOActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ComboObjetivoACO, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 640, 110, -1));
 
         getAccessibleContext().setAccessibleDescription("");
 
@@ -870,14 +894,28 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         Utilitarios.reiniciarJTableColumns(this.jTableEstadoEnlaces);
         Utilitarios.reiniciarJTableRows(this.jTableResultadosDefrag);
         
+        //pone en cero los resultados
+        etiquetaCantRutasReruteadas.setText("0");
+        etiquetaCantDesfrag.setText("0");
+        etiquetaDemandasTotales.setText("0");
+        etiquetaBloqueosTotales.setText("0");
+        
+        Integer[] resultadoReRuteo = new Integer[2]; //resultado Reruteo peores rutas
+        
         //método
-        this.metodo = (String) this.Metodo.getSelectedItem(); // obtenemos la topologia seleccionada
+        this.metodo = (String) this.ComboMetodo.getSelectedItem(); // obtenemos la topologia seleccionada
+        
+        //desfrag metodo
+        String metodoDesfrag = (String) this.ComboMetodoDesfrag.getSelectedItem(); // obtenemos la topologia seleccionada
+        
+        //Peores rutas
+        String ObjetivoReruteo = (String) this.ComboObjetivoReruteo.getSelectedItem(); // obtenemos la topologia seleccionada
         
         //parámetros ACO
         double mejoraACO = Double.parseDouble(this.textFieldMejoraACO.getText());
         int cantHormACO = Integer.parseInt(this.textFieldCantHormigas.getText());
-        int cantRutasARerutear = Integer.parseInt(this.textFieldRutasARerutear.getText());
-        String objetivoACO = (String) this.objetivoACO.getSelectedItem(); // obtenemos la topologia seleccionada
+        double porcRutasARerutear = Double.parseDouble(this.textFieldRutasARerutear.getText());
+        String objetivoACO = (String) this.ComboObjetivoACO.getSelectedItem(); // obtenemos la topologia seleccionada
 
         //leemos los valores seteados
         this.tiempoTotal = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); //Tiempo de simulacion indicado por el usuario
@@ -1018,6 +1056,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoResultados = new File(ruta);
             File archivoDefrag = new File(rutaDefrag);
             File archivoEstados = new File(rutaEstados);
+            
+            String algoritmoAejecutar = RSA.get(0);
+            
             for (int i = 1; i <= tiempoT; i++) {
                 haybloqueos = false;
 //                //imprimir estado de los enlaces
@@ -1035,14 +1076,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 esBloqueo = false;
                     ListaEnlazada[] ksp = Utilitarios.KSP(G[0], demanda.getOrigen(), demanda.getDestino(), 5); // calculamos los k caminos mas cortos entre el origen y el fin. Con k=5 (pude ser mas, cambiar dependiendo de la necesidad)
                     for (int a = 0; a < RSA.size(); a++) {
-
-                        String algoritmoAejecutar = RSA.get(a);
+                        
+                        algoritmoAejecutar = RSA.get(a);
 
                         switch (algoritmoAejecutar) {
                             case "FA":
-//                                if(i==14){
-//                                    System.out.println("empieza el kilombo");
-//                                }
+                                if(i==191){
+                                    System.out.println("empieza el kilombo");
+                                }
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
@@ -1061,7 +1102,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     if(metodo == "Reactivo"){
                                         System.out.println("Inicia desfragmentacion en el tiempo "+i+"con "+arrayRutas.size()+" rutas activas");
                                         try {
-                                            encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                                            if (metodoDesfrag == "ACO"){
+                                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                                            }else{
+                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                                //suma el resultado
+                                                etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo[0]));
+                                                etiquetaCantDesfrag.setText("" + (int) (Integer.parseInt("" + etiquetaCantDesfrag.getText()) + resultadoReRuteo[1]));
+                                            } 
                                         } catch (IOException ex) {
                                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                                         }
@@ -1098,7 +1146,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                 } else {
                                     if(metodo == "Reactivo"){
                                         try {
-                                            encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                                            if (metodoDesfrag == "ACO"){
+                                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                                            }else{
+                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                                //suma el resultado
+                                                etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
+                                                etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
+                                            } 
                                         } catch (IOException ex) {
                                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                                         }
@@ -1159,7 +1214,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
                     if((probBloqMin != 0 && probBloqMax != 0) && probBloqMin < probBloqueo && probBloqueo < probBloqMax){// || i==500 || i==700){
                         try {
-                            Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                            if (metodoDesfrag == "ACO"){
+                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                            }else{
+                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                //suma el resultado
+                                etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
+                                etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
+                            } 
                         } catch (IOException ex) {
                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -1229,7 +1291,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     if(i == ultimoDesfrag && i != tiempoTotal){// cada periodo y que no haga si es el ultimo tiempo
                         ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
                         try {
-                            Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC,objetivoACO);
+                            if (metodoDesfrag == "ACO"){
+                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                            }else{
+                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar);
+                                //suma el resultado
+                                etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
+                                etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
+                            } 
                         } catch (IOException ex) {
                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -1587,17 +1656,25 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldRutasARerutearActionPerformed
 
-    private void objetivoACOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objetivoACOActionPerformed
+    private void ComboMetodoDesfragActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboMetodoDesfragActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_objetivoACOActionPerformed
+    }//GEN-LAST:event_ComboMetodoDesfragActionPerformed
 
-    private void MetodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MetodoActionPerformed
+    private void ComboMetodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboMetodoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MetodoActionPerformed
+    }//GEN-LAST:event_ComboMetodoActionPerformed
 
     private void textFieldFSminimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFSminimoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldFSminimoActionPerformed
+
+    private void ComboObjetivoReruteoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboObjetivoReruteoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboObjetivoReruteoActionPerformed
+
+    private void ComboObjetivoACOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboObjetivoACOActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboObjetivoACOActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -1663,7 +1740,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> Metodo;
+    private javax.swing.JComboBox<String> ComboMetodo;
+    private javax.swing.JComboBox<String> ComboMetodoDesfrag;
+    private javax.swing.JComboBox<String> ComboObjetivoACO;
+    private javax.swing.JComboBox<String> ComboObjetivoReruteo;
     private javax.swing.JButton botonEjecutarSimulacion;
     private javax.swing.JLabel etiquetaAnchoFSActual;
     private javax.swing.JLabel etiquetaAnchoFSActual1;
@@ -1713,6 +1793,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JLabel etiquetaTiempoActual;
     private javax.swing.JLabel etiquetaTopologia;
     private javax.swing.JLabel etiquetaTopologia1;
+    private javax.swing.JLabel etiquetaTopologia2;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1743,7 +1824,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private javax.swing.JTable jTableResultadosMinMax;
     private javax.swing.JList<String> listaAlgoritmosRuteo;
     private javax.swing.JComboBox<String> listaRedes;
-    private javax.swing.JComboBox<String> objetivoACO;
     private javax.swing.JScrollPane panelResultados;
     private javax.swing.JSpinner spinnerErlang;
     private javax.swing.JSpinner spinnerTiempoSimulacion;

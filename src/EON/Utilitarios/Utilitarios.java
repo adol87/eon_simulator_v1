@@ -2948,11 +2948,11 @@ public class Utilitarios {
         Double[][] auxMetricaRutas = new Double[1][2];
         Boolean descentente = true;
         
-        int cantRutas = (int) (rutas.size() * porcentaje); //calcula la cant de rutas de acuerdo al porcentaje
+        int cantRutas = (int) (rutas.size() * porcentaje / 100); //calcula la cant de rutas de acuerdo al porcentaje
         ArrayList<Integer> indiceRutasElegidas = new ArrayList<>();
         
         //guardar la métrica de cada ruta
-        for (int i = 0; i == rutas.size() - 1; i++){
+        for (int i = 0; i <= rutas.size() - 1; i++){
             metricaRutas[i][1] = Double.parseDouble("" + i);
             if("Entropía".equals(metrica)){
                 metricaRutas[i][0] = entropiaDeRuta(rutas.get(i), capacidad, g);
@@ -2971,8 +2971,8 @@ public class Utilitarios {
         }
         
         //encontrar y ordenar los "cantRutas" más grandes descendente
-        for (int i = 0; i == rutas.size() - 1; i++){
-            for(int j = i + 1; j == rutas.size() - 1; j++){
+        for (int i = 0; i <= rutas.size() - 1; i++){
+            for(int j = i + 1; j <= rutas.size() - 1; j++){
                 if((descentente && metricaRutas[j][0] > metricaRutas[i][0]) || (!descentente && metricaRutas[j][0] < metricaRutas[i][0])){
                     //guarda en aux los datos del que va a reemplazar primero
                     auxMetricaRutas[0][0] = metricaRutas[i][0];
@@ -2990,7 +2990,7 @@ public class Utilitarios {
         }
         
         //cargar los peores
-        for(int i = 0; i == cantRutas - 1; i++){
+        for(int i = 0; i <= cantRutas - 1; i++){
             indiceRutasElegidas.add(metricaRutas[i][1].intValue());
         }
 
