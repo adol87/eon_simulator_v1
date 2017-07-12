@@ -2917,20 +2917,23 @@ public class Utilitarios {
         }
         
         //Cambia a los nuevos resultados
+        int cont = -1;
         for (int k=0; k<indicesRutasElegidas.size(); k++){
             if(!isInList(demandasBloqueadas, indicesRutasElegidas.get(k))){
-                resultadoRuteo.set(indicesRutasElegidas.get(k), resultadosNuevos.get(k));
-                rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(k));
+                cont++;
+                resultadoRuteo.set(indicesRutasElegidas.get(k), resultadosNuevos.get(cont));
+                rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(cont));
             }
         }
         
         //Saca de las listas a los bloqueados
+        cont=0;
         for(int k=0; k<indicesRutasElegidas.size(); k++){
             if(isInList(demandasBloqueadas, indicesRutasElegidas.get(k))){
-                listaKSP.remove(indicesRutasElegidas.get(k));
-                rutas.remove(indicesRutasElegidas.get(k));
-                resultadoRuteo.remove(indicesRutasElegidas.get(k));
-                k--;
+                listaKSP.remove(indicesRutasElegidas.get(k)-cont);
+                rutas.remove(indicesRutasElegidas.get(k)-cont);
+                resultadoRuteo.remove(indicesRutasElegidas.get(k)-cont);
+                cont++;
             }
         }
         resultado[0]=indicesRutasElegidas.size()-contBloqueos;
