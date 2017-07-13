@@ -2935,7 +2935,7 @@ public class Utilitarios {
                 ListaEnlazada[] ksp = listaKSP.get(indicesRutasElegidas.get(i));
                 rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,G, ksp,capacidad);
                 if (rparcial != null) {
-                    asignarFS_Defrag(ksp, rparcial, G, demandaActual, 0);
+                    asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
                     resultadosNuevos.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
                     rutasNuevas.add(listaKSP.get(indicesRutasElegidas.get(i))[rparcial.getCamino()]);
                 } else {
