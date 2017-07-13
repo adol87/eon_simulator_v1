@@ -2922,6 +2922,8 @@ public class Utilitarios {
         int intentos = 0;
         while(intentos<3 && encontroSolucion==false){
             copiarGrafo(copiaGrafo, G, capacidad);
+            resultadosNuevos.clear();
+            rutasNuevas.clear();
             desasignarFS_DefragProAct(rutasElegidas, resultadoRuteo, copiaGrafo, indicesRutasElegidas); //desasignamos los FS de las rutas a reconfigurar
             //rerutea las rutas elegidas
             for (int i=0; i<rutasElegidas.size(); i++){
@@ -2947,7 +2949,7 @@ public class Utilitarios {
                 intentos++;
                 rutasElegidas.clear(); //borra el orden de rutas elegidas
                 rutasElegidas.add(rutas.get(indicesRutasElegidas.get(indiceBloqueo))); //agrega en primer lugar a la demanda bloqueada
-                for(int i=0; i<rutasElegidas.size(); i++){ //agrega las demas demandas seguidas a la bloqueada en el mismo orden en el que estaban
+                for(int i=0; i<indicesRutasElegidas.size(); i++){ //agrega las demas demandas seguidas a la bloqueada en el mismo orden en el que estaban
                     copiaIndices.add(indicesRutasElegidas.get(i));
                     if(i!=indiceBloqueo){
                         rutasElegidas.add(rutas.get(indicesRutasElegidas.get(i)));
@@ -2964,14 +2966,17 @@ public class Utilitarios {
                 encontroSolucion = true;
             }
         }
-        //Si intento 3 veces y no logro retorna null
+        //Si intento 3 veces y no logro retorna cero todo
         if(intentos==3){
-            return null;
+            resultado[0]=0;
+            resultado[1]=0;
+            return resultado;
         }
         //Cambia a los nuevos resultados
         for (int k=0; k<indicesRutasElegidas.size(); k++){
             resultadoRuteo.set(indicesRutasElegidas.get(k), resultadosNuevos.get(k));
             rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(k));
+            copiarGrafo(G, copiaGrafo, capacidad);
         }
         resultado[0]=indicesRutasElegidas.size()-contBloqueos;
         resultado[1]=contBloqueos;
