@@ -2933,7 +2933,7 @@ public class Utilitarios {
                 Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), obtenerFin(rutasElegidas.get(i).getInicio()).getDato(), fs, tVida);
                 //ListaEnlazada[] ksp = KSP(G, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
                 ListaEnlazada[] ksp = listaKSP.get(indicesRutasElegidas.get(i));
-                rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,G, ksp,capacidad);
+                rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,copiaGrafo, ksp,capacidad);
                 if (rparcial != null) {
                     asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
                     resultadosNuevos.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
