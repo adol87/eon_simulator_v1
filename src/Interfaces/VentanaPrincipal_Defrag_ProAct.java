@@ -268,7 +268,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 90, -1, 20));
 
         etiquetaDemandasTotales.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        getContentPane().add(etiquetaDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 10, 50, 20));
+        getContentPane().add(etiquetaDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 20, 50, 20));
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Tráfico Máximo");
@@ -367,13 +367,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, -1, 690));
 
         etiquetaTextoBloqueosTotales.setText("Total Bloqueos:");
-        getContentPane().add(etiquetaTextoBloqueosTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 10, 90, 20));
+        getContentPane().add(etiquetaTextoBloqueosTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 0, 90, 20));
 
         etiquetaBloqueosTotales.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        getContentPane().add(etiquetaBloqueosTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 10, 50, 20));
+        getContentPane().add(etiquetaBloqueosTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 20, 50, 20));
 
         etiquetaTextoDemandasTotales.setText("Total Demandas:");
-        getContentPane().add(etiquetaTextoDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 10, 100, 20));
+        getContentPane().add(etiquetaTextoDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 0, 100, 20));
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -790,16 +790,16 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(textFieldProbBloqueoMax, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 550, 40, 20));
 
         etiquetaTextoCantRutasReruteadas.setText("Total Rutas Reruteadas:");
-        getContentPane().add(etiquetaTextoCantRutasReruteadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 10, 140, 20));
+        getContentPane().add(etiquetaTextoCantRutasReruteadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 0, 140, 20));
 
         etiquetaCantRutasReruteadas.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        getContentPane().add(etiquetaCantRutasReruteadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 10, 50, 20));
+        getContentPane().add(etiquetaCantRutasReruteadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 20, 50, 20));
 
         etiquetaCantDesfrag.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        getContentPane().add(etiquetaCantDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 10, 50, 20));
+        getContentPane().add(etiquetaCantDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, 50, 20));
 
         etiquetaTextoCantDesfrag.setText("Cant. Desfragmentaciones:");
-        getContentPane().add(etiquetaTextoCantDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 10, -1, 20));
+        getContentPane().add(etiquetaTextoCantDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, -1, 20));
 
         etiquetaAnchoFSActual12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         etiquetaAnchoFSActual12.setText("%");
@@ -1057,6 +1057,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoDefrag = new File(rutaDefrag);
             File archivoEstados = new File(rutaEstados);
             
+            int sumaTiempoDeVida = 0;
+            
             String algoritmoAejecutar = RSA.get(0);
             
             for (int i = 1; i <= tiempoT; i++) {
@@ -1073,7 +1075,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 for (Demanda demanda : demandasPorUnidadTiempo) { // para cada demanda
-                esBloqueo = false;
+                    sumaTiempoDeVida = sumaTiempoDeVida + demanda.getTiempo();
+                    esBloqueo = false;
                     ListaEnlazada[] ksp = Utilitarios.KSP(G[0], demanda.getOrigen(), demanda.getDestino(), 5); // calculamos los k caminos mas cortos entre el origen y el fin. Con k=5 (pude ser mas, cambiar dependiendo de la necesidad)
                     for (int a = 0; a < RSA.size(); a++) {
                         
@@ -1081,9 +1084,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                         switch (algoritmoAejecutar) {
                             case "FA":
-                                if(i==203){
-                                    System.out.println("empieza el kilombo");
-                                }
+//                                if(i==203){
+//                                    System.out.println("empieza el kilombo");
+//                                }
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
@@ -1350,6 +1353,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         }
                 }
             //RESULTADOS
+            
+            //suma de tiempos de vida
+            System.out.println("Suma de tiempos de vida: " + sumaTiempoDeVida);
 
             // una vez finalizado, graficamos el resultado.
             //leemos el archivo de resultados
