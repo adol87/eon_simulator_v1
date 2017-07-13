@@ -2898,9 +2898,14 @@ public class Utilitarios {
     public static Integer[] desfragmentacionPeoresRutas(double [][][]v, GrafoMatriz G, int capacidad, ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> resultadoRuteo, ArrayList<ListaEnlazada[]> listaKSP, String metrica, Double porcentaje, int FSMinPC, String algoritmoAejecutar, ArrayList<Integer> rutasEstablecidas){
         ArrayList<Integer> indicesRutasElegidas;
         int contBloqueos = 0;
-        ArrayList<Integer> demandasBloqueadas =  new ArrayList<>();
+        Demanda demandaBloqueada;
+        int indiceBloqueo = -1;
+        boolean encontroSolucion = false;
+        GrafoMatriz copiaGrafo =  new GrafoMatriz(G.getCantidadDeVertices());
+        copiaGrafo.insertarDatos(v);
         ArrayList<Resultado> resultadosNuevos = new ArrayList<>();
         Resultado rparcial;
+        ArrayList<Integer> copiaIndices =  new ArrayList<>();
         ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();
         ArrayList<ListaEnlazada> rutasNuevas = new ArrayList<>();
         Integer[] resultado = new Integer[2];
@@ -2908,57 +2913,60 @@ public class Utilitarios {
         for(int i=0; i<indicesRutasElegidas.size(); i++){
             rutasElegidas.add(rutas.get(indicesRutasElegidas.get(i)));
         }
-        desasignarFS_DefragProAct(rutasElegidas, resultadoRuteo, G, indicesRutasElegidas); //desasignamos los FS de las rutas a reconfigurar
-        
-        //rerutea las rutas elegidas
-        for (int i=0; i<rutasElegidas.size(); i++){
-            int fs = resultadoRuteo.get(indicesRutasElegidas.get(i)).getFin() - resultadoRuteo.get(indicesRutasElegidas.get(i)).getInicio();
-            fs++;
-            int tVida = G.acceder(rutas.get(indicesRutasElegidas.get(i)).getInicio().getDato(),rutas.get(indicesRutasElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultadoRuteo.get(indicesRutasElegidas.get(i)).getInicio()].getTiempo();
-            Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), obtenerFin(rutasElegidas.get(i).getInicio()).getDato(), fs, tVida);
-            //ListaEnlazada[] ksp = KSP(G, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
-            ListaEnlazada[] ksp = listaKSP.get(indicesRutasElegidas.get(i));
-            rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,G, ksp,capacidad);
-            if (rparcial != null) {
-                asignarFS_Defrag(ksp, rparcial, G, demandaActual, 0);
-                resultadosNuevos.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
-                rutasNuevas.add(listaKSP.get(indicesRutasElegidas.get(i))[rparcial.getCamino()]);
-            } else {
-                contBloqueos++;
-                demandasBloqueadas.add(indicesRutasElegidas.get(i));
+        ordenarRutas(resultadoRuteo, rutasElegidas, indicesRutasElegidas, rutasElegidas.size());
+        int intentos = 0;
+        while(intentos<3 && encontroSolucion==false){
+            copiarGrafo(copiaGrafo, G, capacidad);
+            desasignarFS_DefragProAct(rutasElegidas, resultadoRuteo, copiaGrafo, indicesRutasElegidas); //desasignamos los FS de las rutas a reconfigurar
+            //rerutea las rutas elegidas
+            for (int i=0; i<rutasElegidas.size(); i++){
+                int fs = resultadoRuteo.get(indicesRutasElegidas.get(i)).getFin() - resultadoRuteo.get(indicesRutasElegidas.get(i)).getInicio();
+                fs++;
+                int tVida = G.acceder(rutas.get(indicesRutasElegidas.get(i)).getInicio().getDato(),rutas.get(indicesRutasElegidas.get(i)).getInicio().getSiguiente().getDato()).getFS()[resultadoRuteo.get(indicesRutasElegidas.get(i)).getInicio()].getTiempo();
+                Demanda demandaActual = new Demanda(rutasElegidas.get(i).getInicio().getDato(), obtenerFin(rutasElegidas.get(i).getInicio()).getDato(), fs, tVida);
+                //ListaEnlazada[] ksp = KSP(G, rutasElegidas.get(i).getInicio().getDato(),rutasElegidas.get(i).getFin().getDato() , 5);
+                ListaEnlazada[] ksp = listaKSP.get(indicesRutasElegidas.get(i));
+                rparcial = realizarRuteo(algoritmoAejecutar,demandaActual,G, ksp,capacidad);
+                if (rparcial != null) {
+                    asignarFS_Defrag(ksp, rparcial, G, demandaActual, 0);
+                    resultadosNuevos.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
+                    rutasNuevas.add(listaKSP.get(indicesRutasElegidas.get(i))[rparcial.getCamino()]);
+                } else {
+                    contBloqueos++;
+                    indiceBloqueo = i;
+                    break;
+                }
+            }
+            if(contBloqueos>0){
+                contBloqueos=0;
+                intentos++;
+                rutasElegidas.clear(); //borra el orden de rutas elegidas
+                rutasElegidas.add(rutas.get(indicesRutasElegidas.get(indiceBloqueo))); //agrega en primer lugar a la demanda bloqueada
+                for(int i=0; i<rutasElegidas.size(); i++){ //agrega las demas demandas seguidas a la bloqueada en el mismo orden en el que estaban
+                    copiaIndices.add(indicesRutasElegidas.get(i));
+                    if(i!=indiceBloqueo){
+                        rutasElegidas.add(rutas.get(indicesRutasElegidas.get(i)));
+                    }
+                }
+                indicesRutasElegidas.clear();
+                indicesRutasElegidas.add(copiaIndices.get(indiceBloqueo));
+                for(int i=0; i<copiaIndices.size();i++){
+                    if(i!=indiceBloqueo){
+                        indicesRutasElegidas.add(copiaIndices.get(i));
+                    }
+                }
+            }else{
+                encontroSolucion = true;
             }
         }
-        
+        //Si intento 3 veces y no logro retorna null
+        if(intentos==3){
+            return null;
+        }
         //Cambia a los nuevos resultados
-        int cont = -1;
         for (int k=0; k<indicesRutasElegidas.size(); k++){
-            if(!isInList(demandasBloqueadas, indicesRutasElegidas.get(k))){
-                cont++;
-                resultadoRuteo.set(indicesRutasElegidas.get(k), resultadosNuevos.get(cont));
-                rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(cont));
-            }
-        }
-        
-//esto vamos a usar en caso de que cuando haya blooqueo se tenga que cancelar la desfragmentacion, segun lo que diga el profe
-//        if(contBloqueos!=0){
-//            resultado[0]=0;
-//            resultado[1]=contBloqueos;
-//            return resultado;
-//        }
-        
-        //Saca de las listas a los bloqueados
-        cont=0;
-        if(demandasBloqueadas.size()>1){
-            ordenarIndices(indicesRutasElegidas);
-        }
-        for(int k=0; k<indicesRutasElegidas.size(); k++){
-            if(isInList(demandasBloqueadas, indicesRutasElegidas.get(k))){
-                listaKSP.remove(indicesRutasElegidas.get(k)-cont);
-                rutas.remove(indicesRutasElegidas.get(k)-cont);
-                resultadoRuteo.remove(indicesRutasElegidas.get(k)-cont);
-                rutasEstablecidas.remove(indicesRutasElegidas.get(k)-cont);
-                cont++;
-            }
+            resultadoRuteo.set(indicesRutasElegidas.get(k), resultadosNuevos.get(k));
+            rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(k));
         }
         resultado[0]=indicesRutasElegidas.size()-contBloqueos;
         resultado[1]=contBloqueos;
