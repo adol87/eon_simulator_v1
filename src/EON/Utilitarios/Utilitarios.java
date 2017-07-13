@@ -2948,6 +2948,7 @@ public class Utilitarios {
                 contBloqueos=0;
                 intentos++;
                 rutasElegidas.clear(); //borra el orden de rutas elegidas
+                copiaIndices.clear();
                 rutasElegidas.add(rutas.get(indicesRutasElegidas.get(indiceBloqueo))); //agrega en primer lugar a la demanda bloqueada
                 for(int i=0; i<indicesRutasElegidas.size(); i++){ //agrega las demas demandas seguidas a la bloqueada en el mismo orden en el que estaban
                     copiaIndices.add(indicesRutasElegidas.get(i));
@@ -2976,8 +2977,8 @@ public class Utilitarios {
         for (int k=0; k<indicesRutasElegidas.size(); k++){
             resultadoRuteo.set(indicesRutasElegidas.get(k), resultadosNuevos.get(k));
             rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(k));
-            copiarGrafo(G, copiaGrafo, capacidad);
         }
+        copiarGrafo(G, copiaGrafo, capacidad);
         resultado[0]=indicesRutasElegidas.size()-contBloqueos;
         resultado[1]=contBloqueos;
         System.out.println("Termino la desfragmentacion con "+contBloqueos+" bloqueos");
