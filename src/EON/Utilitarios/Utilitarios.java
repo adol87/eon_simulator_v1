@@ -2289,6 +2289,7 @@ public class Utilitarios {
          ArrayList<ListaEnlazada> rutasMejor = new ArrayList<>(); //arrayList que guarda el mejor conjunto de resultados
          ArrayList<Resultado> resultadosActualElegidas = new ArrayList<>(); //ArrayList que guarda el conjunto de resultados de la hormiga actual
          ArrayList<Integer> indicesMejor = new ArrayList<>(); //arrayList que guarda los indices de las rutas que consiguieron la mejor solucion
+         int cantReruteosIguales = 0; //para sumar la cantidad de reruteos que quedaron en con los mismos caminos (enlaces y FS)
         //imprimir estado de los enlaces
         
          ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();;  //guarda las rutas elegidas por una hormiga
@@ -2365,6 +2366,10 @@ public class Utilitarios {
                     if (rparcial != null) {
                         asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
                         resultadosActualElegidas.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
+                        //verificar si eligio el mismo camino y fs para no sumar en reruteadas
+                        if (compararRutas(rparcial,resultados.get(indicesElegidas.get(i)))){
+                            cantReruteosIguales++;
+                        }
                     } else {
                         contBloqueos++;
                     }
@@ -2417,7 +2422,7 @@ public class Utilitarios {
         }
         if(mejor!=0){
            copiarGrafo(G, grafoMejor, capacidad);
-           escribirArchivoDefrag(archivo, rutasElegidas.size(), tiempo, mejor, true ,mejorHormiga, rutas.size());
+           escribirArchivoDefrag(archivo, rutasElegidas.size() - cantReruteosIguales, tiempo, mejor, true ,mejorHormiga, rutas.size());
            //Retirar resultados viejos del vector resultados, colocar los resultados de la mejor solucion           
            for (int k=0; k<indicesMejor.size(); k++){
                resultados.set(indicesMejor.get(k), resultadosMejor.get(k));
@@ -3017,8 +3022,16 @@ public class Utilitarios {
         for(int i = 0; i <= cantRutas - 1; i++){
             indiceRutasElegidas.add(metricaRutas[i][1].intValue());
         }
+        
 
         return indiceRutasElegidas;
     }
     
+    //ver si dos resultados son iguales
+    public static Boolean compararRutas(Resultado r, Resultado r2){
+        if (r.getCamino() == r2.getCamino() && r.getInicio() == r2.getInicio() && r.getFin() == r2.getFin()){
+            return true;
+        }
+        return false;
+    }
 }
