@@ -2341,7 +2341,7 @@ public class Utilitarios {
             //ordenar vector indice de acuerdo a su probabilidad
             ordenarProbabilidad(probabilidad, indexOrden);
             cont = 0;
-            
+            cantReruteosIguales = 0;
             while(mejoraActual<mejora && cont<rutas.size()){
                 //Crear la copia del grafo original manualmente
                 copiarGrafo(copiaGrafo, G, capacidad);
@@ -2392,10 +2392,10 @@ public class Utilitarios {
 //            imprimirListaEnlazada(rutasElegidas);
             
             
-            if(mejoraActual>mejor && mejoraActual>mejora && cantidadRutasMejor >= resultadosActualElegidas.size()){ //si se logro una mejora mas alta
+            if(mejoraActual>=mejora && cantidadRutasMejor > resultadosActualElegidas.size()){ //si se logro una mejora mas alta
                     System.out.println("Mejor actual: " + redondearDecimales(mejoraActual, 2) + "%, con "+rutasElegidas.size() + " rutas re ruteadas, Hormiga: "+h);
                     mejor = mejoraActual;
-                    cantidadRutasMejor = resultadosActualElegidas.size();
+                    cantidadRutasMejor = resultadosActualElegidas.size()-cantReruteosIguales;
                     copiarGrafo(grafoMejor, copiaGrafo, capacidad);
                     //Guarda el mejor conjunto de resultados para posteriormente cambiar en el vector resultados
                     resultadosMejor.clear();
@@ -2422,7 +2422,7 @@ public class Utilitarios {
         }
         if(mejor!=0){
            copiarGrafo(G, grafoMejor, capacidad);
-           escribirArchivoDefrag(archivo, rutasElegidas.size() - cantReruteosIguales, tiempo, mejor, true ,mejorHormiga, rutas.size());
+           escribirArchivoDefrag(archivo, cantidadRutasMejor, tiempo, mejor, true ,mejorHormiga, rutas.size());
            //Retirar resultados viejos del vector resultados, colocar los resultados de la mejor solucion           
            for (int k=0; k<indicesMejor.size(); k++){
                resultados.set(indicesMejor.get(k), resultadosMejor.get(k));
@@ -2925,6 +2925,7 @@ public class Utilitarios {
             copiarGrafo(copiaGrafo, G, capacidad);
             resultadosNuevos.clear();
             rutasNuevas.clear();
+            cantReruteosIguales =0;
             desasignarFS_DefragProAct(rutasElegidas, resultadoRuteo, copiaGrafo, indicesRutasElegidas); //desasignamos los FS de las rutas a reconfigurar
             //rerutea las rutas elegidas
             for (int i=0; i<rutasElegidas.size(); i++){
@@ -2983,7 +2984,7 @@ public class Utilitarios {
             rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(k));
         }
         copiarGrafo(G, copiaGrafo, capacidad);
-        resultado=indicesRutasElegidas.size()-contBloqueos - cantReruteosIguales; //cant de rutas re ruteadas
+        resultado=indicesRutasElegidas.size() - cantReruteosIguales; //cant de rutas re ruteadas
         System.out.println("Termino la desfragmentacion con "+contBloqueos+" bloqueos");
         return resultado;
     }
