@@ -153,7 +153,7 @@ public class Utilitarios {
     
     public static ListaEnlazada[] KSP(GrafoMatriz G, int o, int d, int k) {
         ListaEnlazada ksp[] = new ListaEnlazada[k];
-        ListaEnlazada posiblesCaminos[] = new ListaEnlazada[100]; //no creo que hallan m[as de 100 combinaciones antes de que encuentre la cant k sp
+        ListaEnlazada posiblesCaminos[] = new ListaEnlazada[200]; //no creo que hallan m[as de 100 combinaciones antes de que encuentre la cant k sp
 //        int termino = 0; //bandera para saber si recorrió el grafo y no encontró más caminos a seguir
         int cont = 0; //contado de sh encontrados
         int primera; //bandera para saber si es la primera opci;on del nodo, para saber si agregar o crea un nuevo posibleCamino
@@ -2208,7 +2208,7 @@ public class Utilitarios {
     public static ListaEnlazada[] hallarCaminosTomadosDeADos(double [][][] v, int cantNodos, int cantEnlaces) {
 //        int promedioGrados = (cantEnlaces * 2)/cantNodos;
 //        int cantCaminosDosEnlaces = (cantEnlaces * promedioGrados) / 2; // = (cantEnlaces * cantEnlaces / cantNodos)
-        ListaEnlazada A[] = new ListaEnlazada[100];
+        ListaEnlazada A[] = new ListaEnlazada[200];
         ListaEnlazada P;
         int cont = 0; //cuenta los resultados
         

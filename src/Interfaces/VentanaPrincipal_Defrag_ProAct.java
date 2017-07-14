@@ -1031,7 +1031,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         G[i] = new GrafoMatriz(this.Redes.getRed(3).getCantidadDeVertices());
                         G[i].insertarDatos(this.Redes.getTopologia(3));
                     }
-                    caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(this.Redes.getTopologia(2), 24, 43);
+                    caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(this.Redes.getTopologia(3), 24, 43);
             }
             try {
                 //while (earlang <= E) { // mientras no se llega a la cargad de trafico maxima
@@ -1593,8 +1593,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     break;
                 case "ARPA-2":
                     Img = new ImageIcon(getClass().getResource(("Imagenes/" + ("Red 2.png"))));
-                    this.textFieldCapacidadEnlace.setText(Integer.toString((int) (this.Redes.getRed(2).getCapacidadTotal() / this.Redes.getRed(1).getAnchoFS())));
+                    this.textFieldCapacidadEnlace.setText(Integer.toString((int) (this.Redes.getRed(2).getCapacidadTotal() / this.Redes.getRed(2).getAnchoFS())));
                     this.textFieldAnchoFS.setText(Double.toString(this.Redes.getRed(2).getAnchoFS()));
+                    break;
+                case "USNet":
+                    Img = new ImageIcon(getClass().getResource(("Imagenes/" + ("Red 6.png"))));
+                    this.textFieldCapacidadEnlace.setText(Integer.toString((int) (this.Redes.getRed(3).getCapacidadTotal() / this.Redes.getRed(3).getAnchoFS())));
+                    this.textFieldAnchoFS.setText(Double.toString(this.Redes.getRed(3).getAnchoFS()));
                     break;
             }
             
