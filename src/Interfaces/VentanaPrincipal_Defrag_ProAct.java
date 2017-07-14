@@ -86,7 +86,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         this.etiquetaCantDesfrag.setVisible(false);
         this.etiquetaCantDesfrag.setVisible(false);
         this.etiquetaCantRutasReruteadas.setVisible(false);
-        this.etiquetaCantRutasReruteadas.setVisible(false);
+        this.etiquetaCantDesfrag.setVisible(false);
+        this.etiquetaTextoCantRutasReruteadas.setVisible(false);
+        this.etiquetaTextoCantDesfrag.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -900,7 +902,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaDemandasTotales.setText("0");
         etiquetaBloqueosTotales.setText("0");
         
-        Integer[] resultadoReRuteo = new Integer[2]; //resultado Reruteo peores rutas
+        Integer resultadoReRuteo; //resultado Reruteo peores rutas
         
         //método
         this.metodo = (String) this.ComboMetodo.getSelectedItem(); // obtenemos la topologia seleccionada
@@ -1104,8 +1106,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             }else{
                                                 resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                                 //suma el resultado
-                                                etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo[0]));
-                                                etiquetaCantDesfrag.setText("" + (int) (Integer.parseInt("" + etiquetaCantDesfrag.getText()) + resultadoReRuteo[1]));
+                                                etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo));
+                                                if (resultadoReRuteo > 0){ //si resultadoReRuteo es mayor a cero si se hizo la desfragmentación
+                                                    etiquetaCantDesfrag.setText("" + (int) (Integer.parseInt("" + etiquetaCantDesfrag.getText()) + 1)); //suma 1
+                                                }
                                             } 
                                         } catch (IOException ex) {
                                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
@@ -1146,10 +1150,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             if (metodoDesfrag == "ACO"){
                                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                             }else{
-                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
+                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                                 //suma el resultado
-                                                etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
-                                                etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
+                                                etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo));
+                                                if (resultadoReRuteo > 0){ //si resultadoReRuteo es mayor a cero si se hizo la desfragmentación
+                                                    etiquetaCantDesfrag.setText("" + (int) (Integer.parseInt("" + etiquetaCantDesfrag.getText()) + 1)); //suma 1
+                                                }
                                             } 
                                         } catch (IOException ex) {
                                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
@@ -1207,22 +1213,22 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         Utilitarios.escribirArchivoEstados(archivoEstados, entropia, msi, bfr, pathConsec, entropiaUso, esBloqueo, rutasEstablecidas.size(),porcUso);
                     }
                     
-                    //desfragmentar si la prob de bloque es alta
-                    probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
-                    if((probBloqMin != 0 && probBloqMax != 0) && probBloqMin < probBloqueo && probBloqueo < probBloqMax){// || i==500 || i==700){
-                        try {
-                            if (metodoDesfrag == "ACO"){
-                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
-                            }else{
-                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
-                                //suma el resultado
-                                etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
-                                etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
-                            } 
-                        } catch (IOException ex) {
-                            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+//                    //desfragmentar si la prob de bloque es alta
+//                    probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
+//                    if((probBloqMin != 0 && probBloqMax != 0) && probBloqMin < probBloqueo && probBloqueo < probBloqMax){// || i==500 || i==700){
+//                        try {
+//                            if (metodoDesfrag == "ACO"){
+//                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+//                            }else{
+//                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
+//                                //suma el resultado
+//                                etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
+//                                etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
+//                            } 
+//                        } catch (IOException ex) {
+//                            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
                 }
                 //Disminuir el tiempo de vida de todas las rutas en la red
                 for (int j = 0; j < RSA.size(); j++) {
@@ -1291,10 +1297,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                             if (metodoDesfrag == "ACO"){
                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                             }else{
-                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, metodo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
+                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                 //suma el resultado
-                                etiquetaCantRutasReruteadas.setText("" + Integer.parseInt("" + etiquetaCantRutasReruteadas) + resultadoReRuteo[0]);
-                                etiquetaCantDesfrag.setText("" + Integer.parseInt("" + etiquetaCantDesfrag) + resultadoReRuteo[1]);
+                                etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo));
+                                if (resultadoReRuteo > 0){ //si resultadoReRuteo es mayor a cero si se hizo la desfragmentación
+                                    etiquetaCantDesfrag.setText("" + (int) (Integer.parseInt("" + etiquetaCantDesfrag.getText()) + 1)); //suma 1
+                                }
                             } 
                         } catch (IOException ex) {
                             Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
@@ -1426,19 +1434,25 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ioe);  
             }
             
+            
+            
             //tabla desfragmentaciones
-            Integer[] resultDefrags = new Integer[2];
-            String rutaResultadosDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
-            File archivoResultadosDefrag = new File(rutaResultadosDefrag);
-            try {
-                resultDefrags = Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
-            } catch (IOException ex) {
-                Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+            //solo si fue ACO porque peores rutas no guarda en el archivo, escribe directamente al terminar
+            if (metodoDesfrag == "ACO"){
+                Integer[] resultDefrags = new Integer[2];
+                String rutaResultadosDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
+                File archivoResultadosDefrag = new File(rutaResultadosDefrag);
+                try {
+                    resultDefrags = Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
+                } catch (IOException ex) {
+                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //imprime los resultados en la pantalla
+                this.etiquetaCantDesfrag.setText("" + resultDefrags[0]);
+                this.etiquetaCantRutasReruteadas.setText("" + resultDefrags[1]);                
             }
             
-            //imprime los resultados en la pantalla
-            this.etiquetaCantDesfrag.setText("" + resultDefrags[0]);
-            this.etiquetaCantRutasReruteadas.setText("" + resultDefrags[1]);
 
 
             //Utilitarios.GraficarResultado(prob, this.panelResultado, "Resultado de la Simulación", RSA, paso);

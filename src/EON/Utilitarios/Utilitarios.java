@@ -2900,10 +2900,9 @@ public class Utilitarios {
     }
     
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
-    public static Integer[] desfragmentacionPeoresRutas(double [][][]v, GrafoMatriz G, int capacidad, ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> resultadoRuteo, ArrayList<ListaEnlazada[]> listaKSP, String metrica, Double porcentaje, int FSMinPC, String algoritmoAejecutar, ArrayList<Integer> rutasEstablecidas){
+    public static int desfragmentacionPeoresRutas(double [][][]v, GrafoMatriz G, int capacidad, ArrayList<ListaEnlazada> rutas, ArrayList<Resultado> resultadoRuteo, ArrayList<ListaEnlazada[]> listaKSP, String metrica, Double porcentaje, int FSMinPC, String algoritmoAejecutar, ArrayList<Integer> rutasEstablecidas){
         ArrayList<Integer> indicesRutasElegidas;
         int contBloqueos = 0;
-        Demanda demandaBloqueada;
         int indiceBloqueo = -1;
         boolean encontroSolucion = false;
         GrafoMatriz copiaGrafo =  new GrafoMatriz(G.getCantidadDeVertices());
@@ -2913,7 +2912,9 @@ public class Utilitarios {
         ArrayList<Integer> copiaIndices =  new ArrayList<>();
         ArrayList<ListaEnlazada> rutasElegidas = new ArrayList<>();
         ArrayList<ListaEnlazada> rutasNuevas = new ArrayList<>();
-        Integer[] resultado = new Integer[2];
+        int resultado = 0; //cant de rutas re reruteadas 
+        int cantReruteosIguales = 0; //para sumar la cantidad de reruteos que quedaron en con los mismos caminos (enlaces y FS)
+        
         indicesRutasElegidas = elegirPeoresRutas(G, capacidad, rutas, metrica, porcentaje, FSMinPC);
         for(int i=0; i<indicesRutasElegidas.size(); i++){
             rutasElegidas.add(rutas.get(indicesRutasElegidas.get(i)));
@@ -2938,6 +2939,10 @@ public class Utilitarios {
                     asignarFS_Defrag(ksp, rparcial, copiaGrafo, demandaActual, 0);
                     resultadosNuevos.add(rparcial); //guardar el conjunto de resultados para esta solucion parcial
                     rutasNuevas.add(listaKSP.get(indicesRutasElegidas.get(i))[rparcial.getCamino()]);
+                    //verificar si eligio el mismo camino y fs para no sumar en reruteadas
+                    if (compararRutas(rparcial,resultadoRuteo.get(indicesRutasElegidas.get(i)))){
+                        cantReruteosIguales++;
+                    }
                 } else {
                     contBloqueos++;
                     indiceBloqueo = i;
@@ -2969,8 +2974,7 @@ public class Utilitarios {
         }
         //Si intento 3 veces y no logro retorna cero todo
         if(intentos==3){
-            resultado[0]=0;
-            resultado[1]=0;
+            resultado=0;
             return resultado;
         }
         //Cambia a los nuevos resultados
@@ -2979,8 +2983,7 @@ public class Utilitarios {
             rutas.set(indicesRutasElegidas.get(k), rutasNuevas.get(k));
         }
         copiarGrafo(G, copiaGrafo, capacidad);
-        resultado[0]=indicesRutasElegidas.size()-contBloqueos;
-        resultado[1]=contBloqueos;
+        resultado=indicesRutasElegidas.size()-contBloqueos - cantReruteosIguales; //cant de rutas re ruteadas
         System.out.println("Termino la desfragmentacion con "+contBloqueos+" bloqueos");
         return resultado;
     }
