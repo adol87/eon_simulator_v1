@@ -2341,8 +2341,8 @@ public class Utilitarios {
             //ordenar vector indice de acuerdo a su probabilidad
             ordenarProbabilidad(probabilidad, indexOrden);
             cont = 0;
-            cantReruteosIguales = 0;
             while(mejoraActual<mejora && cont<rutas.size()){
+                cantReruteosIguales = 0;
                 //Crear la copia del grafo original manualmente
                 copiarGrafo(copiaGrafo, G, capacidad);
                 indicesElegidas.add(indexOrden.get(elegirRuta(probabilidad, indicesElegidas, indexOrden)));
