@@ -1069,7 +1069,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                System.out.println("Grafo al empezar el tiempo: " + i);
 //                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
 
-                System.out.println("tiempo: " + i);
+                System.out.println("Tiempo: " + i);
                 
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -1099,7 +1099,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                                 } else {                                    
                                     if(metodo == "Reactivo"){
-                                        System.out.println("Inicia desfragmentacion en el tiempo "+i+"con "+arrayRutas.size()+" rutas activas");
+                                        System.out.println("Inicia desfragmentacion en el tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
                                         try {
                                             if (metodoDesfrag == "ACO"){
                                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
@@ -1264,36 +1264,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                System.out.println("El porcentaje de Uso es: "+porcUso);
 
                 
-                
-//                //desfragmentación
-//                try {
-//                    if (entropiaMin > 0 && entropia >= entropiaMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC);
-//                    }
-//                    if (msiMin > 0 && msi >= msiMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC);
-//                    }
-//                    if (bfrMin > 0 && bfr >= bfrMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC);
-//                    }
-//                    if (lightPathMax > 0 && rutasEstablecidas.size() >= lightPathMax){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC);
-//                    }                
-//                    if (pathConsMin > 0 && pathConsec >= pathConsMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC);
-//                    }                
-//                    if (entroUsoMin > 0 && entropiaUso >= entroUsoMin){
-//                        Utilitarios.seleccionDeRutas(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC);
-//                    }              
-//                } catch (IOException ex) {
-//                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+  
                 
                 //no modificar 
                 if(metodo == "DT Fijo"){
                     if(i == ultimoDesfrag && i != tiempoTotal){// cada periodo y que no haga si es el ultimo tiempo
                         ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
                         try {
+                            System.out.println("Inicia desfragmentacion en tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
                             if (metodoDesfrag == "ACO"){
                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                             }else{

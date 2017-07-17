@@ -2392,8 +2392,8 @@ public class Utilitarios {
 //            imprimirListaEnlazada(rutasElegidas);
             
             
-            if(mejoraActual>=mejora && cantidadRutasMejor > resultadosActualElegidas.size()){ //si se logro una mejora mas alta
-                    System.out.println("Mejor actual: " + redondearDecimales(mejoraActual, 2) + "%, con "+rutasElegidas.size() + " rutas re ruteadas, Hormiga: "+h);
+            if(mejoraActual>=mejora && cantidadRutasMejor > resultadosActualElegidas.size()-cantReruteosIguales){ //si se logro una mejora mas alta
+                    System.out.println("Mejor actual: " + redondearDecimales(mejoraActual, 2) + "%, con "+(rutasElegidas.size()-cantReruteosIguales) + " rutas re ruteadas, Hormiga: "+h);
                     mejor = mejoraActual;
                     cantidadRutasMejor = resultadosActualElegidas.size()-cantReruteosIguales;
                     copiarGrafo(grafoMejor, copiaGrafo, capacidad);
