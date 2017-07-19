@@ -49,10 +49,10 @@ public class Metricas {
                         if (contSeguido>mayorSeguido){
                             mayorSeguido = contSeguido;
                         }
-                        
-                        if (mayorSeguido==0){
-                            System.out.println("");
-                        }
+//                        
+//                        if (mayorSeguido==0){
+//                            System.out.println("");
+//                        }
                         
                         if (contOcupados==capacidad){
                             maxBlocks[i][j] = 0;

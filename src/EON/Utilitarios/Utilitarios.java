@@ -2266,6 +2266,9 @@ public class Utilitarios {
             pathConsecActual = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, copiaGrafo, fsMinPC);                    
             resultado = ((redondearDecimales(pathConsecActual, 6) * 100)/redondearDecimales(pathConsecGrafo, 6))-100;
         }
+        if(resultado>80){
+            System.out.println("Mejora muy grande");
+        }
         return resultado;
     }
     
@@ -2380,9 +2383,12 @@ public class Utilitarios {
                     mejoraActual = calculoMejora(porEnt, porBfr, porPath, copiaGrafo, entropiaGrafo, bfrGrafo, pathGrafo, capacidad, caminosDeDosEnlaces,FSMinPC);
                 } else {
                     mejoraActual = 0;
-                    break; //Verificar si esto es necesario
+                    //break; //Verificar si esto es necesario
                 }
                 cont++;
+                if((rutasElegidas.size()-cantReruteosIguales)>cantidadRutasMejor){
+                    break;
+                }
             }
 //            System.out.println("Índices de rutas que eligio la hormiga: "+h);
 //            for (int i =0; i<indicesElegidas.size(); i++){
@@ -2410,8 +2416,11 @@ public class Utilitarios {
             }
              
             //Depositar feromonas de acuerdo al porcentaje de mejora
-            for(int i=0;i<indicesElegidas.size();i++){
-                feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejor/100)); //TODO agregar feromona de acuerdo a la mejora
+            if(mejoraActual>0){
+                System.out.println("Hormiga: "+h+" deposita feromonas en: "+(resultadosActualElegidas.size()-cantReruteosIguales)+" rutas");
+                for(int i=0;i<indicesElegidas.size();i++){
+                    feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejoraActual/100)); //TODO agregar feromona de acuerdo a la mejora
+                }
             }
             
             //Evaporar feromonas
@@ -2547,6 +2556,7 @@ public class Utilitarios {
     
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades
     public static int elegirRuta(double[] p, ArrayList<Integer> indices, ArrayList<Integer> indexOrden){
+        //System.out.println("Inicia metodo de Ruleta ");
         int indice;
         ArrayList<Integer> indicesProbab = new ArrayList<>();
         for (int i=0; i<indices.size(); i++){
@@ -2556,9 +2566,10 @@ public class Utilitarios {
         double sumaProbParticipan = 0;
         int n = p.length;
         for (int i = 0; i <= n - 1; i++) {
-            sumaProbParticipan = sumaProbParticipan + p[i];
+            if(!isInList(indicesProbab, i)){
+                sumaProbParticipan = sumaProbParticipan + p[i];
+            }
         }
-        while (true){
             //hallar el valor random entre 0 a el valor máximo de probabilidades en juego
             Random randomGenerator = new Random();
             double randomValue = sumaProbParticipan * randomGenerator.nextDouble();
@@ -2567,12 +2578,10 @@ public class Utilitarios {
             indice = -1;
             while(sumaProb <= randomValue){
                 indice++;
-                sumaProb = sumaProb + p[indice];
+                if(!isInList(indicesProbab, indice)){
+                    sumaProb = sumaProb + p[indice];
+                }
             }
-            if (!isInList(indicesProbab, indice)){
-                    break;
-            }
-        }
         
         if (indice > p.length - 1 || indice < 0){
             System.out.println("oh ooh, mando índice: " + indice + ", máximo: " + p.length);
