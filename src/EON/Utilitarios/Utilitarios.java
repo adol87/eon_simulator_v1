@@ -2422,6 +2422,7 @@ public class Utilitarios {
              
             //Depositar feromonas de acuerdo al porcentaje de mejora
             if(mejoraActual>0){
+                noDeposita=0;
                 System.out.println("Hormiga: "+h+" deposita feromonas en: "+(resultadosActualElegidas.size()-cantReruteosIguales)+" rutas");
                 for(int i=0;i<indicesElegidas.size();i++){
                     feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejoraActual/100)); //TODO agregar feromona de acuerdo a la mejora
