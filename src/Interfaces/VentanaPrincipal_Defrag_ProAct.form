@@ -48,10 +48,9 @@
         <Component class="javax.swing.JList" name="listaAlgoritmosRuteo">
           <Properties>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-              <StringArray count="3">
+              <StringArray count="2">
                 <StringItem index="0" value="FA"/>
                 <StringItem index="1" value="FA-CA"/>
-                <StringItem index="2" value="MTLSC"/>
               </StringArray>
             </Property>
             <Property name="selectionMode" type="int" value="0"/>
@@ -1643,10 +1642,11 @@
     <Component class="javax.swing.JComboBox" name="ComboObjetivoReruteo">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
+          <StringArray count="4">
             <StringItem index="0" value="Entrop&#xed;a"/>
             <StringItem index="1" value="Path Consecutiveness"/>
             <StringItem index="2" value="BFR"/>
+            <StringItem index="3" value="MSI"/>
           </StringArray>
         </Property>
       </Properties>

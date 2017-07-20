@@ -208,7 +208,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listaAlgoritmosRuteo.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "FA", "FA-CA", "MTLSC" };
+            String[] strings = { "FA", "FA-CA" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -851,7 +851,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaTopologia2.setText("Objetivo Peores Rutas");
         getContentPane().add(etiquetaTopologia2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 610, -1, 20));
 
-        ComboObjetivoReruteo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR" }));
+        ComboObjetivoReruteo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR", "MSI" }));
         ComboObjetivoReruteo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboObjetivoReruteoActionPerformed(evt);
