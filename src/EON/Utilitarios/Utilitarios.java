@@ -2935,7 +2935,7 @@ public class Utilitarios {
         int resultado = 0; //cant de rutas re reruteadas 
         int cantReruteosIguales = 0; //para sumar la cantidad de reruteos que quedaron en con los mismos caminos (enlaces y FS)
         
-        indicesRutasElegidas = elegirPeoresRutas(G, capacidad, rutas, metrica, porcentaje, FSMinPC);
+        indicesRutasElegidas = elegirPeoresRutas(G, capacidad, rutas, metrica, porcentaje, FSMinPC, resultadoRuteo);
         for(int i=0; i<indicesRutasElegidas.size(); i++){
             rutasElegidas.add(rutas.get(indicesRutasElegidas.get(i)));
         }
@@ -3010,7 +3010,7 @@ public class Utilitarios {
     }
     
     //Metodo que elige la ruta a seleccionar de acuerdo a su vector de probabilidades, retorna el indice de las rutas elegidas
-    public static ArrayList<Integer> elegirPeoresRutas(GrafoMatriz g, int capacidad, ArrayList<ListaEnlazada> rutas, String metrica, Double porcentaje, int FSMinPC){
+    public static ArrayList<Integer> elegirPeoresRutas(GrafoMatriz g, int capacidad, ArrayList<ListaEnlazada> rutas, String metrica, Double porcentaje, int FSMinPC, ArrayList<Resultado> resultadoRuteo){
         Double[][] metricaRutas = new Double[rutas.size()][2]; //guardo la métrica para ordenar de cada ruta
         Double[][] auxMetricaRutas = new Double[1][2];
         Boolean descentente = true;
@@ -3031,6 +3031,9 @@ public class Utilitarios {
                 descentente = false;
             }else if("BFR".equals(metrica)){
                 metricaRutas[i][0] = BFRdeRuta(rutas.get(i), capacidad, g);
+                descentente = true;
+            }else if("MSI".equals(metrica)){
+                metricaRutas[i][0] = (double) resultadoRuteo.get(i).getFin();
                 descentente = true;
             }else{
                 System.out.println("ERROR. Esta métrica no la conozco: " + metrica);
