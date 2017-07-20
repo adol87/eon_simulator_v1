@@ -2266,9 +2266,9 @@ public class Utilitarios {
             pathConsecActual = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, copiaGrafo, fsMinPC);                    
             resultado = ((redondearDecimales(pathConsecActual, 6) * 100)/redondearDecimales(pathConsecGrafo, 6))-100;
         }
-        if(resultado>80){
-            System.out.println("Mejora muy grande");
-        }
+//        if(resultado>80){
+//            System.out.println("Mejora muy grande");
+//        }
         return resultado;
     }
     
@@ -2288,6 +2288,7 @@ public class Utilitarios {
          double[] probabilidad = new double[rutas.size()];
          ArrayList<Integer> indexOrden = new ArrayList<>();
          double sumatoria;
+         int noDeposita = 0;
          ArrayList<Resultado> resultadosMejor = new ArrayList<>(); //arrayList que guarda el mejor conjunto de resultados
          ArrayList<ListaEnlazada> rutasMejor = new ArrayList<>(); //arrayList que guarda el mejor conjunto de resultados
          ArrayList<Resultado> resultadosActualElegidas = new ArrayList<>(); //ArrayList que guarda el conjunto de resultados de la hormiga actual
@@ -2328,6 +2329,7 @@ public class Utilitarios {
             feromonas[i]=1;
             visibilidad[i]=calculoVisibilidad(porEnt, porBfr, porPath, rutas.get(i),capacidad,G,FSMinPC);
         }
+        noDeposita =0;
         for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
             rutasElegidas.clear();
             indicesElegidas.clear();
@@ -2389,14 +2391,7 @@ public class Utilitarios {
                 if((rutasElegidas.size()-cantReruteosIguales)>cantidadRutasMejor){
                     break;
                 }
-            }
-//            System.out.println("Índices de rutas que eligio la hormiga: "+h);
-//            for (int i =0; i<indicesElegidas.size(); i++){
-//                System.out.println(""+indicesElegidas.get(i));
-//            }
-//            System.out.println("Rutas que eligio la hormiga: "+h);
-//            imprimirListaEnlazada(rutasElegidas);
-            
+            }           
             
             if(mejoraActual>=mejora && cantidadRutasMejor > resultadosActualElegidas.size()-cantReruteosIguales){ //si se logro una mejora mas alta
                     System.out.println("Mejor actual: " + redondearDecimales(mejoraActual, 2) + "%, con "+(rutasElegidas.size()-cantReruteosIguales) + " rutas re ruteadas, Hormiga: "+h);
@@ -2420,12 +2415,21 @@ public class Utilitarios {
                 System.out.println("Hormiga: "+h+" deposita feromonas en: "+(resultadosActualElegidas.size()-cantReruteosIguales)+" rutas");
                 for(int i=0;i<indicesElegidas.size();i++){
                     feromonas[indicesElegidas.get(i)] = (float) (feromonas[indicesElegidas.get(i)] + (mejoraActual/100)); //TODO agregar feromona de acuerdo a la mejora
+                    if(feromonas[indicesElegidas.get(i)]<0){
+                        System.out.println("Feromona negativa depositada");
+                    }
                 }
+            }else{
+                noDeposita++;
+                System.out.println("Hormiga: "+h+" no deposita feromonas.");
             }
             
             //Evaporar feromonas
             for(int i=0;i<feromonas.length;i++){
                 feromonas[i] = (float) (feromonas[i]*0.9);
+            }
+            if(noDeposita>(cantHormigas*0.5)){
+                break;
             }
             
         }
@@ -2578,12 +2582,15 @@ public class Utilitarios {
             indice = -1;
             while(sumaProb <= randomValue){
                 indice++;
+                if(indice>=p.length){
+                    System.out.println();
+                }
                 if(!isInList(indicesProbab, indice)){
                     sumaProb = sumaProb + p[indice];
                 }
             }
         
-        if (indice > p.length - 1 || indice < 0){
+        if (indice >= p.length || indice < 0){
             System.out.println("oh ooh, mando índice: " + indice + ", máximo: " + p.length);
         }
         return indice;
@@ -2862,6 +2869,7 @@ public class Utilitarios {
         ArrayList<Integer> maxBlocks = new ArrayList<>();
         for(Nodo n=ruta.getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
                         contOcupados = 0;
+                        mayorSeguido=0;
                         for (int k=0; k<capacidad; k++){
                             //1= libre 0 = Ocupado
                             if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[k].getEstado()==1){
@@ -2883,6 +2891,9 @@ public class Utilitarios {
                         }else{
                             maxBlocks.add(1 - (mayorSeguido/(capacidad-contOcupados)));
                         }
+//                        if((1 - (mayorSeguido/(capacidad-contOcupados)))<0){
+//                            System.out.println("");
+//                        }
         }
         for (int i=0; i<maxBlocks.size(); i++){
             sumaEnlaces = sumaEnlaces + maxBlocks.get(i);
@@ -2892,9 +2903,9 @@ public class Utilitarios {
             cantEnlaces++;
         }
         double result = sumaEnlaces/cantEnlaces;
-        if (result<0){
-            System.out.println("");
-        }
+//        if (result<0){
+//            System.out.println("");
+//        }
         return (sumaEnlaces/cantEnlaces); 
     }
     
