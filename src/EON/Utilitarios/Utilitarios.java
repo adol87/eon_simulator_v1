@@ -2249,10 +2249,11 @@ public class Utilitarios {
         return resultado;
     }
     
-    public static double calculoMejora(boolean porEnt, boolean porBfr, boolean porPath, GrafoMatriz copiaGrafo, double entropiaGrafo,double bfrGrafo, double pathConsecGrafo, int capacidad, ListaEnlazada[] caminosDeDosEnlaces, int fsMinPC){
+    public static double calculoMejora(boolean porMsi, boolean porEnt, boolean porBfr, boolean porPath, GrafoMatriz copiaGrafo, double entropiaGrafo,double bfrGrafo, double pathConsecGrafo, int capacidad, ListaEnlazada[] caminosDeDosEnlaces, int fsMinPC, double msiGrafo){
         double resultado = 0.0;
         double entropiaActual = 0.0;
         double pathConsecActual = 0.0;
+        double msiActual = 0.0;
         double bfrActual = 0.0;
         if(porEnt){
             entropiaActual = copiaGrafo.entropia();                    
@@ -2266,17 +2267,18 @@ public class Utilitarios {
             pathConsecActual = Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidad, copiaGrafo, fsMinPC);                    
             resultado = ((redondearDecimales(pathConsecActual, 6) * 100)/redondearDecimales(pathConsecGrafo, 6))-100;
         }
-//        if(resultado>80){
-//            System.out.println("Mejora muy grande");
-//        }
+        if(porMsi){
+            msiActual = Metricas.MSI(copiaGrafo, capacidad);                    
+            resultado = 100 - ((redondearDecimales(msiActual, 6) * 100)/redondearDecimales(msiGrafo, 6));
+        }
         return resultado;
     }
     
     //Algoritmo ACO para seleccioinar el conjunto de rutas a reconfigurar
     public static boolean desfragmentacionACO(double [][][]v, String algoritmoAejecutar, ArrayList<Resultado> resultados, ArrayList<ListaEnlazada> rutas, double mejora, int capacidad, GrafoMatriz G, ArrayList<ListaEnlazada[]> listaKSP, File archivo, int tiempo, int cantHormigas, ListaEnlazada[] caminosDeDosEnlaces, JTable tablaEnlaces, int FSMinPC, String objetivoAco) throws IOException {
          int h, cont, cantidadRutasMejor=rutas.size(), mejorHormiga = 0;
-         boolean porEnt = false, porBfr = false, porPath = false;
-         double entropiaGrafo = 0, bfrGrafo = 0, pathGrafo = 0;
+         boolean porEnt = false, porBfr = false, porPath = false, porMsi = false;
+         double entropiaGrafo = 0, bfrGrafo = 0, pathGrafo = 0, msiGrafo=0;
          double mejoraActual, mejor=0;
          Resultado rparcial;
          GrafoMatriz copiaGrafo =  new GrafoMatriz(G.getCantidadDeVertices());
@@ -2325,8 +2327,9 @@ public class Utilitarios {
                 case "MSI":
                     porPath = false;
                     porEnt = false;
-                    porBfr = true;
-                    bfrGrafo = Metricas.BFR(G, capacidad);
+                    porBfr = false;
+                    porMsi = true;
+                    msiGrafo = Metricas.MSI(G, capacidad);
                     break;
         }
 
@@ -2392,10 +2395,9 @@ public class Utilitarios {
                 
                 //si hubo bloqueo no debe contar como una solucion
                 if(contBloqueos==0){
-                    mejoraActual = calculoMejora(porEnt, porBfr, porPath, copiaGrafo, entropiaGrafo, bfrGrafo, pathGrafo, capacidad, caminosDeDosEnlaces,FSMinPC);
+                    mejoraActual = calculoMejora(porMsi,porEnt, porBfr, porPath, copiaGrafo, entropiaGrafo, bfrGrafo, pathGrafo, capacidad, caminosDeDosEnlaces,FSMinPC,msiGrafo);
                 } else {
                     mejoraActual = 0;
-                    //break; //Verificar si esto es necesario
                 }
                 cont++;
                 if((rutasElegidas.size()-cantReruteosIguales)>cantidadRutasMejor){
