@@ -98,14 +98,14 @@ public class Metricas {
     }
     
     /*
-    Maximu Used Index-Slot retorna el proedio de mayores indice usado en un enlace
+    Maximu Used Index-Slot retorna el mayor indice usado en un enlace
     @param
     G - red actual
     capacidad - cantidad de FS por enlace
     */
     public static double MSI(GrafoMatriz G, int capacidad){
         ArrayList<Integer> lista = new ArrayList<>();
-//        double cont = 0;
+        double cont = 0;
         double sumaIndices = 0;
         //ArrayList<Integer> indices = new ArrayList<>();
         double [] indices = new double[G.getCantidadEnlaces()];
