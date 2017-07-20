@@ -859,7 +859,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         });
         getContentPane().add(ComboObjetivoReruteo, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 610, 110, -1));
 
-        ComboObjetivoACO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR" }));
+        ComboObjetivoACO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR", "MSI" }));
         ComboObjetivoACO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboObjetivoACOActionPerformed(evt);

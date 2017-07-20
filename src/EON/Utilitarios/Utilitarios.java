@@ -2322,12 +2322,22 @@ public class Utilitarios {
                     porBfr = true;
                     bfrGrafo = Metricas.BFR(G, capacidad);
                     break;
+                case "MSI":
+                    porPath = false;
+                    porEnt = false;
+                    porBfr = true;
+                    bfrGrafo = Metricas.BFR(G, capacidad);
+                    break;
         }
 
         //Inicializacion de feromonas y visibilidad
         for (int i =0; i<feromonas.length ; i++){
             feromonas[i]=1;
-            visibilidad[i]=calculoVisibilidad(porEnt, porBfr, porPath, rutas.get(i),capacidad,G,FSMinPC);
+            if(objetivoAco == "MSI"){
+                visibilidad[i] = resultados.get(i).getFin();
+            }else{
+                visibilidad[i] = calculoVisibilidad(porEnt, porBfr, porPath, rutas.get(i),capacidad,G,FSMinPC);
+            }
         }
         noDeposita =0;
         for(h=0;h<cantHormigas;h++){ //ir comparando con criterio de parada 
@@ -2562,6 +2572,7 @@ public class Utilitarios {
     public static int elegirRuta(double[] p, ArrayList<Integer> indices, ArrayList<Integer> indexOrden){
         //System.out.println("Inicia metodo de Ruleta ");
         int indice;
+        int ultPosProbCero = -1; //variable para saber la ultima pos cuando hayan con prob cero y retornar uno de esos, -1 nunca debería enviar
         ArrayList<Integer> indicesProbab = new ArrayList<>();
         for (int i=0; i<indices.size(); i++){
             indicesProbab.add(indexOrden.indexOf(indices.get(i)));
@@ -2572,23 +2583,32 @@ public class Utilitarios {
         for (int i = 0; i <= n - 1; i++) {
             if(!isInList(indicesProbab, i)){
                 sumaProbParticipan = sumaProbParticipan + p[i];
+                if (p[i] == 0){
+                    ultPosProbCero = i;
+                }
             }
         }
-            //hallar el valor random entre 0 a el valor máximo de probabilidades en juego
-            Random randomGenerator = new Random();
-            double randomValue = sumaProbParticipan * randomGenerator.nextDouble();
+        
+        //si ya solo quedan opcines con prob cero, le envio el ultimo que no se eligió aún con prob cero
+        if(sumaProbParticipan == 0){
+            return ultPosProbCero;
+        }
+        
+        //hallar el valor random entre 0 a el valor máximo de probabilidades en juego
+        Random randomGenerator = new Random();
+        double randomValue = sumaProbParticipan * randomGenerator.nextDouble();
 
-            double sumaProb = 0;
-            indice = -1;
-            while(sumaProb <= randomValue){
-                indice++;
-                if(indice>=p.length){
-                    System.out.println();
-                }
-                if(!isInList(indicesProbab, indice)){
-                    sumaProb = sumaProb + p[indice];
-                }
+        double sumaProb = 0;
+        indice = -1;
+        while(sumaProb <= randomValue){
+            indice++;
+            if(indice>=p.length){
+                System.out.println();
             }
+            if(!isInList(indicesProbab, indice)){
+                sumaProb = sumaProb + p[indice];
+            }
+        }
         
         if (indice >= p.length || indice < 0){
             System.out.println("oh ooh, mando índice: " + indice + ", máximo: " + p.length);
