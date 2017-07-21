@@ -2887,49 +2887,44 @@ public class Utilitarios {
     }
     
     public static double BFRdeRuta(ListaEnlazada ruta, int capacidad, GrafoMatriz G){
-        int contSeguido = 0, mayorSeguido = 0, contOcupados;
-        double sumaEnlaces=0;
-        ArrayList<Integer> maxBlocks = new ArrayList<>();
-        for(Nodo n=ruta.getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
-                        contOcupados = 0;
-                        mayorSeguido=0;
-                        for (int k=0; k<capacidad; k++){
-                            //1= libre 0 = Ocupado
-                            if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[k].getEstado()==1){
-                                contSeguido++;
-                            }else{
-                                if (contSeguido>mayorSeguido){
-                                    mayorSeguido = contSeguido;
-                                }
-                                contSeguido = 0;
-                                contOcupados++;
-                            }
-                        }
-                        if (contSeguido>mayorSeguido){
-                            mayorSeguido = contSeguido;
-                        }
-                        
-                        if (contOcupados==capacidad){
-                            maxBlocks.add(0);
-                        }else{
-                            maxBlocks.add(1 - (mayorSeguido/(capacidad-contOcupados)));
-                        }
-//                        if((1 - (mayorSeguido/(capacidad-contOcupados)))<0){
-//                            System.out.println("");
-//                        }
-        }
-        for (int i=0; i<maxBlocks.size(); i++){
-            sumaEnlaces = sumaEnlaces + maxBlocks.get(i);
-        }
+        double contSeguido = 0, mayorSeguido = 0, contOcupados;
+        double sumaMaxBlocks = 0;
         int cantEnlaces = 0;
-        for (Nodo n= ruta.getInicio(); n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
+        for(Nodo n=ruta.getInicio();n.getSiguiente().getSiguiente()!=null;n=n.getSiguiente()){
             cantEnlaces++;
+            contOcupados = 0;
+            mayorSeguido=0;
+            contSeguido=0;
+            for (int k=0; k<capacidad; k++){
+                //1= libre 0 = Ocupado
+                if (G.acceder(n.getDato(), n.getSiguiente().getDato()).getFS()[k].getEstado()==1){
+                    contSeguido++;
+                }else{
+                    if (contSeguido>mayorSeguido){
+                        mayorSeguido = contSeguido;
+                    }
+                    contSeguido = 0;
+                    contOcupados++;
+                }
+            }
+            if (contSeguido>mayorSeguido){
+                mayorSeguido = contSeguido;
+            }
+
+            if (contOcupados != capacidad){
+                sumaMaxBlocks = sumaMaxBlocks + (double) (1 - (mayorSeguido/(capacidad-contOcupados)));
+            }
+
+            if((1 - (mayorSeguido/(capacidad-contOcupados)))<0){
+                System.out.println("");
+            }
         }
-        double result = sumaEnlaces/cantEnlaces;
-//        if (result<0){
-//            System.out.println("");
-//        }
-        return (sumaEnlaces/cantEnlaces); 
+
+        if (sumaMaxBlocks/cantEnlaces<0){
+            System.out.println("");
+        }
+        
+        return (sumaMaxBlocks/cantEnlaces); 
     }
     
     public static void reiniciarJTableRows(javax.swing.JTable Tabla){
