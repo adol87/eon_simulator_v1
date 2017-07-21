@@ -48,7 +48,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private int Erlang, rutas;
     private boolean esBloqueo;
     private boolean haybloqueos, encontroSolucion = false;
-    private int Lambda, contBloqueos;
+    private int Lambda, contBloqueos, noLogroEvitar=-1;
     private int HoldingTime; // Erlang / Lambda
     private int FsMinimo; // Cantidad mínima de FS por enlace
     private int FsMaximo; // Cantidad máxima de FS por enlace
@@ -750,7 +750,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual23, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 490, 30, 20));
 
         textFieldPeriodoDesfrag.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldPeriodoDesfrag.setText("100");
+        textFieldPeriodoDesfrag.setText("0");
         textFieldPeriodoDesfrag.setToolTipText("");
         textFieldPeriodoDesfrag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1086,9 +1086,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                         switch (algoritmoAejecutar) {
                             case "FA":
-//                                if(i==203){
-//                                    System.out.println("empieza el kilombo");
-//                                }
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
                                 if (r != null) {
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
@@ -1098,7 +1095,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     listaKSP.add(ksp);
 
                                 } else {                                    
-                                    if(metodo == "Reactivo"){
+                                    if(metodo == "Reactivo" && noLogroEvitar<i){
                                         System.out.println("Inicia desfragmentacion en el tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
                                         try {
                                             if (metodoDesfrag == "ACO"){
@@ -1123,6 +1120,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             listaKSP.add(ksp);
                                         } else{
                                             System.out.println("Desfragmento en el tiempo: "+i+"pero no logro evitar el bloqueo");
+                                            noLogroEvitar = i;
                                             contB[a]++;
                                             contBloqueos++;
                                             esBloqueo = true;
@@ -1145,7 +1143,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
                                 } else {
-                                    if(metodo == "Reactivo"){
+                                    if(metodo == "Reactivo" && noLogroEvitar<i){
                                         try {
                                             if (metodoDesfrag == "ACO"){
                                                 encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
@@ -1169,6 +1167,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             listaKSP.add(ksp);
                                         } else{
                                             System.out.println("Desfragmento en el tiempo: "+i+"pero no logro evitar e bloqueo");
+                                            noLogroEvitar = i;
                                             contB[a]++;
                                             contBloqueos++;
                                             esBloqueo = true;
