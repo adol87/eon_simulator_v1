@@ -616,7 +616,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 580, 20, 20));
 
         textFieldCantHormigas.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldCantHormigas.setText("150");
+        textFieldCantHormigas.setText("30");
         textFieldCantHormigas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldCantHormigasActionPerformed(evt);
@@ -750,7 +750,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual23, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 490, 30, 20));
 
         textFieldPeriodoDesfrag.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldPeriodoDesfrag.setText("0");
+        textFieldPeriodoDesfrag.setText("100");
         textFieldPeriodoDesfrag.setToolTipText("");
         textFieldPeriodoDesfrag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

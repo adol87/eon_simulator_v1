@@ -2913,10 +2913,9 @@ public class Utilitarios {
 
             if (contOcupados != capacidad){
                 sumaMaxBlocks = sumaMaxBlocks + (double) (1 - (mayorSeguido/(capacidad-contOcupados)));
-            }
-
-            if((1 - (mayorSeguido/(capacidad-contOcupados)))<0){
-                System.out.println("");
+                if((1 - (mayorSeguido/(capacidad-contOcupados)))<0){
+                    System.out.println("");
+                }
             }
         }
 
