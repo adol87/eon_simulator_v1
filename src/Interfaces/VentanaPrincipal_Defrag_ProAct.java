@@ -48,7 +48,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private int Erlang, rutas;
     private boolean esBloqueo;
     private boolean haybloqueos, encontroSolucion = false;
-    private int Lambda, contBloqueos, noLogroEvitar=-1;
+    private int Lambda, contBloqueos;
     private int HoldingTime; // Erlang / Lambda
     private int FsMinimo; // Cantidad mínima de FS por enlace
     private int FsMaximo; // Cantidad máxima de FS por enlace
@@ -750,7 +750,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(etiquetaAnchoFSActual23, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 490, 30, 20));
 
         textFieldPeriodoDesfrag.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        textFieldPeriodoDesfrag.setText("0");
+        textFieldPeriodoDesfrag.setText("100");
         textFieldPeriodoDesfrag.setToolTipText("");
         textFieldPeriodoDesfrag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -880,6 +880,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //        this.etiquetaDemandasTotales.setVisible(false);
 //        this.etiquetaTextoBloqueosTotales.setVisible(false);
 //        this.etiquetaBloqueosTotales.setVisible(false);
+
+        //evita desfragmentar cuando hay muchos bloqueos
+        int noLogroEvitar = -1;
+                
         this.etiquetaError.setText("Simulando...");
         this.etiquetaError.setVisible(true); 
         
