@@ -288,6 +288,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         getContentPane().add(textFieldCapacidadEnlace, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, 50, -1));
 
         listaRedes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NSFNet", "USNet", "ARPA-2" }));
+        listaRedes.setSelectedIndex(1);
         listaRedes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 listaRedesActionPerformed(evt);
