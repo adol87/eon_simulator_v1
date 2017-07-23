@@ -40,6 +40,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
     private int tiempoTotal; // Iiempo que dura una simualcion
     private String redSeleccionada;
+    private double[][][] topologia;
     private double anchoFS; // ancho de un FS en los enlaces
     private int capacidadPorEnlace; // cantidad de FSs por enlace en la topologia elegida
 
@@ -909,23 +910,24 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         Integer resultadoReRuteo; //resultado Reruteo peores rutas
         
         //método
-        this.metodo = (String) this.ComboMetodo.getSelectedItem(); // obtenemos la topologia seleccionada
+        this.metodo = (String) this.ComboMetodo.getSelectedItem(); 
         
         //desfrag metodo
-        String metodoDesfrag = (String) this.ComboMetodoDesfrag.getSelectedItem(); // obtenemos la topologia seleccionada
+        String metodoDesfrag = (String) this.ComboMetodoDesfrag.getSelectedItem();
         
         //Peores rutas
-        String ObjetivoReruteo = (String) this.ComboObjetivoReruteo.getSelectedItem(); // obtenemos la topologia seleccionada
+        String ObjetivoReruteo = (String) this.ComboObjetivoReruteo.getSelectedItem();
         
         //parámetros ACO
         double mejoraACO = Double.parseDouble(this.textFieldMejoraACO.getText());
         int cantHormACO = Integer.parseInt(this.textFieldCantHormigas.getText());
         double porcRutasARerutear = Double.parseDouble(this.textFieldRutasARerutear.getText());
-        String objetivoACO = (String) this.ComboObjetivoACO.getSelectedItem(); // obtenemos la topologia seleccionada
+        String objetivoACO = (String) this.ComboObjetivoACO.getSelectedItem(); 
 
         //leemos los valores seteados
         this.tiempoTotal = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); //Tiempo de simulacion indicado por el usuario
         this.redSeleccionada = (String) this.listaRedes.getSelectedItem(); // obtenemos la topologia seleccionada
+        
         this.anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText()); // ancho de los FSs de la toplogia elegida, tambien indicado por el usuario
         this.capacidadPorEnlace = Integer.parseInt(this.textFieldCapacidadEnlace.getText()); //obtenemos la cantidad de FS de los enlaces indicados por el usuario
         this.Erlang = Integer.parseInt(this.spinnerErlang.getValue().toString()); //obtenemos Erlang indicados por el usuario
@@ -1011,32 +1013,38 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
             switch (redSeleccionada) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
                 case "Red 0":
+                    topologia = this.Redes.getTopologia(0);
                     //de ´rueba no utilizado
                     for (int i = 0; i < RSA.size(); i++) {
                         G[i] = new GrafoMatriz(this.Redes.getRed(0).getCantidadDeVertices());
-                        G[i].insertarDatos(this.Redes.getTopologia(0));
+                        G[i].insertarDatos(topologia);
                     }
                     break;
                 case "NSFNet":
+                    topologia = this.Redes.getTopologia(1);
                     for (int i = 0; i < RSA.size(); i++) {
                         G[i] = new GrafoMatriz(this.Redes.getRed(1).getCantidadDeVertices());
-                        G[i].insertarDatos(this.Redes.getTopologia(1));
+                        G[i].insertarDatos(topologia);
                     }
                     caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(this.Redes.getTopologia(1), 14, 21);
                     break;
                 case "ARPA-2":
+                    topologia = this.Redes.getTopologia(2);
                     for (int i = 0; i < RSA.size(); i++) {
                         G[i] = new GrafoMatriz(this.Redes.getRed(2).getCantidadDeVertices());
-                        G[i].insertarDatos(this.Redes.getTopologia(2));
+                        G[i].insertarDatos(topologia);
                     }
                     caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(this.Redes.getTopologia(2), 21, 26);
                 case "USNet":
+                    topologia = this.Redes.getTopologia(3);
                     for (int i = 0; i < RSA.size(); i++) {
                         G[i] = new GrafoMatriz(this.Redes.getRed(3).getCantidadDeVertices());
-                        G[i].insertarDatos(this.Redes.getTopologia(3));
+                        G[i].insertarDatos(topologia);
                     }
                     caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(this.Redes.getTopologia(3), 24, 43);
             }
+            
+            //generar archivo de demandas
             try {
                 //while (earlang <= E) { // mientras no se llega a la cargad de trafico maxima
                 archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, Erlang);
@@ -1103,9 +1111,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                         System.out.println("Inicia desfragmentacion en el tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
                                         try {
                                             if (metodoDesfrag == "ACO"){
-                                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                                                encontroSolucion = Utilitarios.desfragmentacionACO(topologia,RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                             }else{
-                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
+                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(topologia, G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                                 //suma el resultado
                                                 etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo));
                                                 if (resultadoReRuteo > 0){ //si resultadoReRuteo es mayor a cero si se hizo la desfragmentación
@@ -1150,9 +1158,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     if(metodo == "Reactivo" && noLogroEvitar<i){
                                         try {
                                             if (metodoDesfrag == "ACO"){
-                                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                                                encontroSolucion = Utilitarios.desfragmentacionACO(topologia,RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                             }else{
-                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
+                                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(topologia, G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                                 //suma el resultado
                                                 etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo));
                                                 if (resultadoReRuteo > 0){ //si resultadoReRuteo es mayor a cero si se hizo la desfragmentación
@@ -1276,9 +1284,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         try {
                             System.out.println("Inicia desfragmentacion en tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
                             if (metodoDesfrag == "ACO"){
-                                encontroSolucion = Utilitarios.desfragmentacionACO(this.Redes.getTopologia(1),RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
+                                encontroSolucion = Utilitarios.desfragmentacionACO(topologia,RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                             }else{
-                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(this.Redes.getTopologia(1), G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
+                                resultadoReRuteo = Utilitarios.desfragmentacionPeoresRutas(topologia, G[0], capacidadPorEnlace, arrayRutas, resultadoRuteo, listaKSP, ObjetivoReruteo, porcRutasARerutear , FSMinPC, algoritmoAejecutar, rutasEstablecidas);
                                 //suma el resultado
                                 etiquetaCantRutasReruteadas.setText("" + (int) (Integer.parseInt("" + etiquetaCantRutasReruteadas.getText()) + resultadoReRuteo));
                                 if (resultadoReRuteo > 0){ //si resultadoReRuteo es mayor a cero si se hizo la desfragmentación
