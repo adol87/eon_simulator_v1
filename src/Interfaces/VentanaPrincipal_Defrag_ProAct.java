@@ -884,7 +884,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //        this.etiquetaBloqueosTotales.setVisible(false);
 
         //evita desfragmentar cuando hay muchos bloqueos
-        int noLogroEvitar = -1;
+        int noLogroEvitar = -1, yaDesfragmento = -1;
                 
         this.etiquetaError.setText("Simulando...");
         this.etiquetaError.setVisible(true); 
@@ -1108,9 +1108,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     listaKSP.add(ksp);
 
                                 } else {                                    
-                                    if(metodo == "Reactivo" && noLogroEvitar<i){
+                                    if(metodo == "Reactivo" && noLogroEvitar<i && yaDesfragmento!=i){
                                         System.out.println("Inicia desfragmentacion en el tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
-                                        try {
+                                        yaDesfragmento=i;                                        try {
                                             if (metodoDesfrag == "ACO"){
                                                 encontroSolucion = Utilitarios.desfragmentacionACO(topologia,RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                                             }else{

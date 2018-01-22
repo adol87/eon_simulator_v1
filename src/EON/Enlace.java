@@ -23,12 +23,17 @@ public class Enlace {
     private int [] utilizacion;
     
     
-    public Enlace(int v1,int v2,int esp,int d,double a){
+    public void EnlaceOriginal(int v1,int v2,int esp,int d, double a){
         this.vert1=v1;
         this.vert2=v2;
         this.espectro=esp;
         this.ancho=a;
         this.fs=new FrecuencySlots[(int)(this.espectro/this.ancho)];
+        
+        System.out.println("--------> espectro"+this.espectro);
+        System.out.println("--------> ancho"+this.ancho);
+        System.out.println("--------> Longitud del slot"+(int)(this.espectro/this.ancho));
+        
         for(int i=0;i<(int)((int)this.espectro/this.ancho);i++){
             this.fs[i]=new FrecuencySlots(this.ancho);
         }
@@ -39,6 +44,30 @@ public class Enlace {
         this.distancia=d;
         this.hab=true;
     }
+    
+    public Enlace(int v1,int v2,int esp,int d,double a){
+        this.vert1=v1;
+        this.vert2=v2;
+        this.espectro=esp;
+        this.ancho=a;
+        this.fs=new FrecuencySlots[(int)(this.espectro/this.ancho)];
+        
+        //System.out.println("--------> espectro"+this.espectro);
+        //System.out.println("--------> ancho"+this.ancho);
+        //System.out.println("--------> Longitud del slot"+(int)(this.espectro/this.ancho));
+        
+        for(int i=0;i<(int)((int)this.espectro/this.ancho);i++){
+            this.fs[i]=new FrecuencySlots(this.ancho);
+        }
+        this.utilizacion=new int[(int)(this.espectro/this.ancho)];
+        for(int i=0;i<(int)((int)this.espectro/this.ancho);i++){
+            this.utilizacion[i]=0;
+        }
+        this.distancia=d;
+        this.hab=true;
+    }
+    
+    
     public Enlace(){
         this.vert1=0;
         this.vert2=0;

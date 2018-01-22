@@ -146,9 +146,47 @@ public GrafoMatriz(int V){
                 }
             }
         }
-        //System.out.println("cantidad de links::::: "+ countlinks);
+        
+   
         entropy=uelink/countlinks;
         return entropy;
+    }
+    
+    public void cargaRed(int capacidaE){
+        double uelink=0;
+        double entropy=0;
+        int countlinks=0;
+        int countFsUsado = 0;
+        for(int i=0;i<this.getCantidadDeVertices()-1;i++){
+            for(int j=i+1;j<this.getCantidadDeVertices();j++){
+                int UEcont=0;
+                
+                if(this.acceder(i, j)!=null){
+                    //System.out.println("i:"+i+", j:"+j);
+                   
+                    for(int kk=0;kk<this.acceder(i, j).getFS().length-1;kk++){
+                        
+                        //System.out.println("fs tamano: "+ this.acceder(i, j).getFS().length);
+                        //System.out.println("fs tamano: "+ this.acceder(i, j).getFS()[kk]);
+                        if (this.acceder(i, j).getFS()[kk].getEstado()==0){
+                           //System.out.println("fs number -- "+kk+" -- utili--> "+ this.acceder(i, j).getFS()[kk].getEstado() +"::"+ this.acceder(i, j).getUtilizacion()[kk]);    
+                           countFsUsado++;
+                        }
+                        
+                        //this.acceder(i, j).getFS()[kk].getEstado()
+                    }
+                    uelink=uelink+(double)UEcont;//(this.acceder(i, j).getFS().length-1));
+                    countlinks++;
+                    //System.in.read();
+                }
+            }
+        }
+        System.out.println("Cant Slot total:"+(countlinks*capacidaE));
+        System.out.println("Cant Enlaces usados:"+countFsUsado);
+        
+        entropy=uelink/countlinks;
+      
+    
     }
     
     public void ResetRed(){

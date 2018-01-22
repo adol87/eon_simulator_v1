@@ -88,11 +88,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        listaRedes = new javax.swing.JList<String>();
+        listaRedes = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        listaAlgoritmosRuteo = new javax.swing.JList<String>();
+        listaAlgoritmosRuteo = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listaDemandas = new javax.swing.JList<String>();
+        listaDemandas = new javax.swing.JList<>();
         botonEjecutarSimulacion = new javax.swing.JButton();
         etiquetaTopologia = new javax.swing.JLabel();
         etiquetaDemanda = new javax.swing.JLabel();
@@ -148,10 +148,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 112, 58));
 
-        listaAlgoritmosRuteo.setModel(new javax.swing.AbstractListModel() {
+        listaAlgoritmosRuteo.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "FAR" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         listaAlgoritmosRuteo.setToolTipText("");
         listaAlgoritmosRuteo.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -163,10 +163,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 112, 110));
 
-        listaDemandas.setModel(new javax.swing.AbstractListModel() {
+        listaDemandas.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Tiempo de permanecia y FS Fijos", "Tiempo de permanecia Fijo y FS Variables" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane3.setViewportView(listaDemandas);
         listaDemandas.getAccessibleContext().setAccessibleName("");
@@ -195,7 +195,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         getContentPane().add(etiquetaCapacidadActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 110, 20));
 
         etiquetaTiempoActual.setText("Tiempo de Simulacion");
-        getContentPane().add(etiquetaTiempoActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 110, 20));
+        getContentPane().add(etiquetaTiempoActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 10, 150, 20));
 
         etiquetaAnchoFSActual.setText("Ancho FS");
         getContentPane().add(etiquetaAnchoFSActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 50, 110, 20));
@@ -207,7 +207,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         getContentPane().add(spinnerTiempoSimulacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, -1, 20));
 
         jLabel1.setText("Ancho de Banda x Demanda (Gbps)");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 520, 170, 40));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 520, 230, 40));
 
         spinnerFactorCapacidad.setModel(new javax.swing.SpinnerNumberModel(2, 2, 1000, 50));
         spinnerFactorCapacidad.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -215,7 +215,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 spinnerFactorCapacidadStateChanged(evt);
             }
         });
-        getContentPane().add(spinnerFactorCapacidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 530, 70, 20));
+        getContentPane().add(spinnerFactorCapacidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 530, 70, 20));
 
         jLabel2.setText("FSs por Enlace");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 30, -1, 20));
@@ -228,7 +228,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         etiquetaResultado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         etiquetaResultado.setText("Resultado de la Simulación");
-        getContentPane().add(etiquetaResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 320, 180, 20));
+        getContentPane().add(etiquetaResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 320, 180, 20));
         getContentPane().add(etiquetaImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, 320, 170));
 
         panelResultado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -244,26 +244,26 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGap(0, 276, Short.MAX_VALUE)
         );
 
-        getContentPane().add(panelResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 350, 470, 280));
+        getContentPane().add(panelResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 370, 470, 280));
 
         jLabel5.setText("Unidades");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, -1, 20));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, -1, 20));
 
         etiqueta1.setText("Del tiempo de Simulacion");
         getContentPane().add(etiqueta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 490, -1, 20));
 
         etiquetaTextoDemandasTotales.setText("Cantidad total de Demandas");
-        getContentPane().add(etiquetaTextoDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 320, 140, 20));
-        getContentPane().add(etiquetaDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 340, 90, 30));
+        getContentPane().add(etiquetaTextoDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 320, 190, 20));
+        getContentPane().add(etiquetaDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 330, 90, 30));
 
         jLabel4.setText("Carga de Trafico Maximo");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 120, 20));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 160, 20));
 
         spinnerEarlang.setModel(new javax.swing.SpinnerNumberModel(100, 10, 1500, 100));
         getContentPane().add(spinnerEarlang, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 70, 80, -1));
 
         jLabel6.setText("Earlang");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 40, 20));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, -1, 20));
 
         jLabel7.setText("Paso (u)");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 70, -1, -1));
@@ -272,7 +272,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         getContentPane().add(spinnerPaso, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 70, -1, -1));
 
         jLabel8.setText("Earlang");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 70, 40, 20));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 70, 60, 20));
 
         textFieldCapacidadEnlace.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldCapacidadEnlace.setText("50");
@@ -311,7 +311,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        checkBotonModulacion.setText("Desea considerar Modoluacion? ");
+        checkBotonModulacion.setActionCommand("Desea considerar Modulacion? ");
+        checkBotonModulacion.setLabel("Desea considerar Modulacion? ");
 
         javax.swing.GroupLayout panelAsignacionSpectroLayout = new javax.swing.GroupLayout(panelAsignacionSpectro);
         panelAsignacionSpectro.setLayout(panelAsignacionSpectroLayout);
@@ -388,7 +389,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         int paso=(int)this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
         int contD=0; // contador de demandas totales
         int tiempoT=Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); // Tiempo de simulacion especificada por el usaurio
-        int capacidadE=Integer.parseInt(this.textFieldCapacidadEnlace.getText().toString()); // espectro por enalce
+        int capacidadE=Integer.parseInt(this.textFieldCapacidadEnlace.getText()); // espectro por enalce
         double anchoFS=Double.parseDouble(this.textFieldAnchoFS.getText().toString()); // ancho de FS
         //factor del tiempo de simulacion especificado por el usuario
         
@@ -412,6 +413,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
            
             int [] contB=new int [RSA.size()]; // array encargado de almacenar en cada posicion la cantidad de bloqueo para cada
                                                 // algoritmo seleccionado
+            int contBloqInstant = 0;
             List prob []= new LinkedList[RSA.size()]; // probabilidad de bloqueo para cada algoritmo RSA selecciondo 
             
             
@@ -440,10 +442,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         G[i].insertarDatos(this.Redes.getTopologia(2));
                     }
             }
-           while(earlang<=E){ // mientras no se llega a la cargad de trafico maxima
-                  for(int i=0;i<tiempoT;i++){ // para cada unidad de tiempo
+           while(earlang<=E){ // mientras no se llega a la carga de trafico maxima
+                contBloqInstant = 0;
+                for(int i=0;i<tiempoT;i++){ // para cada unidad de tiempo
                    demandasPorUnidadTiempo = Utilitarios.demandasTotalesPorTiempo(earlang, i); // obtener las demandas
-                     // por unidad de tiempo
+                    //System.out.println("En el tiempo: "+i+" demandas x unid: "+demandasPorUnidadTiempo);
+                        // por unidad de tiempo
                      for(int j=0;j<demandasPorUnidadTiempo;j++){ // para cada demanda
                         switch(demandaSeleccionada){ // se ve que modelo de trafico fue seleccionado
                         case "Tiempo de permanecia y FS Fijos":
@@ -459,6 +463,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             String algoritmoAejecutar = RSA.get(a);
                             
                             switch(algoritmoAejecutar){
+                                
                                 case "FAR - M - FF":
                                     ////////////////////////////Ruteo///////////////////////////
                                     r1=Algoritmos.Ruteo_FAR(G[a], d, ksp, capacidadE,true);
@@ -500,6 +505,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                         r=Algoritmos.asignacionSpectro_FF(G[a], r1, capacidadE, d);
                                         Utilitarios.asignarFS(ksp, r, G[a], d);
                                     }else{
+                                        contBloqInstant++;
                                         contB[a]++;
                                     }
                                     break;
@@ -541,17 +547,31 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         }
                         contD++; 
                     }
-                     for(int j=0;j<RSA.size();j++){
-                         Utilitarios.Disminuir(G[j]);
-                     }
+                    
                 }
+            
             ++k;
             // almacenamos la probablidad de bloqueo final para cada algoritmo
             for(int a=0;a<RSA.size();a++){
+                System.out.println("Bloqueo: "+contB[a] + " cant demandas: "+contD);
+                System.out.println("Bloqueo Instantaneo: "+contBloqInstant+ " demandas insta: "+0);
                 prob[a].add(((double)contB[a]/contD));
                System.out.println("Probabilidad: "+(double)prob[a].get(k)+" Algoritmo: "+a+" Earlang: "+earlang);
             }
             // avanzamos a la siguiente carga de trafico
+             System.out.println("Vertices:"+ G[0].getCantidadDeVertices());
+        
+            System.out.println("Enlaces:"+ G[0].getCantidadEnlaces());
+            System.out.println("Capacidad:"+ G[0].getCapacidadTotal());
+            
+            G[0].cargaRed(capacidadE);
+            
+            System.out.println("-------------------------------------------------");
+            
+            for(int j=0;j<RSA.size();j++){
+                 Utilitarios.Disminuir(G[j]);
+            }    
+            
             earlang+=paso;
         }
         this.etiquetaError.setText("Simulacion Terminada...");
@@ -559,7 +579,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Utilitarios.GraficarResultado(prob, this.panelResultado, this.etiquetaResultado,RSA,paso);
         String demandasTotales=""+contD; // mostramos la cantidad de demandas totales recibidas
         this.etiquetaDemandasTotales.setText(demandasTotales);
-        
+        System.out.println("Total demandas: "+demandasTotales);
         ////////Vaciar listas para las siguientes simulaciones///////////////
         /////////////////////////////////////////////////////////////////////
         this.algoritmosCompletosParaEjecutar.clear();

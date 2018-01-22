@@ -92,11 +92,11 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        listaRedes = new javax.swing.JList<String>();
+        listaRedes = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        listaRSA = new javax.swing.JList<String>();
+        listaRSA = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listaDemandas = new javax.swing.JList<String>();
+        listaDemandas = new javax.swing.JList<>();
         botonEjecutarSimulacion = new javax.swing.JButton();
         etiquetaTopologia = new javax.swing.JLabel();
         etiquetaRSA = new javax.swing.JLabel();
@@ -104,7 +104,7 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
         etiquetaError = new javax.swing.JLabel();
         panelCambiarDatosdelosEnlaces = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        listaEnlaces = new javax.swing.JList<String>();
+        listaEnlaces = new javax.swing.JList<>();
         PaneleEditarEnalce = new javax.swing.JPanel();
         bGuardar = new javax.swing.JButton();
         campoDeTextoEspectro = new javax.swing.JTextField();
@@ -151,13 +151,13 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
         lbl1 = new javax.swing.JLabel();
         btndefrag = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
-        listdefrag = new javax.swing.JList<String>();
+        listdefrag = new javax.swing.JList<>();
         lbldefrag = new javax.swing.JLabel();
         txtdefrag = new javax.swing.JTextField();
         btninsertar1 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        listaRSADF = new javax.swing.JList<String>();
+        listaRSADF = new javax.swing.JList<>();
         panelResultado = new javax.swing.JPanel();
         PanelEntropia = new javax.swing.JPanel();
         etiquetaResultado = new javax.swing.JLabel();
@@ -190,20 +190,20 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 112, 58));
 
-        listaRSA.setModel(new javax.swing.AbstractListModel() {
+        listaRSA.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "FAR - FF", "Def P-CF", "Def CBD", "Def MBBR", "Def DWD", "FA CA RSA", "FA RSA", "FAR - FF - SP - DF", "FAR - FF - GREEDY - DF", "FAR - FF - MSGD - DF", "FAR - LF", "FAR - RF", "FAR - EF", "FAR - LU", "FAR - MU" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         listaRSA.setToolTipText("");
         jScrollPane2.setViewportView(listaRSA);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 112, 110));
 
-        listaDemandas.setModel(new javax.swing.AbstractListModel() {
+        listaDemandas.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Tiempo de permanecia y FS Fijos", "Tiempo de permanecia Fijo y FS Variables" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane3.setViewportView(listaDemandas);
         listaDemandas.getAccessibleContext().setAccessibleName("");
@@ -369,13 +369,13 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
                 botonCambiarDatosdelosEnlacesActionPerformed(evt);
             }
         });
-        getContentPane().add(botonCambiarDatosdelosEnlaces, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, 20));
+        getContentPane().add(botonCambiarDatosdelosEnlaces, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 190, 20));
 
         etiquetaCapacidadActual.setText("Capacidad");
         getContentPane().add(etiquetaCapacidadActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 110, 20));
 
         etiquetaTiempoActual.setText("Tiempo de Simulacion");
-        getContentPane().add(etiquetaTiempoActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 110, 20));
+        getContentPane().add(etiquetaTiempoActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 180, 20));
 
         etiquetaAnchoFSActual.setText("Ancho FS");
         getContentPane().add(etiquetaAnchoFSActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 50, 110, 20));
@@ -411,7 +411,7 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
         getContentPane().add(etiquetaMSI, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 610, 180, 20));
         etiquetaMSI.getAccessibleContext().setAccessibleName("Entropia");
 
-        getContentPane().add(etiquetaImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 320, 170));
+        getContentPane().add(etiquetaImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, 320, 170));
 
         panelBFR.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
@@ -429,7 +429,7 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
         getContentPane().add(panelBFR, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 640, 470, 280));
 
         jLabel5.setText("Unidades");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, -1, 20));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, -1, 20));
 
         etiqueta1.setText("Del tiempo de Simulacion");
         getContentPane().add(etiqueta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 390, -1, 20));
@@ -438,7 +438,7 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
         getContentPane().add(etiqueta2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 420, -1, 20));
 
         etiquetaTextoDemandasTotales.setText("Cantidad total de Demandas");
-        getContentPane().add(etiquetaTextoDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 250, 140, 20));
+        getContentPane().add(etiquetaTextoDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 250, 200, 20));
         getContentPane().add(etiquetaDemandasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 270, 90, 30));
 
         etiquetaGHz.setText("GHz");
@@ -462,7 +462,7 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
         getContentPane().add(spinnerPaso, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 70, -1, -1));
 
         jLabel8.setText("Earlang");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 70, 40, 20));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 50, 50, 20));
 
         textFieldCapacidadEnlace.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         textFieldCapacidadEnlace.setText("50");
@@ -543,10 +543,10 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
         jLabel9.setText("Earlang");
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 10, 40, 20));
 
-        listaRSADF.setModel(new javax.swing.AbstractListModel() {
+        listaRSADF.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "FAR - FF - SP - DF", "FAR - FF - GREEDY - DF" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         listaRSADF.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listaRSADF.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -2112,10 +2112,6 @@ public class VentanaPrincipal_Defrag extends javax.swing.JFrame {
                 
                 
                 
-                
-                
-                
-
             }
         });
     }

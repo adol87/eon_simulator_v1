@@ -46,11 +46,13 @@ public class Modulacion {
     * para el camino completo, aque se considera para el camino completo
     */
     public int getNroFS(int B, int distancia){
+        
         int modulacion=getTipoDeModulacion(distancia);
         Double N = B/(modulacion*12.5);
         if(N<1){
             N++;
         }
+        //System.out.println("Tamano: "+B+" distancia: "+distancia + " slot: "+N);
         return N.intValue();
     }
     /*
