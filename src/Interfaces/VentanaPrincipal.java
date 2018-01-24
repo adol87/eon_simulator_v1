@@ -384,6 +384,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         int E=(int)this.spinnerEarlang.getValue(); // se obtiene el limite de carga (Erlang) de trafico seleccionado por el usuario
         int demandasPorUnidadTiempo=0; //demandas por unidad de tiempo. Considerando el punt decimal
+        int contadorDemandas=0; //demandas por unidad de tiempo. Considerando el punt decimal
         int earlang=0; //Carga de trafico en cada simulacion
         int k=-1; // contador auxiliar
         int paso=(int)this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
@@ -397,6 +398,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         System.out.println("Cantidad de FS por enlace:"+capacidadE);
         System.out.println("Cantidad Algoritmos:"+this.cantidadDeAlgoritmosTotalSeleccionados);
         
+        System.out.println("-------------------------------------------------");
         
         // tiempo de permanencia fijado por el usuario.
         int t=(int)(Double.parseDouble(this.spinnerFactorTiempo.getValue().toString())*tiempoT);
@@ -444,31 +446,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
            while(earlang<=E){ // mientras no se llega a la carga de trafico maxima
                 contBloqInstant = 0;
+                contadorDemandas = 0;
                 for(int i=0;i<tiempoT;i++){ // para cada unidad de tiempo
-                   demandasPorUnidadTiempo = Utilitarios.demandasTotalesPorTiempo(earlang, i); // obtener las demandas
-                    //System.out.println("En el tiempo: "+i+" demandas x unid: "+demandasPorUnidadTiempo);
+                    demandasPorUnidadTiempo = Utilitarios.demandasTotalesPorTiempo(earlang, i); // obtener las demandas
+                    if (demandasPorUnidadTiempo>0){
+                        contadorDemandas = contadorDemandas + demandasPorUnidadTiempo;
+                    }
+                    
                         // por unidad de tiempo
-                     for(int j=0;j<demandasPorUnidadTiempo;j++){ // para cada demanda
-                        switch(demandaSeleccionada){ // se ve que modelo de trafico fue seleccionado
-                        case "Tiempo de permanecia y FS Fijos":
-                             d.obtenerDemandasFijoConModulacion(B, i,G[0].getCantidadDeVertices()-1);  // obtenemos un origen, fin, catidad de FS y tiempo de permanecia
-                             break;
-                        case "Tiempo de permanecia Fijo y FS Variables": // aun en duda, no utilizar. Se espera tener listo en la version 0.3
-                            d.obtenerDemandasFSVariable(B, t,G[0].getCantidadDeVertices()-1);  // obtenemos un origen, fin, catidad de FS y tiempo de permanecia
-                             break;
-                        } 
-                        ListaEnlazada[] ksp=Utilitarios.KSP(G[0], d.getOrigen(), d.getDestino(), 5); // calculamos los k caminos mas cortos entre el origen y el fin. Con k=5 (pude ser mas, cambiar dependiendo de la necesidad)
-                        for(int a=0; a<RSA.size();a++){ 
-                            
-                            String algoritmoAejecutar = RSA.get(a);
-                            
-                            switch(algoritmoAejecutar){
+                        for(int j=0;j<demandasPorUnidadTiempo;j++){ // para cada demanda
+                            switch(demandaSeleccionada){ // se ve que modelo de trafico fue seleccionado
+                                case "Tiempo de permanecia y FS Fijos":
+                                    d.obtenerDemandasFijoConModulacion(B, i,G[0].getCantidadDeVertices()-1);  // obtenemos un origen, fin, catidad de FS y tiempo de permanecia
+                                    break;
+                                case "Tiempo de permanecia Fijo y FS Variables": // aun en duda, no utilizar. Se espera tener listo en la version 0.3
+                                    d.obtenerDemandasFSVariable(B, t,G[0].getCantidadDeVertices()-1);  // obtenemos un origen, fin, catidad de FS y tiempo de permanecia
+                                    break;
+                            } 
+                            ListaEnlazada[] ksp=Utilitarios.KSP(G[0], d.getOrigen(), d.getDestino(), 5); // calculamos los k caminos mas cortos entre el origen y el fin. Con k=5 (pude ser mas, cambiar dependiendo de la necesidad)
+                            for(int a=0; a<RSA.size();a++){ 
+                                String algoritmoAejecutar = RSA.get(a);
                                 
-                                case "FAR - M - FF":
+                                switch(algoritmoAejecutar){
+                                    case "FAR - M - FF":
                                     ////////////////////////////Ruteo///////////////////////////
-                                    r1=Algoritmos.Ruteo_FAR(G[a], d, ksp, capacidadE,true);
-                                    if(r1!=null){
-                                        /////////////////////Asignacion de Espectro//////////////////////
+                                        r1=Algoritmos.Ruteo_FAR(G[a], d, ksp, capacidadE,true);
+                                        if(r1!=null){
+                                                        /////////////////////Asignacion de Espectro//////////////////////
                                         r=Algoritmos.asignacionSpectro_FF(G[a], r1, capacidadE, d);
                                         Utilitarios.asignarFS(ksp, r, G[a], d);
                                     }else{
@@ -549,20 +553,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     }
                     
                 }
-            
+                
             ++k;
             // almacenamos la probablidad de bloqueo final para cada algoritmo
             for(int a=0;a<RSA.size();a++){
-                System.out.println("Bloqueo: "+contB[a] + " cant demandas: "+contD);
-                System.out.println("Bloqueo Instantaneo: "+contBloqInstant+ " demandas insta: "+0);
+                System.out.println("Demandas Totales: " + contD);
+                System.out.println("Bloqueo Totales:  "  + contB[a]);
+                System.out.println("Demanda Instantanea: "+contadorDemandas);
+                System.out.println("Bloqueo Instantaneo: "+contBloqInstant);
                 prob[a].add(((double)contB[a]/contD));
-               System.out.println("Probabilidad: "+(double)prob[a].get(k)+" Algoritmo: "+a+" Earlang: "+earlang);
+                System.out.println("Probabilidad de Bloqueo General: "+(double)prob[a].get(k)+" Algoritmo: " + a + " Earlang: "+earlang);
+                if(contadorDemandas==0){
+                    contadorDemandas=1;
+                }
+                System.out.println("Probabilidad de Bloqueo Instantaneo: " + (double)(contBloqInstant/contadorDemandas));
+                //System.out.println("Uso del Espectro: " + (double)(contBloqInstant/contadorDemandas));
             }
             // avanzamos a la siguiente carga de trafico
              System.out.println("Vertices:"+ G[0].getCantidadDeVertices());
         
             System.out.println("Enlaces:"+ G[0].getCantidadEnlaces());
-            System.out.println("Capacidad:"+ G[0].getCapacidadTotal());
+            //System.out.println("Capacidad:"+ G[0].getCapacidadTotal());
             
             G[0].cargaRed(capacidadE);
             

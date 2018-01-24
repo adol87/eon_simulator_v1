@@ -181,8 +181,9 @@ public GrafoMatriz(int V){
                 }
             }
         }
-        System.out.println("Cant Slot total:"+(countlinks*capacidaE));
-        System.out.println("Cant Enlaces usados:"+countFsUsado);
+        System.out.println("Capacidad Total Espectro (FS): " + (countlinks*capacidaE) );
+        System.out.println("Utilización del Espectro (FS): " + countFsUsado );
+        System.out.println("Porcentaje de Utilización    : " + (double)(countFsUsado)/(countlinks*capacidaE));
         
         entropy=uelink/countlinks;
       
