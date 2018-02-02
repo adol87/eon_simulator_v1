@@ -1082,10 +1082,12 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                System.out.println("Grafo al empezar el tiempo: " + i);
 //                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
 
-                System.out.println("Tiempo: " + i);
+                //System.out.println("Tiempo: " + i);
                 
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
+                    //System.out.println("demanda: " + demandasPorUnidadTiempo.size());
+                    System.out.println(""+ i + ";"+demandasPorUnidadTiempo.size());
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
