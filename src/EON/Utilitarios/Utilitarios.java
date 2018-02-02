@@ -1892,7 +1892,9 @@ public class Utilitarios {
         } else {
             Random rand = new Random();
             for (i = 1; i < t; i++) {
+                
                 cantidadDemandas = poisson(lambda);
+                System.out.println(""+ i + ";"+cantidadDemandas);
                 for (j = 0; j < cantidadDemandas; j++) {
                     rand = new Random();
                     origen = rand.nextInt(cantNodos);
@@ -1989,7 +1991,7 @@ public class Utilitarios {
         int b, bFact;
         double s, a;
         double e = Math.E;
-        a = (Math.random() * 1) + 0;
+        a = (Math.random() * 1) ;
         b = 0;
         bFact = factorial(b);
         s = (Math.pow(e, (-lambda))) * ((Math.pow(lambda, b)) / (bFact));
