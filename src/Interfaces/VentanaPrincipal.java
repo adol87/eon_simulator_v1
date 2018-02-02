@@ -566,7 +566,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 if(contadorDemandas==0){
                     contadorDemandas=1;
                 }
-                System.out.println("Probabilidad de Bloqueo Instantaneo: " + (double)(contBloqInstant/contadorDemandas));
+                System.out.println("Probabilidad de Bloqueo Instantaneo: " + (double)contBloqInstant/(double)contadorDemandas);
                 //System.out.println("Uso del Espectro: " + (double)(contBloqInstant/contadorDemandas));
             }
             // avanzamos a la siguiente carga de trafico
