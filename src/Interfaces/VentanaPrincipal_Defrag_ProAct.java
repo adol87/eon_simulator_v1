@@ -1077,6 +1077,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             String algoritmoAejecutar = RSA.get(0);
             
             for (int i = 1; i <= tiempoT; i++) {
+                System.out.println("--------------------------------------------------------");
                 haybloqueos = false;
 //                //imprimir estado de los enlaces
 //                System.out.println("Grafo al empezar el tiempo: " + i);
@@ -1087,7 +1088,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
                     //System.out.println("demanda: " + demandasPorUnidadTiempo.size());
-                    System.out.println(""+ i + ";"+demandasPorUnidadTiempo.size());
+                    //System.out.println(""+ i + ";"+demandasPorUnidadTiempo.size());
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1102,7 +1103,29 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         switch (algoritmoAejecutar) {
                             case "FA":
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
+                                System.out.println(" ");
+                                System.out.println("Tratar de ubicar demanda: "+ demanda.getNroFS());
+                                
                                 if (r != null) {
+                                    
+                                    int bandera=0;
+                                    Nodo nodoActual;
+                                    nodoActual = ksp[r.getCamino()].getInicio();
+                                    
+                                    while (bandera==0){
+                                        
+                                        System.out.print(nodoActual.getDato()+";");
+                                        System.out.print(nodoActual.getPosicion());
+                                        
+                                        if (nodoActual.getDato()==99){
+                                            bandera=1;
+                                            System.out.println(" ");
+                                        } else {
+                                            nodoActual=nodoActual.getSiguiente();
+                                            System.out.print("-->");
+                                        }            
+                                    }
+                                    
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
                                     arrayRutas.add(ksp[r.getCamino()]);
@@ -1142,6 +1165,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             haybloqueos = true;
                                         }
                                     }else{
+                                        System.out.println("demanda bloqueada: "+demanda.getNroFS() + " origen,destino: "+demanda.getOrigen() + ","+demanda.getDestino());
                                         contB[a]++;
                                         contBloqueos++;
                                         esBloqueo = true;
@@ -1189,6 +1213,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                             haybloqueos = true;
                                         }
                                     }else{
+                                        
+                                        
                                         contB[a]++;
                                         contBloqueos++;
                                         esBloqueo = true;
@@ -1214,7 +1240,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 
                     }
                     contD++;
-                    //Para cada demanda guardar el estado de la red, para el analisisde metricas
+                    //Para cada demanda guardar el estado de la red, para el analisis de metricas
                     for (int a = 0; a < RSA.size(); a++) {
                         //Escribimos el archivo de resultados
                         entropia = msi = bfr = pathConsec = entropiaUso = 0.0;
@@ -1276,8 +1302,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
 //                System.out.println("La probabilidad de bloqueo en el tiempo: "+i+" es: "+ Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size()));
 //                System.out.println("El porcentaje de Uso es: "+porcUso);
-
-                
   
                 
                 //no modificar 
@@ -1322,7 +1346,15 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                                    System.out.println("Path Consecutiveness Despues: "+ Metricas.PathConsecutiveness(caminosDeDosEnlaces, capacidadPorEnlace, G[0]));
 //                }
                 
-                contBloqueos = 0;
+                //System.out.println("Tiempo: " +i+ "   bloqueos inst: " +contBloqueos + " bloqueo acumulado: "+contB[0]);
+                //System.out.println("demanda acumulada: " +contD);
+                //System.out.println("demanda inst; "+demandasPorUnidadTiempo.size());
+                try {
+                    //System.out.println( (contBloqueos*100)/demandasPorUnidadTiempo.size());
+                } catch (ArithmeticException e){
+                    System.out.println( 0);
+                }
+                    contBloqueos = 0;
                 
             }
             ++k;

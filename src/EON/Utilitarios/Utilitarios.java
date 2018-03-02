@@ -1894,7 +1894,7 @@ public class Utilitarios {
             for (i = 1; i < t; i++) {
                 
                 cantidadDemandas = poisson(lambda);
-                System.out.println(""+ i + ";"+cantidadDemandas);
+                //System.out.println(""+ i + ";"+cantidadDemandas);
                 for (j = 0; j < cantidadDemandas; j++) {
                     rand = new Random();
                     origen = rand.nextInt(cantNodos);
@@ -1904,6 +1904,7 @@ public class Utilitarios {
                         destino = rand.nextInt(cantNodos);
                     }
                     tVida = obtenerTiempoDeVida(HT);
+                    //System.out.println(tVida);
                     archivo = escribirArchivo(origen, destino, fs, lambda, i, archivo, tVida, cantidadDemandas);
                 }
             }

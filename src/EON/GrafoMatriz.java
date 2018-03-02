@@ -147,7 +147,9 @@ public GrafoMatriz(int V){
             }
         }
         
-   
+        System.out.println("links: "+uelink+" / countlinks: "+countlinks);
+        System.out.println("entropy: "+entropy);
+        
         entropy=uelink/countlinks;
         return entropy;
     }
